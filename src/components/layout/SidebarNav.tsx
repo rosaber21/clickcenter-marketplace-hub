@@ -30,7 +30,8 @@ export function SidebarNav() {
   
   // Poderia vir de um estado global de autenticação
   const isAuthenticated = false;
-  const userRole = "aluno"; // "aluno" | "afiliado" | "criador" | "admin"
+  // Fix TypeScript errors by making userRole a string literal union type
+  const userRole: "aluno" | "afiliado" | "criador" | "admin" = "aluno";
 
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     cn(

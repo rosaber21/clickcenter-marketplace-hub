@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SidebarNav } from "./SidebarNav";
 import { 
   User as UserIcon, 
   ShoppingCart, 
@@ -120,15 +118,12 @@ export function MainLayout({ children }: MainLayoutProps) {
         </div>
       </header>
 
-      {/* Main content */}
-      <div className="flex flex-1">
-        {!isMobile && <SidebarNav />}
-        <main className="flex-1">
-          <div className="container py-6">
-            {children}
-          </div>
-        </main>
-      </div>
+      {/* Main content - removed the sidebar */}
+      <main className="flex-1">
+        <div className="container py-6">
+          {children}
+        </div>
+      </main>
 
       {/* Footer */}
       <footer className="border-t py-8 bg-muted/40">
