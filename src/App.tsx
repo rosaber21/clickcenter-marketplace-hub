@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import ProductDetails from "./pages/ProductDetails";
 import NotFound from "./pages/NotFound";
+import AffiliateCategories from "./pages/AffiliateCategories";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/produto/:id" element={<ProductDetails />} />
+          <Route path="/afiliados" element={<AffiliateCategories />} />
           {/* Outras rotas serão adicionadas conforme desenvolvemos a aplicação */}
           <Route path="*" element={<NotFound />} />
         </Routes>

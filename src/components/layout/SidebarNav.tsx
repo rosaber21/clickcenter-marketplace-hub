@@ -23,6 +23,7 @@ import {
   Link as LinkIcon,
   Plus
 } from "lucide-react";
+import { UserRole } from "@/types";
 
 export function SidebarNav() {
   const { state } = useSidebar();
@@ -30,8 +31,7 @@ export function SidebarNav() {
   
   // Poderia vir de um estado global de autenticação
   const isAuthenticated = false;
-  // Fix TypeScript errors by making userRole a string literal union type
-  const userRole: "aluno" | "afiliado" | "criador" | "admin" = "aluno";
+  const userRole: UserRole = "aluno";
 
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     cn(
