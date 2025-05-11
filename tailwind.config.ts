@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,11 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Cores específicas para o ClickCenter
+				'royal-blue': '#1E40AF',  // Azul Royal
+				'vibrant-purple': '#8B5CF6', // Roxo Vibrante
+				'white': '#FFFFFF'  // Branco
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
