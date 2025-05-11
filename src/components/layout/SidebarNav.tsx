@@ -25,7 +25,9 @@ import {
 } from "lucide-react";
 
 export function SidebarNav() {
-  const { collapsed } = useSidebar();
+  const { state } = useSidebar();
+  const collapsed = state === "collapsed";
+  
   // Poderia vir de um estado global de autenticação
   const isAuthenticated = false;
   const userRole = "aluno"; // "aluno" | "afiliado" | "criador" | "admin"
@@ -44,12 +46,12 @@ export function SidebarNav() {
         "border-r bg-sidebar",
         collapsed ? "w-[70px]" : "w-[240px]"
       )}
-      collapsible
+      collapsible="icon"
     >
       <SidebarTrigger className="m-2 self-end text-sidebar-foreground" />
 
       <SidebarContent>
-        <SidebarGroup defaultOpen>
+        <SidebarGroup>
           <SidebarGroupLabel className="text-sidebar-foreground/70">
             Menu Principal
           </SidebarGroupLabel>

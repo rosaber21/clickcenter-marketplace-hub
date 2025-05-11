@@ -3,7 +3,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Product } from "@/types";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -12,9 +14,9 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   return (
-    <div className="clickcenter-card group">
-      <Link to={`/produto/${product.id}`} className="block">
-        <div className="aspect-[4/3] mb-3 overflow-hidden rounded-md bg-muted">
+    <div className="group relative flex flex-col overflow-hidden rounded-lg border border-muted bg-card shadow-sm transition-all hover:shadow-md">
+      <Link to={`/produto/${product.id}`} className="flex-1">
+        <div className="aspect-[4/3] relative overflow-hidden bg-muted">
           {product.images && product.images.length > 0 ? (
             <img 
               src={product.images[0]}
@@ -26,31 +28,64 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               Sem imagem
             </div>
           )}
-          <div className="absolute top-2 right-2 bg-primary/90 text-primary-foreground text-xs px-2 py-1 rounded">
+          <Badge 
+            className={cn(
+              "absolute top-2 right-2 opacity-90", 
+              product.type === "digital" 
+                ? "bg-secondary hover:bg-secondary/80" 
+                : "bg-primary hover:bg-primary/80"
+            )}
+          >
             {product.type === "digital" ? "Digital" : "Físico"}
-          </div>
+          </Badge>
         </div>
         
-        <h3 className="font-medium line-clamp-2 mb-1 min-h-[2.5rem]">{product.title}</h3>
-        
-        <div className="flex justify-between items-center">
-          <p className="font-semibold text-lg">
-            {new Intl.NumberFormat("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            }).format(product.price)}
+        <div className="p-4">
+          <h3 className="font-medium line-clamp-2 mb-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
+            {product.title}
+          </h3>
+          
+          <p className="line-clamp-3 text-sm text-muted-foreground mb-4">
+            {product.description}
           </p>
+          
+          <div className="mt-auto">
+            <p className="font-bold text-lg text-foreground">
+              {new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }).format(product.price)}
+            </p>
+          </div>
         </div>
       </Link>
       
-      <div className="mt-3">
+      <div className="p-4 pt-0 mt-auto">
         <Button 
-          onClick={onAddToCart} 
-          className="w-full gap-2"
-          variant="outline"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onAddToCart();
+          }} 
+          className="w-full gap-2 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
         >
           <ShoppingCart className="h-4 w-4" />
           Adicionar ao Carrinho
+        </Button>
+      </div>
+      
+      <div className="absolute right-2 top-24 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Button 
+          size="icon"
+          variant="secondary" 
+          className="rounded-full shadow-md"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onAddToCart();
+          }}
+        >
+          <Plus className="h-4 w-4" />
         </Button>
       </div>
     </div>
