@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,6 +27,11 @@ import CreatorDashboard from "./pages/Creator/Dashboard";
 // Affiliate pages
 import AffiliateDashboard from "./pages/Affiliate/Dashboard";
 import AffiliateLayout from "./pages/Affiliate/AffiliateLayout";
+
+// Student pages
+import { StudentLayout } from "./pages/Student/StudentLayout";
+import StudentDashboard from "./pages/Student/Dashboard";
+import CoursePage from "./pages/Student/CoursePage";
 
 const queryClient = new QueryClient();
 
@@ -66,7 +70,20 @@ const App = () => (
             {/* Add more affiliate routes here as needed */}
           </Route>
           
-          {/* Outras rotas serão adicionadas conforme desenvolvemos a aplicação */}
+          {/* Student Routes */}
+          <Route path="/aluno" element={<StudentLayout />}>
+            <Route index element={<StudentDashboard />} />
+            <Route path="curso/:courseId" element={<CoursePage />} />
+            <Route path="curso/:courseId/aula/:lessonId" element={<CoursePage />} />
+            <Route path="cursos" element={<StudentDashboard />} />
+            <Route path="favoritos" element={<StudentDashboard />} />
+            <Route path="agenda" element={<StudentDashboard />} />
+            <Route path="mensagens" element={<StudentDashboard />} />
+            <Route path="certificados" element={<StudentDashboard />} />
+            <Route path="notas" element={<StudentDashboard />} />
+          </Route>
+          
+          {/* Other routes will be added as the application develops */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
