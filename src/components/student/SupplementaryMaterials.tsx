@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, FileText, FileZip, FileImage } from "lucide-react";
+import { Download, FileText, Archive, FileImage } from "lucide-react";
 
 interface Material {
   id: string;
@@ -25,7 +25,7 @@ export function SupplementaryMaterials({ materials }: SupplementaryMaterialsProp
       case "pdf":
         return <FileText className="h-4 w-4" />;
       case "zip":
-        return <FileZip className="h-4 w-4" />;
+        return <Archive className="h-4 w-4" />;
       case "jpg":
       case "png":
         return <FileImage className="h-4 w-4" />;

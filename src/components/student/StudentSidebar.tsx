@@ -9,7 +9,7 @@ import {
   Bookmark,
   Calendar,
   MessageSquare,
-  Certificate,
+  Award,
   FileText,
   ChevronLeft,
   ChevronRight,
@@ -28,7 +28,7 @@ const navItems: NavItem[] = [
   { label: "Favoritos", href: "/aluno/favoritos", icon: Bookmark },
   { label: "Agenda", href: "/aluno/agenda", icon: Calendar },
   { label: "Mensagens", href: "/aluno/mensagens", icon: MessageSquare },
-  { label: "Certificados", href: "/aluno/certificados", icon: Certificate },
+  { label: "Certificados", href: "/aluno/certificados", icon: Award },
   { label: "Notas", href: "/aluno/notas", icon: FileText },
 ];
 
