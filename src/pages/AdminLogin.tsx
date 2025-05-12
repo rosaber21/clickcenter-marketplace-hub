@@ -17,11 +17,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { Eye, EyeOff } from "lucide-react";
 
-// Esquema de validação para login de admin
+// Schema de validação para login de admin
 const adminLoginSchema = z.object({
   email: z.string().email("Digite um email válido"),
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+  password: z.string().min(3, "A senha deve ter pelo menos 3 caracteres"),
 });
 
 type AdminLoginFormValues = z.infer<typeof adminLoginSchema>;
@@ -29,6 +30,7 @@ type AdminLoginFormValues = z.infer<typeof adminLoginSchema>;
 const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [showPassword, setShowPassword] = React.useState(false);
 
   // Form para login de admin
   const form = useForm<AdminLoginFormValues>({
@@ -40,9 +42,8 @@ const AdminLogin = () => {
   });
 
   const onSubmit = (data: AdminLoginFormValues) => {
-    // Este é apenas um exemplo simples de autenticação
-    // Em um ambiente de produção, isso seria conectado a um sistema de autenticação real
-    if (data.email === "admin@clickcenter.com" && data.password === "admin123") {
+    // Verificação com as novas credenciais
+    if (data.email === "rb9356670@gmail.com" && data.password === "123") {
       toast({
         title: "Login bem-sucedido",
         description: "Bem-vindo ao painel administrativo.",
@@ -57,15 +58,19 @@ const AdminLogin = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <MainLayout>
-      <div className="flex justify-center py-10">
-        <div className="w-full max-w-md">
-          <Card className="border-2 bg-slate-50">
+      <div className="flex justify-center items-center min-h-[calc(100vh-180px)]">
+        <div className="w-full max-w-md px-4">
+          <Card className="border-2 shadow-lg">
             <CardHeader className="space-y-1 text-center bg-primary text-white rounded-t-md">
-              <CardTitle className="text-2xl">Painel Administrativo</CardTitle>
+              <CardTitle className="text-2xl font-bold">Painel Administrativo</CardTitle>
               <CardDescription className="text-white/90">
-                Acesso exclusivo para administradores
+                Entre com suas credenciais para acessar
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
@@ -76,9 +81,13 @@ const AdminLogin = () => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel className="text-sm font-medium">Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="admin@exemplo.com" {...field} />
+                          <Input 
+                            placeholder="admin@exemplo.com" 
+                            {...field} 
+                            className="bg-slate-50 focus:bg-white" 
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -89,23 +98,44 @@ const AdminLogin = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Senha</FormLabel>
+                        <FormLabel className="text-sm font-medium">Senha</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="********" {...field} />
+                          <div className="relative">
+                            <Input 
+                              type={showPassword ? "text" : "password"} 
+                              placeholder="********" 
+                              {...field} 
+                              className="bg-slate-50 focus:bg-white pr-10" 
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                              onClick={togglePasswordVisibility}
+                            >
+                              {showPassword ? (
+                                <EyeOff size={16} />
+                              ) : (
+                                <Eye size={16} />
+                              )}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-primary hover:bg-primary/90 transition-all duration-200 font-medium py-2 mt-2"
+                  >
                     Entrar como Administrador
                   </Button>
                 </form>
               </Form>
             </CardContent>
-            <CardFooter className="flex justify-center">
+            <CardFooter className="flex justify-center border-t pt-4">
               <p className="text-xs text-muted-foreground text-center">
-                Acesso restrito apenas para administradores da plataforma.
+                Acesso restrito apenas para administradores autorizados da plataforma.
               </p>
             </CardFooter>
           </Card>
