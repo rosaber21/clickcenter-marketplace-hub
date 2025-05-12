@@ -3,24 +3,65 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { BarChart3, Package, Link as LinkIcon, Wallet, TrendingUp, Plus, Users } from "lucide-react";
+import { BarChart3, Package, Link as LinkIcon, Wallet, TrendingUp, Plus, Users, LineChart, PieChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { BarChart, LineChart as CustomLineChart } from "@/components/charts/CustomCharts";
 
 export default function CreatorDashboard() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("overview");
   const [totalSales, setTotalSales] = useState(7829.45);
   const [activeProducts, setActiveProducts] = useState(12);
   const [pendingCommissions, setPendingCommissions] = useState(1245.50);
   
+  // Mock data for charts
+  const monthlySalesData = [5430, 4290, 6540, 7829, 8210, 7450, 7829];
+  const monthlySalesLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+  
+  const productSalesData = [32, 68, 7, 41, 25];
+  const productSalesLabels = ["Marketing Digital", "E-book Finance", "Business Consulting", "Templates", "Course XYZ"];
+
+  // Action handlers
+  const handleNewProduct = () => {
+    toast({
+      title: "New Product",
+      description: "Redirecting to product creation page",
+      variant: "default",
+    });
+    navigate("/novo-produto");
+  };
+
+  const handleViewAllProducts = () => {
+    toast({
+      title: "All Products",
+      description: "Redirecting to products page",
+      variant: "default",
+    });
+    navigate("/meus-produtos");
+  };
+
+  const handleManageAffiliates = () => {
+    toast({
+      title: "Manage Affiliates",
+      description: "Redirecting to affiliates management page",
+      variant: "default", 
+    });
+    navigate("/gerenciar-afiliados");
+  };
+
   return (
     <MainLayout>
       <div className="container py-6">
-        <h1 className="text-3xl font-bold mb-2 text-primary">Painel do Criador</h1>
-        <p className="text-muted-foreground mb-6">Gerencie seus produtos e acompanhe suas vendas</p>
+        <h1 className="text-3xl font-bold mb-2 text-primary">Creator Dashboard</h1>
+        <p className="text-muted-foreground mb-6">Manage your products and track your sales</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           <Card className="border-l-4 border-l-primary shadow-md hover:shadow-lg transition-shadow">
             <CardHeader className="pb-2 bg-primary/5">
-              <CardTitle className="text-sm font-medium text-primary">Vendas Totais</CardTitle>
+              <CardTitle className="text-sm font-medium text-primary">Total Sales</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -29,13 +70,13 @@ export default function CreatorDashboard() {
               </div>
             </CardContent>
             <CardFooter className="pt-0">
-              <p className="text-xs text-muted-foreground">+12% desde o mês passado</p>
+              <p className="text-xs text-muted-foreground">+12% since last month</p>
             </CardFooter>
           </Card>
           
           <Card className="border-l-4 border-l-secondary shadow-md hover:shadow-lg transition-shadow">
             <CardHeader className="pb-2 bg-secondary/5">
-              <CardTitle className="text-sm font-medium text-secondary">Produtos Ativos</CardTitle>
+              <CardTitle className="text-sm font-medium text-secondary">Active Products</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -46,13 +87,13 @@ export default function CreatorDashboard() {
               </div>
             </CardContent>
             <CardFooter className="pt-0">
-              <p className="text-xs text-muted-foreground">+3 nos últimos 30 dias</p>
+              <p className="text-xs text-muted-foreground">+3 in the last 30 days</p>
             </CardFooter>
           </Card>
           
           <Card className="border-l-4 border-l-green-500 shadow-md hover:shadow-lg transition-shadow">
             <CardHeader className="pb-2 bg-green-500/5">
-              <CardTitle className="text-sm font-medium text-green-600">Comissões Pendentes</CardTitle>
+              <CardTitle className="text-sm font-medium text-green-600">Pending Commissions</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -63,107 +104,202 @@ export default function CreatorDashboard() {
               </div>
             </CardContent>
             <CardFooter className="pt-0">
-              <p className="text-xs text-muted-foreground">Pagamento em 15 dias</p>
+              <p className="text-xs text-muted-foreground">Payment in 15 days</p>
             </CardFooter>
           </Card>
         </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2 shadow-md hover:shadow-lg transition-shadow">
-            <CardHeader className="bg-primary/5 flex flex-row justify-between items-center">
-              <div>
-                <CardTitle className="text-primary">Meus Produtos</CardTitle>
-                <CardDescription>Gerenciar seus produtos digitais</CardDescription>
-              </div>
-              <Button className="gap-2">
-                <Plus size={16} />
-                <span>Novo Produto</span>
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2 font-medium text-primary/80">Produto</th>
-                    <th className="text-left py-2 font-medium text-primary/80">Categoria</th>
-                    <th className="text-left py-2 font-medium text-primary/80">Preço</th>
-                    <th className="text-left py-2 font-medium text-primary/80">Vendas</th>
-                    <th className="text-left py-2 font-medium text-primary/80">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b hover:bg-muted/30 transition-colors">
-                    <td className="py-3">Curso de Marketing Digital</td>
-                    <td className="py-3">Marketing</td>
-                    <td className="py-3">€ 149,90</td>
-                    <td className="py-3">32</td>
-                    <td className="py-3"><span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Ativo</span></td>
-                  </tr>
-                  <tr className="border-b hover:bg-muted/30 transition-colors">
-                    <td className="py-3">E-book Gestão Financeira</td>
-                    <td className="py-3">Finanças</td>
-                    <td className="py-3">€ 29,90</td>
-                    <td className="py-3">68</td>
-                    <td className="py-3"><span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Ativo</span></td>
-                  </tr>
-                  <tr className="border-b hover:bg-muted/30 transition-colors">
-                    <td className="py-3">Consultoria de Negócios</td>
-                    <td className="py-3">Consultoria</td>
-                    <td className="py-3">€ 399,00</td>
-                    <td className="py-3">7</td>
-                    <td className="py-3"><span className="bg-amber-100 text-amber-800 rounded-full px-2 py-1 text-xs">Revisão</span></td>
-                  </tr>
-                  <tr className="border-b hover:bg-muted/30 transition-colors">
-                    <td className="py-3">Pacote de Templates Premium</td>
-                    <td className="py-3">Design</td>
-                    <td className="py-3">€ 89,90</td>
-                    <td className="py-3">41</td>
-                    <td className="py-3"><span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Ativo</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="text-primary text-sm hover:text-primary/80 transition-colors flex items-center">
-                Ver todos os produtos <span className="ml-1">→</span>
-              </Button>
-            </CardFooter>
-          </Card>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+          <TabsList className="mb-4">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="products">Products</TabsTrigger>
+            <TabsTrigger value="affiliates">Affiliates</TabsTrigger>
+          </TabsList>
           
-          <Card className="shadow-md hover:shadow-lg transition-shadow">
-            <CardHeader className="bg-secondary/5">
-              <CardTitle className="text-secondary">Afiliados</CardTitle>
-              <CardDescription>Desempenho de afiliados</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="border rounded-lg p-3 hover:border-primary/30 hover:bg-primary/5 transition-colors">
-                  <p className="font-medium text-primary">Total de afiliados</p>
-                  <p className="text-2xl font-bold mt-2">27</p>
-                  <p className="text-xs text-muted-foreground mt-1">+5 novos este mês</p>
+          <TabsContent value="overview">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="shadow-md">
+                <CardHeader className="bg-primary/5">
+                  <CardTitle>Monthly Sales</CardTitle>
+                  <CardDescription>Last 7 months performance</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <CustomLineChart 
+                    data={monthlySalesData}
+                    labels={monthlySalesLabels}
+                    title="Sales"
+                  />
+                </CardContent>
+              </Card>
+              
+              <Card className="shadow-md">
+                <CardHeader className="bg-secondary/5">
+                  <CardTitle>Top Products</CardTitle>
+                  <CardDescription>Sales by product</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <BarChart
+                    data={productSalesData}
+                    labels={productSalesLabels}
+                    title="Products"
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="products">
+            <Card className="shadow-md">
+              <CardHeader className="bg-primary/5 flex flex-row justify-between items-center">
+                <div>
+                  <CardTitle className="text-primary">My Products</CardTitle>
+                  <CardDescription>Manage your digital products</CardDescription>
+                </div>
+                <Button className="gap-2" onClick={handleNewProduct}>
+                  <Plus size={16} />
+                  <span>New Product</span>
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left py-2 font-medium text-primary/80">Product</th>
+                      <th className="text-left py-2 font-medium text-primary/80">Category</th>
+                      <th className="text-left py-2 font-medium text-primary/80">Price</th>
+                      <th className="text-left py-2 font-medium text-primary/80">Sales</th>
+                      <th className="text-left py-2 font-medium text-primary/80">Status</th>
+                      <th className="text-left py-2 font-medium text-primary/80">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b hover:bg-muted/30 transition-colors">
+                      <td className="py-3">Digital Marketing Course</td>
+                      <td className="py-3">Marketing</td>
+                      <td className="py-3">€ 149,90</td>
+                      <td className="py-3">32</td>
+                      <td className="py-3"><span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Active</span></td>
+                      <td className="py-3">
+                        <div className="flex space-x-2">
+                          <Button size="sm" variant="outline" onClick={() => toast({title: "Edit", description: "Editing product details"})}>Edit</Button>
+                          <Button size="sm" variant="outline" className="text-red-500" onClick={() => toast({title: "Delete", description: "Are you sure you want to delete this product?", variant: "destructive"})}>Delete</Button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b hover:bg-muted/30 transition-colors">
+                      <td className="py-3">Financial Management E-book</td>
+                      <td className="py-3">Finance</td>
+                      <td className="py-3">€ 29,90</td>
+                      <td className="py-3">68</td>
+                      <td className="py-3"><span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Active</span></td>
+                      <td className="py-3">
+                        <div className="flex space-x-2">
+                          <Button size="sm" variant="outline" onClick={() => toast({title: "Edit", description: "Editing product details"})}>Edit</Button>
+                          <Button size="sm" variant="outline" className="text-red-500" onClick={() => toast({title: "Delete", description: "Are you sure you want to delete this product?", variant: "destructive"})}>Delete</Button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b hover:bg-muted/30 transition-colors">
+                      <td className="py-3">Business Consulting</td>
+                      <td className="py-3">Consulting</td>
+                      <td className="py-3">€ 399,00</td>
+                      <td className="py-3">7</td>
+                      <td className="py-3"><span className="bg-amber-100 text-amber-800 rounded-full px-2 py-1 text-xs">Under Review</span></td>
+                      <td className="py-3">
+                        <div className="flex space-x-2">
+                          <Button size="sm" variant="outline" onClick={() => toast({title: "Edit", description: "Editing product details"})}>Edit</Button>
+                          <Button size="sm" variant="outline" className="text-red-500" onClick={() => toast({title: "Delete", description: "Are you sure you want to delete this product?", variant: "destructive"})}>Delete</Button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  className="text-primary text-sm hover:text-primary/80 transition-colors flex items-center"
+                  onClick={handleViewAllProducts}
+                >
+                  See all products <span className="ml-1">→</span>
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="affiliates">
+            <Card className="shadow-md">
+              <CardHeader className="bg-secondary/5">
+                <CardTitle className="text-secondary">Affiliates</CardTitle>
+                <CardDescription>Affiliate performance</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="border rounded-lg p-3 hover:border-primary/30 hover:bg-primary/5 transition-colors">
+                    <p className="font-medium text-primary">Total affiliates</p>
+                    <p className="text-2xl font-bold mt-2">27</p>
+                    <p className="text-xs text-muted-foreground mt-1">+5 new this month</p>
+                  </div>
+                  
+                  <div className="border rounded-lg p-3 hover:border-secondary/30 hover:bg-secondary/5 transition-colors">
+                    <p className="font-medium text-secondary">Sales by affiliates</p>
+                    <p className="text-2xl font-bold mt-2">€ 3.465,80</p>
+                    <p className="text-xs text-muted-foreground mt-1">44% of your total sales</p>
+                  </div>
+                  
+                  <div className="border rounded-lg p-3 bg-muted/50 hover:bg-muted transition-colors">
+                    <p className="font-medium">Commissions paid</p>
+                    <p className="text-2xl font-bold mt-2 text-primary">€ 692,90</p>
+                    <p className="text-xs text-muted-foreground mt-1">20% of affiliate sales</p>
+                  </div>
                 </div>
                 
-                <div className="border rounded-lg p-3 hover:border-secondary/30 hover:bg-secondary/5 transition-colors">
-                  <p className="font-medium text-secondary">Vendas por afiliados</p>
-                  <p className="text-2xl font-bold mt-2">€ 3.465,80</p>
-                  <p className="text-xs text-muted-foreground mt-1">44% das suas vendas totais</p>
+                <div className="mt-6">
+                  <h3 className="font-medium mb-3">Top Performing Affiliates</h3>
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-2 font-medium text-primary/80">Affiliate</th>
+                        <th className="text-left py-2 font-medium text-primary/80">Sales</th>
+                        <th className="text-left py-2 font-medium text-primary/80">Commission</th>
+                        <th className="text-left py-2 font-medium text-primary/80">Products</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b hover:bg-muted/30 transition-colors">
+                        <td className="py-3">João Silva</td>
+                        <td className="py-3">€ 1240,00</td>
+                        <td className="py-3">€ 248,00</td>
+                        <td className="py-3">5</td>
+                      </tr>
+                      <tr className="border-b hover:bg-muted/30 transition-colors">
+                        <td className="py-3">Maria Oliveira</td>
+                        <td className="py-3">€ 950,50</td>
+                        <td className="py-3">€ 190,10</td>
+                        <td className="py-3">3</td>
+                      </tr>
+                      <tr className="border-b hover:bg-muted/30 transition-colors">
+                        <td className="py-3">Carlos Mendes</td>
+                        <td className="py-3">€ 780,30</td>
+                        <td className="py-3">€ 156,06</td>
+                        <td className="py-3">2</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-                
-                <div className="border rounded-lg p-3 bg-muted/50 hover:bg-muted transition-colors">
-                  <p className="font-medium">Comissões pagas</p>
-                  <p className="text-2xl font-bold mt-2 text-primary">€ 692,90</p>
-                  <p className="text-xs text-muted-foreground mt-1">20% das vendas por afiliados</p>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full flex items-center justify-center gap-2">
-                <Users className="h-4 w-4" />
-                Gerenciar Afiliados
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={handleManageAffiliates}
+                >
+                  <Users className="h-4 w-4" />
+                  Manage Affiliates
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </MainLayout>
   );
