@@ -149,127 +149,127 @@ const AffiliateCategories = () => {
                 Ranking
               </TabsTrigger>
             </TabsList>
-          </Tabs>
-        </div>
 
-        {/* Main content */}
-        <TabsContent value="categories" className="mt-0 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {affiliateCategories.map((category) => (
-              <Link to={`/afiliados/categoria/${category.id}`} key={category.id} className="group">
-                <Card className="h-full transition-all duration-300 hover:shadow-lg hover:border-primary/50 group-hover:scale-[1.02]">
-                  <CardHeader className="pb-2">
-                    <div className="flex justify-between items-start">
-                      <div className="text-3xl mb-2">{category.icon}</div>
-                      <Badge variant="outline" className="bg-primary/10 hover:bg-primary/20">
-                        {category.commission}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                      {category.name}
-                    </CardTitle>
-                    <CardDescription className="line-clamp-2">
-                      {category.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      {category.productCount} produtos disponíveis para afiliação
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="ghost" className="w-full group-hover:bg-primary group-hover:text-white transition-colors">
-                      Ver Produtos
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </Link>
-            ))}
-          </div>
-          
-          {/* How it works section */}
-          <div className="mt-12 bg-muted/40 rounded-lg p-8">
-            <h3 className="text-2xl font-bold mb-6 text-center">Como Funciona o Programa de Afiliados</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-primary text-2xl mb-4">1</div>
-                <h4 className="font-semibold text-lg mb-2">Cadastre-se</h4>
-                <p className="text-muted-foreground">
-                  Faça seu cadastro como afiliado em nossa plataforma e aguarde a aprovação
-                </p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-primary text-2xl mb-4">2</div>
-                <h4 className="font-semibold text-lg mb-2">Escolha Produtos</h4>
-                <p className="text-muted-foreground">
-                  Selecione os produtos que deseja promover e gere seus links de afiliado
-                </p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-primary text-2xl mb-4">3</div>
-                <h4 className="font-semibold text-lg mb-2">Receba Comissões</h4>
-                <p className="text-muted-foreground">
-                  Acompanhe suas vendas e receba comissões diretamente na sua conta
-                </p>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="ranking" className="mt-0">
-          <div className="bg-white rounded-lg border shadow-sm">
-            <div className="p-6">
-              <h3 className="text-xl font-bold mb-4">Top Afiliados do Mês</h3>
-              <p className="text-muted-foreground mb-6">
-                Os afiliados com melhor desempenho neste mês. Seja o próximo!
-              </p>
-              
-              <div className="space-y-6">
-                {topAffiliates.map((affiliate, index) => (
-                  <div key={affiliate.id} className="flex items-center gap-4 p-4 rounded-lg border bg-muted/20">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-bold">
-                      {index + 1}
-                    </div>
-                    <div className="w-12 h-12 rounded-full overflow-hidden">
-                      <img 
-                        src={affiliate.avatar} 
-                        alt={affiliate.name} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium">{affiliate.name}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {affiliate.sales} vendas
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-lg">{affiliate.earnings}</p>
-                      <p className="text-sm text-muted-foreground">
-                        em comissões
-                      </p>
-                    </div>
-                  </div>
+            {/* Main content */}
+            <TabsContent value="categories" className="mt-0 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {affiliateCategories.map((category) => (
+                  <Link to={`/afiliados/categoria/${category.id}`} key={category.id} className="group">
+                    <Card className="h-full transition-all duration-300 hover:shadow-lg hover:border-primary/50 group-hover:scale-[1.02]">
+                      <CardHeader className="pb-2">
+                        <div className="flex justify-between items-start">
+                          <div className="text-3xl mb-2">{category.icon}</div>
+                          <Badge variant="outline" className="bg-primary/10 hover:bg-primary/20">
+                            {category.commission}
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                          {category.name}
+                        </CardTitle>
+                        <CardDescription className="line-clamp-2">
+                          {category.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground">
+                          {category.productCount} produtos disponíveis para afiliação
+                        </p>
+                      </CardContent>
+                      <CardFooter>
+                        <Button variant="ghost" className="w-full group-hover:bg-primary group-hover:text-white transition-colors">
+                          Ver Produtos
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  </Link>
                 ))}
               </div>
-            </div>
-          </div>
-
-          {/* Join banner */}
-          <div className="mt-8 p-8 rounded-lg bg-gradient-to-r from-secondary/80 to-primary text-white">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              <div>
-                <h3 className="text-2xl font-bold mb-2">Quer aparecer neste ranking?</h3>
-                <p className="opacity-90">
-                  Junte-se ao nosso programa de afiliados e comece a ganhar comissões agora mesmo!
-                </p>
+              
+              {/* How it works section */}
+              <div className="mt-12 bg-muted/40 rounded-lg p-8">
+                <h3 className="text-2xl font-bold mb-6 text-center">Como Funciona o Programa de Afiliados</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-primary text-2xl mb-4">1</div>
+                    <h4 className="font-semibold text-lg mb-2">Cadastre-se</h4>
+                    <p className="text-muted-foreground">
+                      Faça seu cadastro como afiliado em nossa plataforma e aguarde a aprovação
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-primary text-2xl mb-4">2</div>
+                    <h4 className="font-semibold text-lg mb-2">Escolha Produtos</h4>
+                    <p className="text-muted-foreground">
+                      Selecione os produtos que deseja promover e gere seus links de afiliado
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-primary text-2xl mb-4">3</div>
+                    <h4 className="font-semibold text-lg mb-2">Receba Comissões</h4>
+                    <p className="text-muted-foreground">
+                      Acompanhe suas vendas e receba comissões diretamente na sua conta
+                    </p>
+                  </div>
+                </div>
               </div>
-              <Button variant="default" size="lg" className="bg-white text-primary hover:bg-gray-100">
-                Comece Agora
-              </Button>
-            </div>
-          </div>
-        </TabsContent>
+            </TabsContent>
+
+            <TabsContent value="ranking" className="mt-0">
+              <div className="bg-white rounded-lg border shadow-sm">
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-4">Top Afiliados do Mês</h3>
+                  <p className="text-muted-foreground mb-6">
+                    Os afiliados com melhor desempenho neste mês. Seja o próximo!
+                  </p>
+                  
+                  <div className="space-y-6">
+                    {topAffiliates.map((affiliate, index) => (
+                      <div key={affiliate.id} className="flex items-center gap-4 p-4 rounded-lg border bg-muted/20">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-bold">
+                          {index + 1}
+                        </div>
+                        <div className="w-12 h-12 rounded-full overflow-hidden">
+                          <img 
+                            src={affiliate.avatar} 
+                            alt={affiliate.name} 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium">{affiliate.name}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {affiliate.sales} vendas
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-lg">{affiliate.earnings}</p>
+                          <p className="text-sm text-muted-foreground">
+                            em comissões
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Join banner */}
+              <div className="mt-8 p-8 rounded-lg bg-gradient-to-r from-secondary/80 to-primary text-white">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">Quer aparecer neste ranking?</h3>
+                    <p className="opacity-90">
+                      Junte-se ao nosso programa de afiliados e comece a ganhar comissões agora mesmo!
+                    </p>
+                  </div>
+                  <Button variant="default" size="lg" className="bg-white text-primary hover:bg-gray-100">
+                    Comece Agora
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
 
         {/* FAQ Section */}
         <div className="bg-muted/30 rounded-lg p-8 mt-8">
