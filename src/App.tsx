@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,9 +12,6 @@ import AffiliateCategories from "./pages/AffiliateCategories";
 
 // Admin pages
 import AdminDashboard from "./pages/Admin/Dashboard";
-import AdminProducts from "./pages/Admin/Products";
-import AdminUsers from "./pages/Admin/Users";
-import AdminPayments from "./pages/Admin/Payments";
 
 const queryClient = new QueryClient();
 
@@ -33,9 +29,6 @@ const App = () => (
           
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/produtos" element={<AdminProducts />} />
-          <Route path="/admin/usuarios" element={<AdminUsers />} />
-          <Route path="/admin/pagamentos" element={<AdminPayments />} />
           
           {/* Outras rotas serão adicionadas conforme desenvolvemos a aplicação */}
           <Route path="*" element={<NotFound />} />

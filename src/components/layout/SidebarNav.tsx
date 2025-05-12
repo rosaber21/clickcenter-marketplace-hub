@@ -17,14 +17,11 @@ import {
 import {
   ShoppingCart,
   Package,
-  Users,
   Settings,
   LogIn,
   Link as LinkIcon,
   Plus,
   BarChart3,
-  Wallet,
-  UserCog
 } from "lucide-react";
 import { UserRole } from "@/types";
 
@@ -108,24 +105,14 @@ export function SidebarNav() {
                   )}
 
                   {hasRole(["admin"]) && (
-                    <>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                          <NavLink to="/admin" className={getNavLinkClass}>
-                            <BarChart3 className="h-5 w-5" />
-                            {!collapsed && <span>Painel Admin</span>}
-                          </NavLink>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                          <NavLink to="/usuarios" className={getNavLinkClass}>
-                            <Users className="h-5 w-5" />
-                            {!collapsed && <span>Usuários</span>}
-                          </NavLink>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    </>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <NavLink to="/admin" className={getNavLinkClass}>
+                          <BarChart3 className="h-5 w-5" />
+                          {!collapsed && <span>Painel Admin</span>}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
                   )}
 
                   <SidebarMenuItem>
