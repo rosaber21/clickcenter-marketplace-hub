@@ -14,6 +14,12 @@ import AffiliateCategories from "./pages/AffiliateCategories";
 
 // Admin pages
 import AdminDashboard from "./pages/Admin/Dashboard";
+import AdminProducts from "./pages/Admin/Products";
+import AdminUsers from "./pages/Admin/Users";
+import AdminSales from "./pages/Admin/Sales";
+import AdminAffiliates from "./pages/Admin/Affiliates";
+import AdminPayments from "./pages/Admin/Payments";
+import AdminSettings from "./pages/Admin/Settings";
 
 const queryClient = new QueryClient();
 
@@ -34,7 +40,12 @@ const App = () => (
           
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/produtos" element={<AdminDashboard />} />
+          <Route path="/admin/produtos" element={<AdminProducts />} />
+          <Route path="/admin/usuarios" element={<AdminUsers />} />
+          <Route path="/admin/vendas" element={<AdminSales />} />
+          <Route path="/admin/afiliados" element={<AdminAffiliates />} />
+          <Route path="/admin/pagamentos" element={<AdminPayments />} />
+          <Route path="/admin/configuracoes" element={<AdminSettings />} />
           
           {/* Outras rotas serão adicionadas conforme desenvolvemos a aplicação */}
           <Route path="*" element={<NotFound />} />
