@@ -14,13 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, UserPlus } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 // Register schema validation
 const registerSchema = z.object({
@@ -28,7 +21,6 @@ const registerSchema = z.object({
   email: z.string().email("Digite um email válido"),
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
   confirmPassword: z.string().min(6, "Confirme sua senha"),
-  role: z.enum(["aluno", "afiliado", "criador"]),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "As senhas não coincidem",
   path: ["confirmPassword"],
@@ -52,7 +44,6 @@ export const UserRegisterForm = ({ onSubmit, isLoading = false }: UserRegisterFo
       email: "",
       password: "",
       confirmPassword: "",
-      role: "aluno",
     },
   });
 
@@ -141,32 +132,6 @@ export const UserRegisterForm = ({ onSubmit, isLoading = false }: UserRegisterFo
                   </Button>
                 </div>
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tipo de Conta</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-                disabled={isLoading}
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione um tipo de conta" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="aluno">Aluno/Cliente</SelectItem>
-                  <SelectItem value="afiliado">Afiliado</SelectItem>
-                  <SelectItem value="criador">Criador de Produtos</SelectItem>
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}

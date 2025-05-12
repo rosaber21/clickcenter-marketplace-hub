@@ -70,14 +70,8 @@ const Login = () => {
         variant: "success",
       });
       
-      // Redirect based on role
-      if (data.role === "criador") {
-        navigate("/criador");
-      } else if (data.role === "afiliado") {
-        navigate("/afiliado");
-      } else {
-        navigate("/");
-      }
+      // Default redirect for new users
+      navigate("/");
     }, 1500);
   };
 
