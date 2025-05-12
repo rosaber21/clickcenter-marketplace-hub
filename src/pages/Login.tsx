@@ -120,247 +120,243 @@ const Login = () => {
 
   return (
     <MainLayout>
-      <div className="flex justify-center py-10">
+      <div className="flex flex-col gap-8 py-10">
+        {/* Seção do usuário */}
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Formulário de Usuários */}
-            <div>
-              <Card className="border-2">
-                <CardHeader className="space-y-1 text-center">
-                  <CardTitle className="text-2xl">Bem-vindo ao ClickCenter</CardTitle>
-                  <CardDescription>
-                    Entre na sua conta ou crie uma nova
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Tabs
-                    defaultValue="login"
-                    value={activeTab}
-                    onValueChange={setActiveTab}
-                    className="w-full"
-                  >
-                    <TabsList className="grid w-full grid-cols-2 mb-6">
-                      <TabsTrigger value="login">Entrar</TabsTrigger>
-                      <TabsTrigger value="register">Cadastrar</TabsTrigger>
-                    </TabsList>
+          <Card className="border-2 max-w-2xl mx-auto">
+            <CardHeader className="space-y-1 text-center">
+              <CardTitle className="text-2xl">Bem-vindo ao ClickCenter</CardTitle>
+              <CardDescription>
+                Entre na sua conta ou crie uma nova
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Tabs
+                defaultValue="login"
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full"
+              >
+                <TabsList className="grid w-full grid-cols-2 mb-6">
+                  <TabsTrigger value="login">Entrar</TabsTrigger>
+                  <TabsTrigger value="register">Cadastrar</TabsTrigger>
+                </TabsList>
 
-                    {/* Tab de Login */}
-                    <TabsContent value="login">
-                      <Form {...loginForm}>
-                        <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                          <FormField
-                            control={loginForm.control}
-                            name="email"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="seu.email@exemplo.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={loginForm.control}
-                            name="password"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Senha</FormLabel>
-                                <FormControl>
-                                  <Input type="password" placeholder="********" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <Button type="submit" className="w-full">
-                            Entrar
-                          </Button>
-                        </form>
-                      </Form>
-                      <div className="mt-4 text-center text-sm">
-                        <Link to="/recuperar-senha" className="text-primary hover:underline">
-                          Esqueceu sua senha?
-                        </Link>
-                      </div>
-                    </TabsContent>
-
-                    {/* Tab de Registro */}
-                    <TabsContent value="register">
-                      <Form {...registerForm}>
-                        <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
-                          <FormField
-                            control={registerForm.control}
-                            name="name"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Nome Completo</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Seu nome" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={registerForm.control}
-                            name="email"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="seu.email@exemplo.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={registerForm.control}
-                            name="password"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Senha</FormLabel>
-                                <FormControl>
-                                  <Input type="password" placeholder="********" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={registerForm.control}
-                            name="confirmPassword"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Confirmar Senha</FormLabel>
-                                <FormControl>
-                                  <Input type="password" placeholder="********" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={registerForm.control}
-                            name="role"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Tipo de Conta</FormLabel>
-                                <select 
-                                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...field}
-                                >
-                                  <option value="aluno">Aluno/Cliente</option>
-                                  <option value="afiliado">Afiliado</option>
-                                  <option value="criador">Criador de Produtos</option>
-                                </select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <Button type="submit" className="w-full">
-                            Criar Conta
-                          </Button>
-                        </form>
-                      </Form>
-                    </TabsContent>
-                  </Tabs>
-                </CardContent>
-                <CardFooter className="flex justify-center">
-                  <p className="text-xs text-muted-foreground text-center">
-                    Ao continuar, você concorda com os{" "}
-                    <Link to="/termos" className="underline">
-                      Termos de Serviço
-                    </Link>{" "}
-                    e{" "}
-                    <Link to="/privacidade" className="underline">
-                      Política de Privacidade
-                    </Link>
-                    .
-                  </p>
-                </CardFooter>
-              </Card>
-            </div>
-
-            {/* Formulário de Admin */}
-            <div>
-              <Card className="border-2 shadow-lg">
-                <CardHeader className="space-y-1 text-center bg-primary text-white rounded-t-md">
-                  <CardTitle className="text-2xl font-bold">Painel Administrativo</CardTitle>
-                  <CardDescription className="text-white/90">
-                    Entre com suas credenciais para acessar
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <Form {...adminLoginForm}>
-                    <form onSubmit={adminLoginForm.handleSubmit(onAdminLoginSubmit)} className="space-y-4">
+                {/* Tab de Login */}
+                <TabsContent value="login">
+                  <Form {...loginForm}>
+                    <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
                       <FormField
-                        control={adminLoginForm.control}
+                        control={loginForm.control}
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm font-medium">Email</FormLabel>
+                            <FormLabel>Email</FormLabel>
                             <FormControl>
-                              <Input 
-                                placeholder="admin@exemplo.com" 
-                                {...field} 
-                                className="bg-slate-50 focus:bg-white" 
-                              />
+                              <Input placeholder="seu.email@exemplo.com" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                       <FormField
-                        control={adminLoginForm.control}
+                        control={loginForm.control}
                         name="password"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm font-medium">Senha</FormLabel>
+                            <FormLabel>Senha</FormLabel>
                             <FormControl>
-                              <div className="relative">
-                                <Input 
-                                  type={showAdminPassword ? "text" : "password"} 
-                                  placeholder="********" 
-                                  {...field} 
-                                  className="bg-slate-50 focus:bg-white pr-10" 
-                                />
-                                <button
-                                  type="button"
-                                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                  onClick={toggleAdminPasswordVisibility}
-                                >
-                                  {showAdminPassword ? (
-                                    <EyeOff size={16} />
-                                  ) : (
-                                    <Eye size={16} />
-                                  )}
-                                </button>
-                              </div>
+                              <Input type="password" placeholder="********" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      <Button 
-                        type="submit" 
-                        className="w-full bg-primary hover:bg-primary/90 transition-all duration-200 font-medium py-2 mt-2"
-                      >
-                        Entrar como Administrador
+                      <Button type="submit" className="w-full">
+                        Entrar
                       </Button>
                     </form>
                   </Form>
-                </CardContent>
-                <CardFooter className="flex justify-center border-t pt-4">
-                  <p className="text-xs text-muted-foreground text-center">
-                    Acesso restrito apenas para administradores autorizados da plataforma.
-                  </p>
-                </CardFooter>
-              </Card>
-            </div>
-          </div>
+                  <div className="mt-4 text-center text-sm">
+                    <Link to="/recuperar-senha" className="text-primary hover:underline">
+                      Esqueceu sua senha?
+                    </Link>
+                  </div>
+                </TabsContent>
+
+                {/* Tab de Registro */}
+                <TabsContent value="register">
+                  <Form {...registerForm}>
+                    <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                      <FormField
+                        control={registerForm.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nome Completo</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Seu nome" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={registerForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="seu.email@exemplo.com" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={registerForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Senha</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="********" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={registerForm.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Confirmar Senha</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="********" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={registerForm.control}
+                        name="role"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tipo de Conta</FormLabel>
+                            <select 
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              {...field}
+                            >
+                              <option value="aluno">Aluno/Cliente</option>
+                              <option value="afiliado">Afiliado</option>
+                              <option value="criador">Criador de Produtos</option>
+                            </select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button type="submit" className="w-full">
+                        Criar Conta
+                      </Button>
+                    </form>
+                  </Form>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+            <CardFooter className="flex justify-center">
+              <p className="text-xs text-muted-foreground text-center">
+                Ao continuar, você concorda com os{" "}
+                <Link to="/termos" className="underline">
+                  Termos de Serviço
+                </Link>{" "}
+                e{" "}
+                <Link to="/privacidade" className="underline">
+                  Política de Privacidade
+                </Link>
+                .
+              </p>
+            </CardFooter>
+          </Card>
+        </div>
+        
+        {/* Seção do Admin - Separada */}
+        <div className="container mx-auto px-4 mt-8">
+          <Card className="border-2 shadow-lg max-w-md mx-auto bg-secondary/10">
+            <CardHeader className="space-y-1 text-center bg-secondary text-white rounded-t-md">
+              <CardTitle className="text-2xl font-bold">Painel Administrativo</CardTitle>
+              <CardDescription className="text-white/90">
+                Entre com suas credenciais para acessar
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <Form {...adminLoginForm}>
+                <form onSubmit={adminLoginForm.handleSubmit(onAdminLoginSubmit)} className="space-y-4">
+                  <FormField
+                    control={adminLoginForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">Email</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="admin@exemplo.com" 
+                            {...field} 
+                            className="bg-slate-50 focus:bg-white" 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={adminLoginForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">Senha</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input 
+                              type={showAdminPassword ? "text" : "password"} 
+                              placeholder="********" 
+                              {...field} 
+                              className="bg-slate-50 focus:bg-white pr-10" 
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                              onClick={toggleAdminPasswordVisibility}
+                            >
+                              {showAdminPassword ? (
+                                <EyeOff size={16} />
+                              ) : (
+                                <Eye size={16} />
+                              )}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-secondary hover:bg-secondary/80 transition-all duration-200 font-medium py-2 mt-2"
+                  >
+                    Entrar como Administrador
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+            <CardFooter className="flex justify-center border-t pt-4">
+              <p className="text-xs text-muted-foreground text-center">
+                Acesso restrito apenas para administradores autorizados da plataforma.
+              </p>
+            </CardFooter>
+          </Card>
         </div>
       </div>
     </MainLayout>
