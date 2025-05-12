@@ -27,9 +27,12 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/produto/:id" element={<ProductDetails />} />
           <Route path="/afiliados" element={<AffiliateCategories />} />
+          <Route path="/afiliados/categoria/:id" element={<ProductDetails />} />
+          <Route path="/afiliados/como-funciona" element={<AffiliateCategories />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/produtos" element={<AdminDashboard />} />
           
           {/* Outras rotas serão adicionadas conforme desenvolvemos a aplicação */}
           <Route path="*" element={<NotFound />} />

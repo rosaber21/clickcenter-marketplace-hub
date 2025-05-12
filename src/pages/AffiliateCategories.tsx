@@ -108,11 +108,20 @@ const AffiliateCategories = () => {
   const { toast } = useToast();
 
   const handleAffiliateSignup = () => {
-    // In a real application, this would navigate to a signup page or open a modal
+    // Navegando para a página de login
     navigate("/login");
     toast({
       title: "Redirecionando para cadastro",
       description: "Você precisa fazer login para se tornar um afiliado.",
+    });
+  };
+
+  const handleViewProducts = (categoryId: number) => {
+    // Navegação para a página de produtos da categoria
+    navigate(`/afiliados/categoria/${categoryId}`);
+    toast({
+      title: "Carregando produtos",
+      description: `Visualizando produtos da categoria ${affiliateCategories.find(cat => cat.id === categoryId)?.name}`,
     });
   };
 
@@ -135,7 +144,11 @@ const AffiliateCategories = () => {
               >
                 Seja um Afiliado
               </Button>
-              <Button variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button 
+                variant="outline" 
+                className="border-white text-white hover:bg-white/10"
+                onClick={() => navigate("/afiliados/como-funciona")}
+              >
                 Saiba Mais
               </Button>
             </div>
@@ -173,7 +186,7 @@ const AffiliateCategories = () => {
           <TabsContent value="categories" className="mt-0 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {affiliateCategories.map((category) => (
-                <Link to={`/afiliados/categoria/${category.id}`} key={category.id} className="group">
+                <div key={category.id} className="group">
                   <Card className="h-full transition-all duration-300 hover:shadow-lg hover:border-primary/50 group-hover:scale-[1.02]">
                     <CardHeader className="pb-2">
                       <div className="flex justify-between items-start">
@@ -195,12 +208,16 @@ const AffiliateCategories = () => {
                       </p>
                     </CardContent>
                     <CardFooter>
-                      <Button variant="ghost" className="w-full group-hover:bg-primary group-hover:text-white transition-colors">
+                      <Button 
+                        variant="ghost" 
+                        className="w-full group-hover:bg-primary group-hover:text-white transition-colors"
+                        onClick={() => handleViewProducts(category.id)}
+                      >
                         Ver Produtos
                       </Button>
                     </CardFooter>
                   </Card>
-                </Link>
+                </div>
               ))}
             </div>
             
