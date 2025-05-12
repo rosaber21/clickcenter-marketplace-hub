@@ -1,152 +1,128 @@
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
-import { toast } from "sonner";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { LessonLogin } from "@/components/student/LessonLogin";
 
 export default function StudentSandbox() {
+  const [progress, setProgress] = useState(13);
   const [count, setCount] = useState(0);
-  const [formData, setFormData] = useState({ name: "", message: "" });
-  const [progress, setProgress] = useState(0);
-  
+  const { toast } = useToast();
+
   const incrementProgress = () => {
-    setProgress(prev => Math.min(100, prev + 10));
-    toast.success("Progresso atualizado!");
+    setProgress((prev) => Math.min(prev + 10, 100));
   };
-  
-  const resetProgress = () => {
-    setProgress(0);
-    toast.info("Progresso reiniciado!");
-  };
-  
-  const handleSubmitForm = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.success("Formulário enviado com sucesso!");
-    console.log("Form submitted:", formData);
-    setFormData({ name: "", message: "" });
+
+  const decrementProgress = () => {
+    setProgress((prev) => Math.max(prev - 10, 0));
   };
   
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Área de Testes</h1>
-        <p className="text-muted-foreground">
-          Esta é uma área para testar componentes e funcionalidades.
-        </p>
+    <div className="grid gap-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight">Área de Testes</h1>
       </div>
       
-      <Tabs defaultValue="buttons" className="w-full">
+      <Tabs defaultValue="overview" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="buttons">Botões</TabsTrigger>
+          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="forms">Formulários</TabsTrigger>
           <TabsTrigger value="progress">Progresso</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="buttons" className="space-y-4">
+        <TabsContent value="overview" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Teste de Botões</CardTitle>
+              <CardTitle>Interações Básicas</CardTitle>
+              <CardDescription>Teste diferentes componentes interativos</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <p className="mb-2">Contagem atual: {count}</p>
-                <div className="flex flex-wrap gap-4">
-                  <Button onClick={() => { 
-                    setCount(count + 1);
-                    toast.success("Incrementado com sucesso!");
-                  }}>
-                    Incrementar
-                  </Button>
-                  
-                  <Button onClick={() => { 
-                    setCount(count - 1);
-                    toast.info("Decrementado com sucesso!");
-                  }}
-                  variant="outline">
-                    Decrementar
-                  </Button>
-                  
-                  <Button onClick={() => { 
-                    setCount(0);
-                    toast.info("Contador reiniciado!");
-                  }} 
-                  variant="secondary">
-                    Resetar
-                  </Button>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-medium mb-2">Variantes de Botões</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button>Padrão</Button>
-                  <Button variant="secondary">Secundário</Button>
-                  <Button variant="outline">Outline</Button>
-                  <Button variant="ghost">Fantasma</Button>
-                  <Button variant="link">Link</Button>
-                  <Button variant="destructive">Destrutivo</Button>
-                  <Button disabled>Desabilitado</Button>
-                  <Button size="sm">Pequeno</Button>
-                </div>
+              <div className="flex flex-wrap gap-4">
+                <Button onClick={() => toast({ title: "Botão clicado", description: "Este é um toast de exemplo" })}>
+                  Mostrar Toast
+                </Button>
+                <Button variant="outline" onClick={() => setCount(count + 1)}>
+                  Contagem: {count}
+                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="secondary">Abrir Modal</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Exemplo de Modal</DialogTitle>
+                      <DialogDescription>
+                        Este é um exemplo de um componente de diálogo modal.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      Conteúdo do modal pode ser colocado aqui.
+                    </div>
+                    <DialogFooter>
+                      <Button type="button">Confirmar</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="forms" className="space-y-4">
+        <TabsContent value="forms" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Teste de Formulários</CardTitle>
+              <CardTitle>Login da Aula</CardTitle>
+              <CardDescription>Entre na aula utilizando seu código e ID de aluno</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmitForm} className="space-y-4">
-                <div className="grid w-full items-center gap-1.5">
-                  <label htmlFor="name">Nome</label>
-                  <Input
-                    id="name"
-                    placeholder="Digite seu nome"
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  />
+              <LessonLogin 
+                onLoginSuccess={(data) => {
+                  console.log("Login bem-sucedido:", data);
+                }} 
+              />
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Formulário Simples</CardTitle>
+              <CardDescription>Exemplo de inputs e campos de texto</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4">
+                <div>
+                  <label htmlFor="name" className="text-sm font-medium mb-2 block">Nome</label>
+                  <Input id="name" placeholder="Digite seu nome" />
                 </div>
-                
-                <div className="grid w-full gap-1.5">
-                  <label htmlFor="message">Mensagem</label>
-                  <Textarea
-                    id="message"
-                    placeholder="Digite sua mensagem"
-                    value={formData.message}
-                    onChange={(e) => setFormData({...formData, message: e.target.value})}
-                  />
+                <div>
+                  <label htmlFor="email" className="text-sm font-medium mb-2 block">Email</label>
+                  <Input id="email" type="email" placeholder="seu@email.com" />
                 </div>
-                
-                <Button type="submit">Enviar Formulário</Button>
-              </form>
+                <Button>Enviar</Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="progress" className="space-y-4">
+        <TabsContent value="progress" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Teste de Progresso</CardTitle>
+              <CardTitle>Barra de Progresso</CardTitle>
+              <CardDescription>Controle o progresso usando os botões abaixo</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <p className="mb-2">Progresso atual: {progress}%</p>
-                <Progress value={progress} className="h-2 mb-4" />
-                <div className="flex flex-wrap gap-4">
-                  <Button onClick={incrementProgress}>
-                    Avançar 10%
-                  </Button>
-                  <Button onClick={resetProgress} variant="outline">
-                    Reiniciar
-                  </Button>
-                </div>
+              <Progress value={progress} className="h-2" />
+              <div className="text-sm text-muted-foreground text-center">
+                {progress}%
+              </div>
+              <div className="flex justify-center gap-4">
+                <Button variant="outline" onClick={decrementProgress}>Diminuir</Button>
+                <Button variant="outline" onClick={incrementProgress}>Aumentar</Button>
               </div>
             </CardContent>
           </Card>
