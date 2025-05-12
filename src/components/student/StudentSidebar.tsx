@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,8 +12,7 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
-  Menu,
-  Sandbox
+  Menu
 } from "lucide-react";
 
 type NavItem = {
