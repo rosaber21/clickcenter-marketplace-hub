@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,6 +33,7 @@ import AffiliateLayout from "./pages/Affiliate/AffiliateLayout";
 import { StudentLayout } from "./pages/Student/StudentLayout";
 import StudentDashboard from "./pages/Student/Dashboard";
 import CoursePage from "./pages/Student/CoursePage";
+import StudentSandbox from "./pages/Student/Sandbox";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +75,7 @@ const App = () => (
           {/* Student Routes */}
           <Route path="/aluno" element={<StudentLayout />}>
             <Route index element={<StudentDashboard />} />
+            <Route path="sandbox" element={<StudentSandbox />} />
             <Route path="curso/:courseId" element={<CoursePage />} />
             <Route path="curso/:courseId/aula/:lessonId" element={<CoursePage />} />
             <Route path="cursos" element={<StudentDashboard />} />

@@ -13,7 +13,8 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
-  Menu
+  Menu,
+  Sandbox
 } from "lucide-react";
 
 type NavItem = {
@@ -26,6 +27,7 @@ const navItems: NavItem[] = [
   { label: "Dashboard", href: "/aluno", icon: Home },
   { label: "Meus Cursos", href: "/aluno/cursos", icon: BookOpen },
   { label: "Favoritos", href: "/aluno/favoritos", icon: Bookmark },
+  { label: "Área de Testes", href: "/aluno/sandbox", icon: FileText },
   { label: "Agenda", href: "/aluno/agenda", icon: Calendar },
   { label: "Mensagens", href: "/aluno/mensagens", icon: MessageSquare },
   { label: "Certificados", href: "/aluno/certificados", icon: Award },
