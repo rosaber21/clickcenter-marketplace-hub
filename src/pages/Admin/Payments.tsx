@@ -12,11 +12,33 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { 
+  RadioGroup, 
+  RadioGroupItem 
+} from "@/components/ui/radio-group";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AdminPayments() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [processingPayments, setProcessingPayments] = useState(false);
+  const [paymentMethodDialog, setPaymentMethodDialog] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  
+  const form = useForm({
+    defaultValues: {
+      paymentMethod: "bank_transfer"
+    }
+  });
+  
   const [pendingPayments, setPendingPayments] = useState([
     {
       id: 1,
@@ -69,17 +91,48 @@ export default function AdminPayments() {
   };
 
   const handleApprovePayment = (paymentId) => {
+    setSelectedPayment(pendingPayments.find(p => p.id === paymentId));
+    setPaymentMethodDialog(true);
+  };
+  
+  const handlePaymentMethodSubmit = (values) => {
+    if (!selectedPayment) return;
+    
+    // Get payment method display name
+    let methodDisplay = "";
+    switch (values.paymentMethod) {
+      case "bank_transfer":
+        methodDisplay = "Transferência Bancária";
+        break;
+      case "digital_account":
+        methodDisplay = "Conta Digital";
+        break;
+      case "other_bank":
+        methodDisplay = "Outro Banco";
+        break;
+      case "paypal":
+        methodDisplay = "PayPal";
+        break;
+      default:
+        methodDisplay = "Transferência Bancária";
+    }
+    
     // Process individual payment
     const updatedPayments = pendingPayments.map(payment => 
-      payment.id === paymentId ? { ...payment, status: "Processado" } : payment
+      payment.id === selectedPayment.id ? { 
+        ...payment, 
+        status: "Processado",
+        method: methodDisplay
+      } : payment
     );
     
     setPendingPayments(updatedPayments);
+    setPaymentMethodDialog(false);
     
     // Show success notification
     toast({
       title: "Pagamento aprovado",
-      description: "O pagamento foi aprovado com sucesso.",
+      description: `O pagamento foi aprovado com sucesso via ${methodDisplay}.`,
       className: "bg-green-50 border-green-200",
     });
   };
@@ -202,6 +255,79 @@ export default function AdminPayments() {
               {processingPayments ? "Processando..." : "Confirmar"}
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Payment Method Selection Dialog */}
+      <Dialog open={paymentMethodDialog} onOpenChange={setPaymentMethodDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Selecione o Método de Pagamento</DialogTitle>
+            <DialogDescription>
+              Escolha o método de pagamento para processar o pagamento de {selectedPayment?.name}.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handlePaymentMethodSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="paymentMethod"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="space-y-3"
+                      >
+                        <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-slate-50 cursor-pointer">
+                          <RadioGroupItem value="bank_transfer" id="bank_transfer" />
+                          <Label htmlFor="bank_transfer" className="flex-grow cursor-pointer">
+                            <div className="font-medium">Transferência Bancária</div>
+                            <p className="text-sm text-gray-500">Transferência direta para conta bancária</p>
+                          </Label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-slate-50 cursor-pointer">
+                          <RadioGroupItem value="digital_account" id="digital_account" />
+                          <Label htmlFor="digital_account" className="flex-grow cursor-pointer">
+                            <div className="font-medium">Conta Digital</div>
+                            <p className="text-sm text-gray-500">Pix, MBWay ou transferências instantâneas</p>
+                          </Label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-slate-50 cursor-pointer">
+                          <RadioGroupItem value="other_bank" id="other_bank" />
+                          <Label htmlFor="other_bank" className="flex-grow cursor-pointer">
+                            <div className="font-medium">Outro Banco</div>
+                            <p className="text-sm text-gray-500">Transferência para outro banco</p>
+                          </Label>
+                        </div>
+
+                        <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-slate-50 cursor-pointer">
+                          <RadioGroupItem value="paypal" id="paypal" />
+                          <Label htmlFor="paypal" className="flex-grow cursor-pointer">
+                            <div className="font-medium">PayPal</div>
+                            <p className="text-sm text-gray-500">Pagamento via PayPal</p>
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setPaymentMethodDialog(false)}>
+                  Cancelar
+                </Button>
+                <Button type="submit">
+                  Confirmar Pagamento
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </AdminLayout>
