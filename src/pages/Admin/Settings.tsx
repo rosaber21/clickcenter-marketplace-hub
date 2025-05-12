@@ -1,12 +1,42 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { AdminLayout } from "./AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 export default function AdminSettings() {
+  const [platformSettings, setPlatformSettings] = useState({
+    platformName: "ClickCenter",
+    contactEmail: "contato@clickcenter.com",
+    affiliateCommission: 15,
+    platformCommission: 10
+  });
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPlatformSettings({
+      ...platformSettings,
+      [name]: name.includes("Commission") ? Number(value) : value
+    });
+  };
+
+  const handleSaveSettings = () => {
+    setIsSaving(true);
+    
+    // Simulação de uma requisição ao servidor
+    setTimeout(() => {
+      setIsSaving(false);
+      toast.success("Configurações salvas com sucesso!", {
+        description: "As alterações foram aplicadas na plataforma."
+      });
+    }, 800);
+  };
+
   return (
     <AdminLayout>
       <div className="container py-6">
@@ -29,8 +59,10 @@ export default function AdminSettings() {
                   <h3 className="font-medium mb-2">Nome da Plataforma</h3>
                   <input 
                     type="text" 
+                    name="platformName"
                     className="w-full px-3 py-2 border rounded-md"
-                    defaultValue="ClickCenter"
+                    value={platformSettings.platformName}
+                    onChange={handleInputChange}
                   />
                 </div>
 
@@ -38,8 +70,10 @@ export default function AdminSettings() {
                   <h3 className="font-medium mb-2">Email de Contato</h3>
                   <input 
                     type="email" 
+                    name="contactEmail"
                     className="w-full px-3 py-2 border rounded-md"
-                    defaultValue="contato@clickcenter.com"
+                    value={platformSettings.contactEmail}
+                    onChange={handleInputChange}
                   />
                 </div>
 
@@ -50,8 +84,10 @@ export default function AdminSettings() {
                   <div className="flex items-center">
                     <input 
                       type="number" 
+                      name="affiliateCommission"
                       className="w-20 px-3 py-2 border rounded-md"
-                      defaultValue="15"
+                      value={platformSettings.affiliateCommission}
+                      onChange={handleInputChange}
                     />
                     <span className="ml-2">%</span>
                   </div>
@@ -62,14 +98,22 @@ export default function AdminSettings() {
                   <div className="flex items-center">
                     <input 
                       type="number" 
+                      name="platformCommission"
                       className="w-20 px-3 py-2 border rounded-md"
-                      defaultValue="10"
+                      value={platformSettings.platformCommission}
+                      onChange={handleInputChange}
                     />
                     <span className="ml-2">%</span>
                   </div>
                 </div>
                 
-                <Button className="mt-4">Salvar Alterações</Button>
+                <Button 
+                  className="mt-4" 
+                  onClick={handleSaveSettings}
+                  disabled={isSaving}
+                >
+                  {isSaving ? "Salvando..." : "Salvar Alterações"}
+                </Button>
               </CardContent>
             </Card>
           </div>
