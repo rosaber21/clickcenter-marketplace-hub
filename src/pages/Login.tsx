@@ -36,6 +36,13 @@ const Login = () => {
           variant: "success",
         });
         navigate("/criador");
+      } else if (data.email.includes("afiliado")) {
+        toast({
+          title: "Login bem-sucedido!",
+          description: "Bem-vindo ao painel de afiliado.",
+          variant: "success",
+        });
+        navigate("/afiliado");
       } else {
         toast({
           title: "Login bem-sucedido!",
@@ -66,7 +73,7 @@ const Login = () => {
       if (data.role === "criador") {
         navigate("/criador");
       } else if (data.role === "afiliado") {
-        navigate("/afiliados");
+        navigate("/afiliado");
       } else {
         navigate("/");
       }

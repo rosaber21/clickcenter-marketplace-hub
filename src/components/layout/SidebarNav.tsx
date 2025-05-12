@@ -116,6 +116,17 @@ export function SidebarNav() {
                     </SidebarMenuItem>
                   )}
 
+                  {hasRole(["afiliado"]) && (
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <NavLink to="/afiliado" className={getNavLinkClass}>
+                          <BarChart3 className="h-5 w-5" />
+                          {!collapsed && <span>Painel Afiliado</span>}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )}
+
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
                       <NavLink to="/perfil" className={getNavLinkClass}>
@@ -159,4 +170,4 @@ export function SidebarNav() {
       </SidebarContent>
     </Sidebar>
   );
-}
+};

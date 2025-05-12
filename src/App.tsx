@@ -20,9 +20,14 @@ import AdminSales from "./pages/Admin/Sales";
 import AdminAffiliates from "./pages/Admin/Affiliates";
 import AdminPayments from "./pages/Admin/Payments";
 import AdminSettings from "./pages/Admin/Settings";
+import AdminLayout from "./pages/Admin/AdminLayout";
 
 // Creator pages
 import CreatorDashboard from "./pages/Creator/Dashboard";
+
+// Affiliate pages
+import AffiliateDashboard from "./pages/Affiliate/Dashboard";
+import AffiliateLayout from "./pages/Affiliate/AffiliateLayout";
 
 const queryClient = new QueryClient();
 
@@ -42,16 +47,24 @@ const App = () => (
           <Route path="/afiliados/como-funciona" element={<AffiliateCategories />} />
           
           {/* Admin Routes */}
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/produtos" element={<AdminProducts />} />
-          <Route path="/admin/usuarios" element={<AdminUsers />} />
-          <Route path="/admin/vendas" element={<AdminSales />} />
-          <Route path="/admin/afiliados" element={<AdminAffiliates />} />
-          <Route path="/admin/pagamentos" element={<AdminPayments />} />
-          <Route path="/admin/configuracoes" element={<AdminSettings />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="produtos" element={<AdminProducts />} />
+            <Route path="usuarios" element={<AdminUsers />} />
+            <Route path="vendas" element={<AdminSales />} />
+            <Route path="afiliados" element={<AdminAffiliates />} />
+            <Route path="pagamentos" element={<AdminPayments />} />
+            <Route path="configuracoes" element={<AdminSettings />} />
+          </Route>
           
           {/* Creator Routes */}
           <Route path="/criador" element={<CreatorDashboard />} />
+          
+          {/* Affiliate Routes */}
+          <Route path="/afiliado" element={<AffiliateLayout />}>
+            <Route index element={<AffiliateDashboard />} />
+            {/* Add more affiliate routes here as needed */}
+          </Route>
           
           {/* Outras rotas serão adicionadas conforme desenvolvemos a aplicação */}
           <Route path="*" element={<NotFound />} />
