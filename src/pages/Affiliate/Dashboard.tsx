@@ -1,10 +1,11 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, DollarSign, Users, Link as LinkIcon } from "lucide-react";
+import { BarChart3, DollarSign, Users, Link as LinkIcon, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const AffiliateDashboard = () => {
   // Sample data - in a real application, this would come from an API
@@ -15,6 +16,9 @@ const AffiliateDashboard = () => {
     conversionsThisMonth: 42,
     conversionRate: "1.7%"
   };
+  
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const recentSales = [
     { id: 1, product: "Curso de Marketing Digital", date: "12/05/2023", commission: "R$ 47,00" },
@@ -30,6 +34,50 @@ const AffiliateDashboard = () => {
     { id: 3, name: "Curso de Design Gráfico", commission: "40%", sales: 15 },
     { id: 4, name: "Planilha de Finanças", commission: "20%", sales: 12 },
   ];
+  
+  const handleViewProducts = () => {
+    navigate("/afiliado/produtos");
+  };
+  
+  const handleSaleDetails = (saleId: number) => {
+    toast({
+      title: "Detalhes da venda",
+      description: `Visualizando detalhes da venda #${saleId}`,
+    });
+  };
+  
+  const handleGenerateLink = (productId: number, productName: string) => {
+    const affiliateLink = `https://example.com/aff/${productId}`;
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(affiliateLink)
+      .then(() => {
+        toast({
+          title: "Link gerado com sucesso!",
+          description: `Link do produto "${productName}" copiado para a área de transferência.`,
+          variant: "success",
+        });
+      })
+      .catch(() => {
+        toast({
+          title: "Erro ao copiar link",
+          description: "Não foi possível copiar o link para a área de transferência.",
+          variant: "destructive",
+        });
+      });
+  };
+  
+  const handleDownloadMaterial = (materialId: number) => {
+    toast({
+      title: "Download iniciado",
+      description: "O material será baixado em instantes.",
+      variant: "success",
+    });
+  };
+  
+  const handleViewAllMaterials = () => {
+    navigate("/afiliado/materiais");
+  };
 
   return (
     <div className="p-6">
@@ -38,11 +86,9 @@ const AffiliateDashboard = () => {
           <h1 className="text-3xl font-bold">Painel de Afiliado</h1>
           <p className="text-muted-foreground">Gerencie suas promoções e acompanhe seus ganhos</p>
         </div>
-        <Button asChild>
-          <Link to="/afiliados">
-            <LinkIcon className="mr-2 h-4 w-4" />
-            Ver Produtos para Afiliar
-          </Link>
+        <Button onClick={handleViewProducts}>
+          <LinkIcon className="mr-2 h-4 w-4" />
+          Ver Produtos para Afiliar
         </Button>
       </div>
 
@@ -118,7 +164,13 @@ const AffiliateDashboard = () => {
                     <td className="py-3 px-4">{sale.date}</td>
                     <td className="py-3 px-4 font-medium text-primary">{sale.commission}</td>
                     <td className="py-3 px-4 text-right">
-                      <Button variant="ghost" size="sm">Detalhes</Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleSaleDetails(sale.id)}
+                      >
+                        Detalhes
+                      </Button>
                     </td>
                   </tr>
                 ))}
@@ -144,7 +196,11 @@ const AffiliateDashboard = () => {
                     <td className="py-3 px-4 text-center">{product.commission}</td>
                     <td className="py-3 px-4 text-center">{product.sales}</td>
                     <td className="py-3 px-4 text-right">
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleGenerateLink(product.id, product.name)}
+                      >
                         <LinkIcon className="h-4 w-4 mr-1" /> Gerar Link
                       </Button>
                     </td>
@@ -175,13 +231,26 @@ const AffiliateDashboard = () => {
                 <p className="text-sm text-muted-foreground mb-3">
                   Banner para redes sociais e campanhas online
                 </p>
-                <Button variant="secondary" size="sm" className="w-full">Download</Button>
+                <Button 
+                  variant="secondary" 
+                  size="sm" 
+                  className="w-full"
+                  onClick={() => handleDownloadMaterial(i)}
+                >
+                  <Download className="h-4 w-4 mr-1" />
+                  Download
+                </Button>
               </div>
             ))}
           </div>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button variant="outline">Ver Todos os Materiais</Button>
+          <Button 
+            variant="outline" 
+            onClick={handleViewAllMaterials}
+          >
+            Ver Todos os Materiais
+          </Button>
         </CardFooter>
       </Card>
     </div>

@@ -3,7 +3,8 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProductsTable } from "@/components/admin/products/ProductsTable";
-import { Users } from "lucide-react";
+import { Users, Eye } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Product {
   name: string;
@@ -28,6 +29,15 @@ export const AffiliatesTab = ({
   onAddAffiliate,
   onManageAffiliates
 }: AffiliatesTabProps) => {
+  const { toast } = useToast();
+  
+  const handleViewAffiliate = (affiliate: string) => {
+    toast({
+      title: "Visualizando afiliado",
+      description: `Detalhes do afiliado ${affiliate}`,
+    });
+  };
+  
   return (
     <Card className="shadow-md">
       <CardHeader className="bg-secondary/5">
@@ -72,6 +82,7 @@ export const AffiliatesTab = ({
                 <th className="text-left py-2 font-medium text-primary/80">Sales</th>
                 <th className="text-left py-2 font-medium text-primary/80">Commission</th>
                 <th className="text-left py-2 font-medium text-primary/80">Products</th>
+                <th className="text-right py-2 font-medium text-primary/80">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -80,18 +91,48 @@ export const AffiliatesTab = ({
                 <td className="py-3">€ 1240,00</td>
                 <td className="py-3">€ 248,00</td>
                 <td className="py-3">5</td>
+                <td className="py-3 text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => handleViewAffiliate("João Silva")}
+                  >
+                    <Eye className="h-4 w-4 mr-1" />
+                    Detalhes
+                  </Button>
+                </td>
               </tr>
               <tr className="border-b hover:bg-muted/30 transition-colors">
                 <td className="py-3">Maria Oliveira</td>
                 <td className="py-3">€ 950,50</td>
                 <td className="py-3">€ 190,10</td>
                 <td className="py-3">3</td>
+                <td className="py-3 text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => handleViewAffiliate("Maria Oliveira")}
+                  >
+                    <Eye className="h-4 w-4 mr-1" />
+                    Detalhes
+                  </Button>
+                </td>
               </tr>
               <tr className="border-b hover:bg-muted/30 transition-colors">
                 <td className="py-3">Carlos Mendes</td>
                 <td className="py-3">€ 780,30</td>
                 <td className="py-3">€ 156,06</td>
                 <td className="py-3">2</td>
+                <td className="py-3 text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => handleViewAffiliate("Carlos Mendes")}
+                  >
+                    <Eye className="h-4 w-4 mr-1" />
+                    Detalhes
+                  </Button>
+                </td>
               </tr>
             </tbody>
           </table>
