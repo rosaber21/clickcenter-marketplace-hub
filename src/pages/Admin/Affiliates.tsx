@@ -1,35 +1,60 @@
 
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search, Download, Plus, Users } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function AdminAffiliates() {
-  const affiliateData = [
-    { id: 1, name: "João Silva", email: "joao@example.com", products: 5, sales: 23, commission: "R$1.250,00", status: "active" },
-    { id: 2, name: "Maria Souza", email: "maria@example.com", products: 3, sales: 15, commission: "R$875,00", status: "active" },
-    { id: 3, name: "Pedro Santos", email: "pedro@example.com", products: 4, sales: 12, commission: "R$560,00", status: "active" },
-    { id: 4, name: "Ana Oliveira", email: "ana@example.com", products: 2, sales: 8, commission: "R$320,00", status: "pending" },
-    { id: 5, name: "Lucas Costa", email: "lucas@example.com", products: 7, sales: 31, commission: "R$1.860,00", status: "active" },
+  const [activeTab, setActiveTab] = useState<'approved' | 'pending'>('approved');
+  
+  // Type definition to ensure all affiliate objects have the required properties
+  type ApprovedAffiliate = {
+    id: number;
+    name: string;
+    email: string;
+    products: number;
+    sales: number; // This is the property that was missing in some objects
+    commission: string;
+    status: string;
+  };
+  
+  type PendingAffiliate = {
+    id: number;
+    name: string;
+    email: string;
+    date: string;
+    products: number;
+    status: string;
+  };
+
+  // Sample data for approved affiliates
+  const approvedAffiliates: ApprovedAffiliate[] = [
+    { id: 1, name: "João Silva", email: "joao@example.com", products: 12, sales: 45, commission: "R$2.430,00", status: "active" },
+    { id: 2, name: "Maria Santos", email: "maria@example.com", products: 8, sales: 32, commission: "R$1.890,00", status: "active" },
+    { id: 3, name: "Carlos Oliveira", email: "carlos@example.com", products: 5, sales: 18, commission: "R$970,00", status: "inactive" },
+    { id: 4, name: "Ana Costa", email: "ana@example.com", products: 10, sales: 37, commission: "R$2.105,00", status: "active" },
+    { id: 5, name: "Lucas Mendes", email: "lucas@example.com", products: 3, sales: 9, commission: "R$485,00", status: "inactive" },
   ];
 
-  const pendingAffiliates = [
-    { id: 6, name: "Carla Mendes", email: "carla@example.com", date: "12/04/2025", products: 0, status: "pending" },
-    { id: 7, name: "Roberto Alves", email: "roberto@example.com", date: "10/04/2025", products: 0, status: "pending" },
-    { id: 8, name: "Juliana Lima", email: "juliana@example.com", date: "08/04/2025", products: 0, status: "pending" },
+  // Sample data for pending affiliates
+  const pendingAffiliates: PendingAffiliate[] = [
+    { id: 6, name: "Fernando Alves", email: "fernando@example.com", date: "10/05/2025", products: 0, status: "pending" },
+    { id: 7, name: "Patricia Lima", email: "patricia@example.com", date: "09/05/2025", products: 0, status: "pending" },
+    { id: 8, name: "Roberto Gomes", email: "roberto@example.com", date: "08/05/2025", products: 0, status: "pending" },
   ];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
         return <Badge className="bg-green-500">Ativo</Badge>;
+      case "inactive":
+        return <Badge variant="outline" className="text-amber-500 border-amber-500">Inativo</Badge>;
       case "pending":
-        return <Badge variant="outline" className="text-amber-500 border-amber-500">Pendente</Badge>;
-      case "suspended":
-        return <Badge variant="destructive">Suspenso</Badge>;
+        return <Badge variant="secondary">Pendente</Badge>;
       default:
         return null;
     }
@@ -39,46 +64,119 @@ export default function AdminAffiliates() {
     <>
       <div className="container py-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Gerenciar Afiliados</h1>
-          <Button>Adicionar Afiliado</Button>
+          <div>
+            <h1 className="text-3xl font-bold">Afiliados</h1>
+            <p className="text-muted-foreground">Gerencie os afiliados da sua plataforma.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" className="gap-2">
+              <Download className="h-4 w-4" />
+              <span>Exportar</span>
+            </Button>
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" />
+              <span>Novo Afiliado</span>
+            </Button>
+          </div>
         </div>
-        
-        <Tabs defaultValue="ativos" className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="ativos">Afiliados Ativos</TabsTrigger>
-            <TabsTrigger value="pendentes">Solicitações Pendentes</TabsTrigger>
-            <TabsTrigger value="todos">Todos Afiliados</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="ativos">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Link className="h-5 w-5" />
-                  Afiliados Ativos
-                </CardTitle>
-                <CardDescription>
-                  Afiliados ativos que podem promover produtos na plataforma.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total de Afiliados
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{approvedAffiliates.length}</div>
+              <p className="text-xs text-muted-foreground">
+                +{pendingAffiliates.length} afiliados pendentes
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Afiliados Ativos
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {approvedAffiliates.filter(a => a.status === "active").length}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {Math.round((approvedAffiliates.filter(a => a.status === "active").length / approvedAffiliates.length) * 100)}% do total
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Comissões Pagas
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">R$7.880,00</div>
+              <p className="text-xs text-muted-foreground">
+                +12.2% em relação ao mês passado
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Vendas via Afiliados
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">141</div>
+              <p className="text-xs text-muted-foreground">
+                +8.3% em relação ao mês passado
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Users className="h-5 w-5" />
+              Lista de Afiliados
+            </CardTitle>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Buscar afiliado..." className="pl-9 w-[200px]" />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'approved' | 'pending')} className="space-y-4">
+              <TabsList>
+                <TabsTrigger value="approved">Aprovados</TabsTrigger>
+                <TabsTrigger value="pending">Pendentes</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="approved">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>ID</TableHead>
                       <TableHead>Nome</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Produtos</TableHead>
                       <TableHead>Vendas</TableHead>
-                      <TableHead>Comissão Total</TableHead>
+                      <TableHead>Comissão</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="text-right">Ações</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {affiliateData.filter(a => a.status === "active").map((affiliate) => (
+                    {approvedAffiliates.map((affiliate) => (
                       <TableRow key={affiliate.id}>
-                        <TableCell>{affiliate.id}</TableCell>
                         <TableCell className="font-medium">{affiliate.name}</TableCell>
                         <TableCell>{affiliate.email}</TableCell>
                         <TableCell>{affiliate.products}</TableCell>
@@ -86,32 +184,21 @@ export default function AdminAffiliates() {
                         <TableCell>{affiliate.commission}</TableCell>
                         <TableCell>{getStatusBadge(affiliate.status)}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="outline" size="sm">Ver Detalhes</Button>
+                          <Button variant="outline" size="sm">Detalhes</Button>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="pendentes">
-            <Card>
-              <CardHeader>
-                <CardTitle>Solicitações Pendentes de Afiliados</CardTitle>
-                <CardDescription>
-                  Usuários que solicitaram se tornar afiliados e aguardam aprovação.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+              </TabsContent>
+              
+              <TabsContent value="pending">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>ID</TableHead>
                       <TableHead>Nome</TableHead>
                       <TableHead>Email</TableHead>
-                      <TableHead>Data da Solicitação</TableHead>
+                      <TableHead>Data</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="text-right">Ações</TableHead>
                     </TableRow>
@@ -119,64 +206,24 @@ export default function AdminAffiliates() {
                   <TableBody>
                     {pendingAffiliates.map((affiliate) => (
                       <TableRow key={affiliate.id}>
-                        <TableCell>{affiliate.id}</TableCell>
                         <TableCell className="font-medium">{affiliate.name}</TableCell>
                         <TableCell>{affiliate.email}</TableCell>
                         <TableCell>{affiliate.date}</TableCell>
                         <TableCell>{getStatusBadge(affiliate.status)}</TableCell>
-                        <TableCell className="text-right space-x-2">
-                          <Button variant="outline" size="sm" className="bg-green-500 hover:bg-green-600 text-white border-0">Aprovar</Button>
-                          <Button variant="outline" size="sm" className="bg-red-500 hover:bg-red-600 text-white border-0">Recusar</Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="todos">
-            <Card>
-              <CardHeader>
-                <CardTitle>Todos os Afiliados</CardTitle>
-                <CardDescription>
-                  Lista completa de todos os afiliados na plataforma.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>ID</TableHead>
-                      <TableHead>Nome</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Produtos</TableHead>
-                      <TableHead>Vendas</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Ações</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {[...affiliateData, ...pendingAffiliates].map((affiliate) => (
-                      <TableRow key={affiliate.id}>
-                        <TableCell>{affiliate.id}</TableCell>
-                        <TableCell className="font-medium">{affiliate.name}</TableCell>
-                        <TableCell>{affiliate.email}</TableCell>
-                        <TableCell>{affiliate.products || 0}</TableCell>
-                        <TableCell>{affiliate.sales || 0}</TableCell>
-                        <TableCell>{getStatusBadge(affiliate.status)}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="outline" size="sm">Ver Detalhes</Button>
+                          <div className="flex justify-end gap-2">
+                            <Button variant="outline" size="sm" className="text-green-600 border-green-600">Aprovar</Button>
+                            <Button variant="outline" size="sm" className="text-red-600 border-red-600">Rejeitar</Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
       </div>
     </>
   );
