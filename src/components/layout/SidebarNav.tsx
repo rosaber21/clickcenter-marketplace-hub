@@ -22,6 +22,7 @@ import {
   Link as LinkIcon,
   Plus,
   BarChart3,
+  UserCog,
 } from "lucide-react";
 import { UserRole } from "@/types";
 
@@ -139,6 +140,14 @@ export function SidebarNav() {
                       <NavLink to="/afiliados" className={getNavLinkClass}>
                         <LinkIcon className="h-5 w-5" />
                         {!collapsed && <span>Afiliação</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <NavLink to="/admin/login" className={getNavLinkClass}>
+                        <UserCog className="h-5 w-5" />
+                        {!collapsed && <span>Área Administrativa</span>}
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +10,7 @@ import Login from "./pages/Login";
 import ProductDetails from "./pages/ProductDetails";
 import NotFound from "./pages/NotFound";
 import AffiliateCategories from "./pages/AffiliateCategories";
+import AdminLogin from "./pages/AdminLogin";
 
 // Admin pages
 import AdminDashboard from "./pages/Admin/Dashboard";
@@ -28,6 +30,7 @@ const App = () => (
           <Route path="/afiliados" element={<AffiliateCategories />} />
           
           {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
           
           {/* Outras rotas serão adicionadas conforme desenvolvemos a aplicação */}
