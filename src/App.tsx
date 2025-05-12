@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import AffiliateCategories from "./pages/AffiliateCategories";
 
 // Admin pages
+import { AdminLayout } from "./pages/Admin/AdminLayout";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminProducts from "./pages/Admin/Products";
 import AdminUsers from "./pages/Admin/Users";
@@ -20,7 +21,6 @@ import AdminSales from "./pages/Admin/Sales";
 import AdminAffiliates from "./pages/Admin/Affiliates";
 import AdminPayments from "./pages/Admin/Payments";
 import AdminSettings from "./pages/Admin/Settings";
-import AdminLayout from "./pages/Admin/AdminLayout";
 
 // Creator pages
 import CreatorDashboard from "./pages/Creator/Dashboard";

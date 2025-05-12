@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
 import { 
   BarChart3, 
   Package, 
@@ -17,11 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 
-interface AdminLayoutProps {
-  children: React.ReactNode;
-}
-
-export function AdminLayout({ children }: AdminLayoutProps) {
+export function AdminLayout() {
   const location = useLocation();
   
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -109,7 +105,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         
         {/* Page Content */}
         <main className="min-h-screen">
-          {children}
+          <Outlet />
         </main>
         
         {/* Mobile Navigation */}
