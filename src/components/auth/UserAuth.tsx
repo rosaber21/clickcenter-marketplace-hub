@@ -5,14 +5,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserLoginForm, LoginFormValues } from "./UserLoginForm";
 import { UserRegisterForm, RegisterFormValues } from "./UserRegisterForm";
+import { AdminLoginForm, AdminLoginFormValues } from "./AdminLoginForm";
 
 interface UserAuthProps {
   onLoginSubmit: (data: LoginFormValues) => void;
   onRegisterSubmit: (data: RegisterFormValues) => void;
+  onAdminLoginSubmit?: (data: AdminLoginFormValues) => void;
   isLoading?: boolean;
 }
 
-export const UserAuth = ({ onLoginSubmit, onRegisterSubmit, isLoading = false }: UserAuthProps) => {
+export const UserAuth = ({ 
+  onLoginSubmit, 
+  onRegisterSubmit, 
+  onAdminLoginSubmit, 
+  isLoading = false 
+}: UserAuthProps) => {
   const [activeTab, setActiveTab] = React.useState<string>("login");
 
   return (
@@ -30,9 +37,10 @@ export const UserAuth = ({ onLoginSubmit, onRegisterSubmit, isLoading = false }:
           onValueChange={setActiveTab}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="login">Entrar</TabsTrigger>
             <TabsTrigger value="register">Cadastrar</TabsTrigger>
+            <TabsTrigger value="admin">Admin</TabsTrigger>
           </TabsList>
 
           {/* Tab de Login */}
@@ -43,6 +51,13 @@ export const UserAuth = ({ onLoginSubmit, onRegisterSubmit, isLoading = false }:
           {/* Tab de Registro */}
           <TabsContent value="register">
             <UserRegisterForm onSubmit={onRegisterSubmit} isLoading={isLoading} />
+          </TabsContent>
+          
+          {/* Tab de Admin */}
+          <TabsContent value="admin">
+            {onAdminLoginSubmit && (
+              <AdminLoginForm onSubmit={onAdminLoginSubmit} />
+            )}
           </TabsContent>
         </Tabs>
       </CardContent>

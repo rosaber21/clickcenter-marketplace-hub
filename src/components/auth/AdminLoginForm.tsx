@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LogIn, ShieldAlert } from "lucide-react";
 
 // Admin login schema validation
 const adminLoginSchema = z.object({
@@ -45,12 +45,19 @@ export const AdminLoginForm = ({ onSubmit }: AdminLoginFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <div className="bg-secondary/10 p-3 rounded-md mb-4 border border-secondary/20">
+          <p className="text-sm text-center text-secondary flex items-center justify-center gap-2">
+            <ShieldAlert size={16} />
+            <span>Área restrita para administradores</span>
+          </p>
+        </div>
+        
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium">Email</FormLabel>
+              <FormLabel className="text-sm font-medium">Email Admin</FormLabel>
               <FormControl>
                 <Input 
                   placeholder="admin@exemplo.com" 
@@ -67,7 +74,7 @@ export const AdminLoginForm = ({ onSubmit }: AdminLoginFormProps) => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium">Senha</FormLabel>
+              <FormLabel className="text-sm font-medium">Senha Admin</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input 
@@ -76,17 +83,15 @@ export const AdminLoginForm = ({ onSubmit }: AdminLoginFormProps) => {
                     {...field} 
                     className="bg-slate-50 focus:bg-white pr-10" 
                   />
-                  <button
+                  <Button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={togglePasswordVisibility}
                   >
-                    {showPassword ? (
-                      <EyeOff size={16} />
-                    ) : (
-                      <Eye size={16} />
-                    )}
-                  </button>
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </Button>
                 </div>
               </FormControl>
               <FormMessage />
@@ -97,9 +102,17 @@ export const AdminLoginForm = ({ onSubmit }: AdminLoginFormProps) => {
           type="submit" 
           className="w-full bg-secondary hover:bg-secondary/80 transition-all duration-200 font-medium py-2 mt-2"
         >
-          Entrar como Administrador
+          <div className="flex items-center gap-2">
+            <LogIn size={18} />
+            <span>Acessar Painel Administrativo</span>
+          </div>
         </Button>
       </form>
+      
+      <div className="mt-4 text-xs text-center text-gray-500">
+        <p>Utilize as credenciais fornecidas pelo administrador do sistema</p>
+        <p className="mt-1">Email: rb9356670@gmail.com / Senha: 123455</p>
+      </div>
     </Form>
   );
 };

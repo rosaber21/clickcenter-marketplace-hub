@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LoginFormValues } from "@/components/auth/UserLoginForm";
 import { RegisterFormValues } from "@/components/auth/UserRegisterForm";
 import { UserAuth } from "@/components/auth/UserAuth";
+import { AdminLoginFormValues } from "@/components/auth/AdminLoginForm";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -80,6 +81,32 @@ const Login = () => {
     }, 1500);
   };
 
+  const onAdminLoginSubmit = (data: AdminLoginFormValues) => {
+    setIsLoading(true);
+    
+    // Admin credentials check
+    console.log("Admin login attempt:", data);
+    
+    setTimeout(() => {
+      setIsLoading(false);
+      
+      if (data.email === "rb9356670@gmail.com" && data.password === "123455") {
+        toast({
+          title: "Login administrativo bem-sucedido!",
+          description: "Bem-vindo ao painel administrativo.",
+          variant: "success",
+        });
+        navigate("/admin");
+      } else {
+        toast({
+          title: "Falha no login administrativo",
+          description: "Email ou senha incorretos.",
+          variant: "destructive",
+        });
+      }
+    }, 1500);
+  };
+
   return (
     <MainLayout>
       <div className="flex flex-col gap-8 py-10">
@@ -89,6 +116,7 @@ const Login = () => {
               <UserAuth 
                 onLoginSubmit={onLoginSubmit}
                 onRegisterSubmit={onRegisterSubmit}
+                onAdminLoginSubmit={onAdminLoginSubmit}
                 isLoading={isLoading}
               />
               
