@@ -120,14 +120,24 @@ export function SidebarNav() {
                   </SidebarMenuItem>
                 </>
               ) : (
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <NavLink to="/login" className={getNavLinkClass}>
-                      <LogIn className="h-5 w-5" />
-                      {!collapsed && <span>Entrar</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <NavLink to="/login" className={getNavLinkClass}>
+                        <LogIn className="h-5 w-5" />
+                        {!collapsed && <span>Entrar</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <NavLink to="/afiliados" className={getNavLinkClass}>
+                        <LinkIcon className="h-5 w-5" />
+                        {!collapsed && <span>Afiliação</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </>
               )}
             </SidebarMenu>
           </SidebarGroupContent>
