@@ -109,6 +109,7 @@ export const AddProductForm = ({ onSubmit, isSubmitting, onCancel }: AddProductF
                   <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
                   <SelectItem value="gestao">Gestão</SelectItem>
                   <SelectItem value="design">Design</SelectItem>
+                  <SelectItem value="curso">Curso</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
