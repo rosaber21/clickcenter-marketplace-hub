@@ -9,6 +9,7 @@ import { Product } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 // Dados de exemplo para simular produtos
 const MOCK_PRODUCTS: Product[] = [
@@ -80,18 +81,13 @@ const MOCK_PRODUCTS: Product[] = [
   },
 ];
 
-// Animação para entrada dos elementos
-const fadeInAnimation = {
-  opacity: 1,
-  transform: "translateY(0)",
-};
-
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
   const [activeFilter, setActiveFilter] = useState<"all" | "digital" | "physical">("all");
   const [animate, setAnimate] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   useEffect(() => {
     setAnimate(true);
@@ -111,6 +107,19 @@ const Index = () => {
       description: `${product.title} foi adicionado ao seu carrinho.`,
     });
     // Aqui adicionaria ao contexto do carrinho
+  };
+
+  const handleViewAllProducts = () => {
+    // Scroll to products section
+    const productsSection = document.getElementById("products-section");
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleLearnMore = () => {
+    // Navigate to about or info page
+    navigate("/afiliados");
   };
 
   return (
@@ -133,11 +142,20 @@ const Index = () => {
             Explore nossa seleção exclusiva de produtos digitais e físicos criados por especialistas
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-primary hover:bg-white/90">
+            <Button 
+              size="lg" 
+              className="bg-white text-primary hover:bg-white/90"
+              onClick={handleViewAllProducts}
+            >
               <ShoppingBag className="mr-2 h-5 w-5" />
               Ver Produtos
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-white text-white hover:bg-white/20"
+              onClick={handleLearnMore}
+            >
               <Zap className="mr-2 h-5 w-5" />
               Saiba Mais
             </Button>
@@ -196,6 +214,7 @@ const Index = () => {
 
       {/* Featured Section */}
       <div 
+        id="products-section"
         className="mb-12"
         style={{
           opacity: animate ? 1 : 0,
@@ -207,7 +226,11 @@ const Index = () => {
           <h2 className="text-2xl font-bold tracking-tight">
             Produtos em Destaque
           </h2>
-          <Button variant="link" className="text-primary font-medium">
+          <Button 
+            variant="link" 
+            className="text-primary font-medium"
+            onClick={() => setActiveFilter("all")}
+          >
             Ver todos
           </Button>
         </div>
