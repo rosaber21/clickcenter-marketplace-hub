@@ -24,25 +24,42 @@ interface ProductsTableProps {
   onEdit: (product: Product) => void;
   onDelete: (product: Product) => void;
   onAddProduct?: () => void;
+  onAddAffiliate?: () => void;
+  showAffiliateButton?: boolean;
 }
 
 export const ProductsTable = ({ 
   products, 
   onEdit, 
   onDelete,
-  onAddProduct 
+  onAddProduct,
+  onAddAffiliate,
+  showAffiliateButton = false
 }: ProductsTableProps) => {
   return (
     <div>
-      {onAddProduct && (
-        <div className="flex justify-end mb-4">
-          <Button 
-            onClick={onAddProduct} 
-            className="gap-2"
-          >
-            <Plus size={16} />
-            <span>Adicionar Produto</span>
-          </Button>
+      {(onAddProduct || onAddAffiliate) && (
+        <div className="flex justify-end mb-4 gap-2">
+          {onAddProduct && (
+            <Button 
+              onClick={onAddProduct} 
+              className="gap-2"
+            >
+              <Plus size={16} />
+              <span>Adicionar Produto</span>
+            </Button>
+          )}
+          
+          {showAffiliateButton && onAddAffiliate && (
+            <Button 
+              onClick={onAddAffiliate}
+              variant="secondary" 
+              className="gap-2"
+            >
+              <Plus size={16} />
+              <span>Adicionar Afiliado</span>
+            </Button>
+          )}
         </div>
       )}
       
@@ -65,7 +82,11 @@ export const ProductsTable = ({
               <TableCell>{product.category}</TableCell>
               <TableCell>{product.price}</TableCell>
               <TableCell>
-                <span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">
+                <span className={`rounded-full px-2 py-1 text-xs ${
+                  product.status === "Ativo" ? "bg-green-100 text-green-800" : 
+                  product.status === "Pendente" ? "bg-yellow-100 text-yellow-800" : 
+                  "bg-red-100 text-red-800"
+                }`}>
                   {product.status}
                 </span>
               </TableCell>

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +11,9 @@ import { BarChart, LineChart as CustomLineChart } from "@/components/charts/Cust
 import { AddProductDialog } from "@/components/admin/products/AddProductDialog";
 import { ProductFormValues } from "@/components/admin/products/AddProductForm";
 import { ProductsTable } from "@/components/admin/products/ProductsTable";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export default function CreatorDashboard() {
   const navigate = useNavigate();
@@ -22,6 +26,12 @@ export default function CreatorDashboard() {
   // State for Product Dialog
   const [productDialogOpen, setProductDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // New state for Affiliate Dialog
+  const [affiliateDialogOpen, setAffiliateDialogOpen] = useState(false);
+  const [newAffiliateEmail, setNewAffiliateEmail] = useState("");
+  const [isAddingAffiliate, setIsAddingAffiliate] = useState(false);
+  
   const [products, setProducts] = useState([
     {
       name: "Digital Marketing Course",
@@ -83,6 +93,39 @@ export default function CreatorDashboard() {
     
     setIsSubmitting(false);
     setProductDialogOpen(false);
+  };
+  
+  // New affiliate handlers
+  const handleNewAffiliate = () => {
+    setAffiliateDialogOpen(true);
+  };
+  
+  const handleAddAffiliate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newAffiliateEmail.trim()) {
+      toast({
+        title: "Erro",
+        description: "Por favor, insira um email válido.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsAddingAffiliate(true);
+    
+    // Simulating API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    toast({
+      title: "Convite enviado com sucesso!",
+      description: `Um convite foi enviado para ${newAffiliateEmail}`,
+      variant: "success",
+    });
+    
+    setIsAddingAffiliate(false);
+    setAffiliateDialogOpen(false);
+    setNewAffiliateEmail("");
   };
 
   const handleViewAllProducts = () => {
@@ -250,7 +293,15 @@ export default function CreatorDashboard() {
                 <CardDescription>Affiliate performance</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <ProductsTable
+                  products={products}
+                  onEdit={handleEditProduct}
+                  onDelete={handleDeleteProduct}
+                  onAddAffiliate={handleNewAffiliate}
+                  showAffiliateButton={true}
+                />
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                   <div className="border rounded-lg p-3 hover:border-primary/30 hover:bg-primary/5 transition-colors">
                     <p className="font-medium text-primary">Total affiliates</p>
                     <p className="text-2xl font-bold mt-2">27</p>
@@ -325,6 +376,50 @@ export default function CreatorDashboard() {
         onSubmit={handleAddProduct}
         isSubmitting={isSubmitting}
       />
+      
+      {/* Add Affiliate Dialog */}
+      <Dialog open={affiliateDialogOpen} onOpenChange={setAffiliateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Adicionar Novo Afiliado</DialogTitle>
+            <DialogDescription>
+              Envie um convite para um novo afiliado se juntar ao seu programa.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleAddAffiliate}>
+            <div className="space-y-4 py-2">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email do Afiliado</Label>
+                <Input
+                  id="email"
+                  type="email" 
+                  placeholder="email@example.com"
+                  value={newAffiliateEmail}
+                  onChange={(e) => setNewAffiliateEmail(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            
+            <DialogFooter className="mt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setAffiliateDialogOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button 
+                type="submit" 
+                disabled={isAddingAffiliate || !newAffiliateEmail}
+              >
+                {isAddingAffiliate ? 'Enviando...' : 'Enviar Convite'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </MainLayout>
   );
 }
