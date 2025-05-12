@@ -119,41 +119,6 @@ const Login = () => {
                 onAdminLoginSubmit={onAdminLoginSubmit}
                 isLoading={isLoading}
               />
-              
-              <div className="mt-8">
-                <div className="bg-white p-4 rounded-lg border shadow-sm">
-                  <h3 className="text-center font-medium mb-2">Login rápido para demonstração</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button 
-                      onClick={() => onLoginSubmit({email: "admin@example.com", password: "123455"})}
-                      className="p-2 text-sm border border-purple-500 rounded-md text-purple-600 hover:bg-purple-50"
-                    >
-                      Admin
-                    </button>
-                    
-                    <button 
-                      onClick={() => onLoginSubmit({email: "criador@example.com", password: "123455"})}
-                      className="p-2 text-sm border border-blue-500 rounded-md text-blue-600 hover:bg-blue-50"
-                    >
-                      Criador
-                    </button>
-                    
-                    <button 
-                      onClick={() => onLoginSubmit({email: "afiliado@example.com", password: "123455"})}
-                      className="p-2 text-sm border border-green-500 rounded-md text-green-600 hover:bg-green-50"
-                    >
-                      Afiliado
-                    </button>
-                    
-                    <button 
-                      onClick={() => onLoginSubmit({email: "cliente@example.com", password: "123455"})}
-                      className="p-2 text-sm border border-gray-500 rounded-md text-gray-600 hover:bg-gray-50"
-                    >
-                      Cliente
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
