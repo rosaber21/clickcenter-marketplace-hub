@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import {
@@ -12,6 +12,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PaymentItem {
   id: number;
@@ -32,12 +39,24 @@ const ITEMS_PER_PAGE = 5;
 
 export function PaymentsTable({ payments, onApprovePayment }: PaymentsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  
+  // Filter payments based on selected status
+  const filteredPayments = statusFilter === "all" 
+    ? payments 
+    : payments.filter(payment => payment.status === statusFilter);
   
   // Calculate pagination values
-  const totalPages = Math.ceil(payments.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredPayments.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentPayments = payments.slice(startIndex, endIndex);
+  const currentPayments = filteredPayments.slice(startIndex, endIndex);
+  
+  // Reset to first page when filter changes
+  const handleStatusFilterChange = (value: string) => {
+    setStatusFilter(value);
+    setCurrentPage(1);
+  };
   
   // Handle page change
   const handlePageChange = (page: number) => {
@@ -87,6 +106,22 @@ export function PaymentsTable({ payments, onApprovePayment }: PaymentsTableProps
 
   return (
     <CardContent>
+      <div className="flex justify-end mb-4">
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4 text-gray-500" />
+          <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filtrar por status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="Pendente">Pendente</SelectItem>
+              <SelectItem value="Processado">Processado</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      
       <table className="w-full">
         <thead>
           <tr className="border-b">
@@ -134,17 +169,19 @@ export function PaymentsTable({ payments, onApprovePayment }: PaymentsTableProps
             </tr>
           ))}
           
-          {payments.length === 0 && (
+          {currentPayments.length === 0 && (
             <tr>
               <td colSpan={7} className="py-4 text-center text-gray-500">
-                Não há pagamentos pendentes no momento.
+                {filteredPayments.length === 0 ? 
+                  "Não há pagamentos correspondentes aos filtros aplicados." : 
+                  "Não há pagamentos pendentes no momento."}
               </td>
             </tr>
           )}
         </tbody>
       </table>
       
-      {payments.length > ITEMS_PER_PAGE && (
+      {filteredPayments.length > ITEMS_PER_PAGE && (
         <div className="mt-4">
           <Pagination>
             <PaginationContent>

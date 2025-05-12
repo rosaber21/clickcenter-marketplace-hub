@@ -36,6 +36,51 @@ export function usePayments() {
       amount: "€ 1.250,00",
       requestDate: "10/05/2025",
       status: "Pendente"
+    },
+    {
+      id: 3,
+      name: "Maria Silva",
+      type: "Afiliado",
+      method: "Conta Digital",
+      amount: "€ 720,50",
+      requestDate: "08/05/2025",
+      status: "Processado"
+    },
+    {
+      id: 4,
+      name: "João Oliveira",
+      type: "Produtor",
+      method: "Transferência Bancária",
+      amount: "€ 950,00",
+      requestDate: "07/05/2025",
+      status: "Processado"
+    },
+    {
+      id: 5,
+      name: "Ana Santos",
+      type: "Afiliado",
+      method: "PayPal",
+      amount: "€ 345,75",
+      requestDate: "06/05/2025",
+      status: "Processado"
+    },
+    {
+      id: 6,
+      name: "Luís Ferreira",
+      type: "Produtor",
+      method: "Outro Banco",
+      amount: "€ 1.875,30",
+      requestDate: "05/05/2025",
+      status: "Pendente"
+    },
+    {
+      id: 7,
+      name: "Sofia Ribeiro",
+      type: "Afiliado",
+      method: "Conta Digital",
+      amount: "€ 530,00",
+      requestDate: "04/05/2025",
+      status: "Processado"
     }
   ]);
   
