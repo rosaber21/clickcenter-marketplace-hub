@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { BarChart, LineChart as CustomLineChart } from "@/components/charts/CustomCharts";
+import { AddProductDialog } from "@/components/admin/products/AddProductDialog";
+import { ProductFormValues } from "@/components/admin/products/AddProductForm";
+import { ProductsTable } from "@/components/admin/products/ProductsTable";
 
 export default function CreatorDashboard() {
   const navigate = useNavigate();
@@ -16,6 +18,33 @@ export default function CreatorDashboard() {
   const [totalSales, setTotalSales] = useState(7829.45);
   const [activeProducts, setActiveProducts] = useState(12);
   const [pendingCommissions, setPendingCommissions] = useState(1245.50);
+  
+  // State for Product Dialog
+  const [productDialogOpen, setProductDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [products, setProducts] = useState([
+    {
+      name: "Digital Marketing Course",
+      creator: "You",
+      category: "Marketing",
+      price: "€ 149,90",
+      status: "Ativo" as const
+    },
+    {
+      name: "Financial Management E-book",
+      creator: "You",
+      category: "Finance",
+      price: "€ 29,90",
+      status: "Ativo" as const
+    },
+    {
+      name: "Business Consulting",
+      creator: "You",
+      category: "Consulting",
+      price: "€ 399,00",
+      status: "Pendente" as const
+    }
+  ]);
   
   // Mock data for charts
   const monthlySalesData = [5430, 4290, 6540, 7829, 8210, 7450, 7829];
@@ -26,12 +55,34 @@ export default function CreatorDashboard() {
 
   // Action handlers
   const handleNewProduct = () => {
+    setProductDialogOpen(true);
+  };
+
+  const handleAddProduct = async (values: ProductFormValues) => {
+    setIsSubmitting(true);
+    
+    // Simulating API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Add the new product
+    const newProduct = {
+      name: values.name,
+      creator: "You",
+      category: values.category,
+      price: `€ ${values.price}`,
+      status: "Pendente" as const
+    };
+    
+    setProducts([...products, newProduct]);
+    
     toast({
-      title: "New Product",
-      description: "Redirecting to product creation page",
-      variant: "default",
+      title: "Produto adicionado com sucesso!",
+      description: "Seu novo produto está aguardando aprovação.",
+      variant: "success",
     });
-    navigate("/novo-produto");
+    
+    setIsSubmitting(false);
+    setProductDialogOpen(false);
   };
 
   const handleViewAllProducts = () => {
@@ -50,6 +101,22 @@ export default function CreatorDashboard() {
       variant: "default", 
     });
     navigate("/gerenciar-afiliados");
+  };
+
+  const handleEditProduct = (product: any) => {
+    toast({
+      title: "Edit Product",
+      description: "Editing product details",
+      variant: "default",
+    });
+  };
+
+  const handleDeleteProduct = (product: any) => {
+    toast({
+      title: "Delete Product",
+      description: "Are you sure you want to delete this product?",
+      variant: "destructive",
+    });
   };
 
   return (
@@ -155,65 +222,14 @@ export default function CreatorDashboard() {
                   <CardTitle className="text-primary">My Products</CardTitle>
                   <CardDescription>Manage your digital products</CardDescription>
                 </div>
-                <Button className="gap-2" onClick={handleNewProduct}>
-                  <Plus size={16} />
-                  <span>New Product</span>
-                </Button>
               </CardHeader>
               <CardContent>
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2 font-medium text-primary/80">Product</th>
-                      <th className="text-left py-2 font-medium text-primary/80">Category</th>
-                      <th className="text-left py-2 font-medium text-primary/80">Price</th>
-                      <th className="text-left py-2 font-medium text-primary/80">Sales</th>
-                      <th className="text-left py-2 font-medium text-primary/80">Status</th>
-                      <th className="text-left py-2 font-medium text-primary/80">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b hover:bg-muted/30 transition-colors">
-                      <td className="py-3">Digital Marketing Course</td>
-                      <td className="py-3">Marketing</td>
-                      <td className="py-3">€ 149,90</td>
-                      <td className="py-3">32</td>
-                      <td className="py-3"><span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Active</span></td>
-                      <td className="py-3">
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline" onClick={() => toast({title: "Edit", description: "Editing product details"})}>Edit</Button>
-                          <Button size="sm" variant="outline" className="text-red-500" onClick={() => toast({title: "Delete", description: "Are you sure you want to delete this product?", variant: "destructive"})}>Delete</Button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b hover:bg-muted/30 transition-colors">
-                      <td className="py-3">Financial Management E-book</td>
-                      <td className="py-3">Finance</td>
-                      <td className="py-3">€ 29,90</td>
-                      <td className="py-3">68</td>
-                      <td className="py-3"><span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Active</span></td>
-                      <td className="py-3">
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline" onClick={() => toast({title: "Edit", description: "Editing product details"})}>Edit</Button>
-                          <Button size="sm" variant="outline" className="text-red-500" onClick={() => toast({title: "Delete", description: "Are you sure you want to delete this product?", variant: "destructive"})}>Delete</Button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b hover:bg-muted/30 transition-colors">
-                      <td className="py-3">Business Consulting</td>
-                      <td className="py-3">Consulting</td>
-                      <td className="py-3">€ 399,00</td>
-                      <td className="py-3">7</td>
-                      <td className="py-3"><span className="bg-amber-100 text-amber-800 rounded-full px-2 py-1 text-xs">Under Review</span></td>
-                      <td className="py-3">
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline" onClick={() => toast({title: "Edit", description: "Editing product details"})}>Edit</Button>
-                          <Button size="sm" variant="outline" className="text-red-500" onClick={() => toast({title: "Delete", description: "Are you sure you want to delete this product?", variant: "destructive"})}>Delete</Button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <ProductsTable
+                  products={products}
+                  onEdit={handleEditProduct}
+                  onDelete={handleDeleteProduct}
+                  onAddProduct={handleNewProduct}
+                />
               </CardContent>
               <CardFooter>
                 <Button 
@@ -301,6 +317,14 @@ export default function CreatorDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+      
+      {/* Product Dialog */}
+      <AddProductDialog
+        open={productDialogOpen}
+        onOpenChange={setProductDialogOpen}
+        onSubmit={handleAddProduct}
+        isSubmitting={isSubmitting}
+      />
     </MainLayout>
   );
 }
