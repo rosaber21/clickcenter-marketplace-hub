@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 
 // Login schema validation
 const loginSchema = z.object({
@@ -25,9 +26,12 @@ export type LoginFormValues = z.infer<typeof loginSchema>;
 
 interface UserLoginFormProps {
   onSubmit: (data: LoginFormValues) => void;
+  isLoading?: boolean;
 }
 
-export const UserLoginForm = ({ onSubmit }: UserLoginFormProps) => {
+export const UserLoginForm = ({ onSubmit, isLoading = false }: UserLoginFormProps) => {
+  const [showPassword, setShowPassword] = React.useState(false);
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -46,7 +50,7 @@ export const UserLoginForm = ({ onSubmit }: UserLoginFormProps) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="seu.email@exemplo.com" {...field} />
+                <Input placeholder="seu.email@exemplo.com" {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -59,15 +63,44 @@ export const UserLoginForm = ({ onSubmit }: UserLoginFormProps) => {
             <FormItem>
               <FormLabel>Senha</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="********" {...field} />
+                <div className="relative">
+                  <Input 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder="********" 
+                    {...field} 
+                    disabled={isLoading}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Entrar
-        </Button>
+        <div className="pt-2">
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                <span>Entrando...</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <LogIn size={18} />
+                <span>Entrar</span>
+              </div>
+            )}
+          </Button>
+        </div>
       </form>
       <div className="mt-4 text-center text-sm">
         <Link to="/recuperar-senha" className="text-primary hover:underline">

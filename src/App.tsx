@@ -21,6 +21,9 @@ import AdminAffiliates from "./pages/Admin/Affiliates";
 import AdminPayments from "./pages/Admin/Payments";
 import AdminSettings from "./pages/Admin/Settings";
 
+// Creator pages
+import CreatorDashboard from "./pages/Creator/Dashboard";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -46,6 +49,9 @@ const App = () => (
           <Route path="/admin/afiliados" element={<AdminAffiliates />} />
           <Route path="/admin/pagamentos" element={<AdminPayments />} />
           <Route path="/admin/configuracoes" element={<AdminSettings />} />
+          
+          {/* Creator Routes */}
+          <Route path="/criador" element={<CreatorDashboard />} />
           
           {/* Outras rotas serão adicionadas conforme desenvolvemos a aplicação */}
           <Route path="*" element={<NotFound />} />

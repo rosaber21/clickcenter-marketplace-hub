@@ -9,20 +9,21 @@ import { UserRegisterForm, RegisterFormValues } from "./UserRegisterForm";
 interface UserAuthProps {
   onLoginSubmit: (data: LoginFormValues) => void;
   onRegisterSubmit: (data: RegisterFormValues) => void;
+  isLoading?: boolean;
 }
 
-export const UserAuth = ({ onLoginSubmit, onRegisterSubmit }: UserAuthProps) => {
+export const UserAuth = ({ onLoginSubmit, onRegisterSubmit, isLoading = false }: UserAuthProps) => {
   const [activeTab, setActiveTab] = React.useState<string>("login");
 
   return (
-    <Card className="border-2 max-w-2xl mx-auto">
-      <CardHeader className="space-y-1 text-center">
+    <Card className="border-2 max-w-2xl mx-auto shadow-lg">
+      <CardHeader className="space-y-1 text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-t-lg">
         <CardTitle className="text-2xl">Bem-vindo ao ClickCenter</CardTitle>
         <CardDescription>
           Entre na sua conta ou crie uma nova
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <Tabs
           defaultValue="login"
           value={activeTab}
@@ -36,23 +37,23 @@ export const UserAuth = ({ onLoginSubmit, onRegisterSubmit }: UserAuthProps) => 
 
           {/* Tab de Login */}
           <TabsContent value="login">
-            <UserLoginForm onSubmit={onLoginSubmit} />
+            <UserLoginForm onSubmit={onLoginSubmit} isLoading={isLoading} />
           </TabsContent>
 
           {/* Tab de Registro */}
           <TabsContent value="register">
-            <UserRegisterForm onSubmit={onRegisterSubmit} />
+            <UserRegisterForm onSubmit={onRegisterSubmit} isLoading={isLoading} />
           </TabsContent>
         </Tabs>
       </CardContent>
-      <CardFooter className="flex justify-center">
+      <CardFooter className="flex justify-center bg-gradient-to-r from-primary/5 to-secondary/5 rounded-b-lg">
         <p className="text-xs text-muted-foreground text-center">
           Ao continuar, você concorda com os{" "}
-          <Link to="/termos" className="underline">
+          <Link to="/termos" className="underline text-primary">
             Termos de Serviço
           </Link>{" "}
           e{" "}
-          <Link to="/privacidade" className="underline">
+          <Link to="/privacidade" className="underline text-primary">
             Política de Privacidade
           </Link>
           .

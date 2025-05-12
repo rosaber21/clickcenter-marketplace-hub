@@ -13,6 +13,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff, UserPlus } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Register schema validation
 const registerSchema = z.object({
@@ -30,9 +38,13 @@ export type RegisterFormValues = z.infer<typeof registerSchema>;
 
 interface UserRegisterFormProps {
   onSubmit: (data: RegisterFormValues) => void;
+  isLoading?: boolean;
 }
 
-export const UserRegisterForm = ({ onSubmit }: UserRegisterFormProps) => {
+export const UserRegisterForm = ({ onSubmit, isLoading = false }: UserRegisterFormProps) => {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -54,7 +66,7 @@ export const UserRegisterForm = ({ onSubmit }: UserRegisterFormProps) => {
             <FormItem>
               <FormLabel>Nome Completo</FormLabel>
               <FormControl>
-                <Input placeholder="Seu nome" {...field} />
+                <Input placeholder="Seu nome" {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -67,7 +79,7 @@ export const UserRegisterForm = ({ onSubmit }: UserRegisterFormProps) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="seu.email@exemplo.com" {...field} />
+                <Input placeholder="seu.email@exemplo.com" {...field} disabled={isLoading} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -80,7 +92,24 @@ export const UserRegisterForm = ({ onSubmit }: UserRegisterFormProps) => {
             <FormItem>
               <FormLabel>Senha</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="********" {...field} />
+                <div className="relative">
+                  <Input 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder="********" 
+                    {...field} 
+                    disabled={isLoading}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -93,7 +122,24 @@ export const UserRegisterForm = ({ onSubmit }: UserRegisterFormProps) => {
             <FormItem>
               <FormLabel>Confirmar Senha</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="********" {...field} />
+                <div className="relative">
+                  <Input 
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="********" 
+                    {...field} 
+                    disabled={isLoading}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={isLoading}
+                  >
+                    {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,21 +151,41 @@ export const UserRegisterForm = ({ onSubmit }: UserRegisterFormProps) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tipo de Conta</FormLabel>
-              <select 
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                {...field}
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                disabled={isLoading}
               >
-                <option value="aluno">Aluno/Cliente</option>
-                <option value="afiliado">Afiliado</option>
-                <option value="criador">Criador de Produtos</option>
-              </select>
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione um tipo de conta" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="aluno">Aluno/Cliente</SelectItem>
+                  <SelectItem value="afiliado">Afiliado</SelectItem>
+                  <SelectItem value="criador">Criador de Produtos</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Criar Conta
-        </Button>
+        <div className="pt-2">
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                <span>Processando...</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <UserPlus size={18} />
+                <span>Criar Conta</span>
+              </div>
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );

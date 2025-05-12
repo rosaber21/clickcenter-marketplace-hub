@@ -173,12 +173,15 @@ export default function AdminProducts() {
                   <FormItem>
                     <FormLabel>Preço</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="0.00" 
-                        {...field} 
-                        type="text" 
-                        startContent="€"
-                      />
+                      <div className="relative">
+                        <span className="absolute left-3 top-2.5">€</span>
+                        <Input 
+                          type="text" 
+                          placeholder="0.00" 
+                          className="pl-8"
+                          {...field} 
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
