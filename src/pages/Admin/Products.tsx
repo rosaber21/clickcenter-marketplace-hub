@@ -1,17 +1,89 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { AdminLayout } from "./AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle 
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useForm } from "react-hook-form";
+import { 
+  Form, 
+  FormControl, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormMessage 
+} from "@/components/ui/form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/hooks/use-toast";
+
+const productSchema = z.object({
+  name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
+  price: z.string().refine(val => !isNaN(parseFloat(val)), {
+    message: "Por favor, insira um preço válido",
+  }),
+  category: z.string().min(1, "Por favor, selecione uma categoria"),
+  creator: z.string().min(3, "O nome do criador é obrigatório"),
+});
+
+type ProductFormValues = z.infer<typeof productSchema>;
 
 export default function AdminProducts() {
+  const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      price: "",
+      category: "",
+      creator: "",
+    },
+  });
+
+  const handleSubmit = async (values: ProductFormValues) => {
+    setIsSubmitting(true);
+    
+    // Simulando um atraso na API
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    console.log("Produto adicionado:", values);
+    
+    toast({
+      title: "Produto adicionado com sucesso!",
+      variant: "success",
+    });
+    
+    setIsSubmitting(false);
+    setOpen(false);
+    form.reset();
+  };
+
   return (
     <AdminLayout>
       <div className="container py-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold">Gerenciar Produtos</h1>
-          <Button className="gap-2">
+          <Button className="gap-2" onClick={() => setOpen(true)}>
             <Plus size={16} />
             <span>Adicionar Produto</span>
           </Button>
@@ -68,6 +140,106 @@ export default function AdminProducts() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Adicionar Produto</DialogTitle>
+            <DialogDescription>
+              Preencha os detalhes do novo produto.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome do Produto</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Digite o nome do produto" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Preço</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="0.00" 
+                        {...field} 
+                        type="text" 
+                        startContent="€"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Categoria</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione uma categoria" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="marketing">Marketing</SelectItem>
+                        <SelectItem value="financas">Finanças</SelectItem>
+                        <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
+                        <SelectItem value="gestao">Gestão</SelectItem>
+                        <SelectItem value="design">Design</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="creator"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Criador</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Nome do criador" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+  
+              <DialogFooter className="pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setOpen(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Adicionando..." : "Adicionar Produto"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 }
