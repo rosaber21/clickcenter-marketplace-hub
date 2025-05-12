@@ -1,8 +1,17 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface PaymentItem {
   id: number;
@@ -19,7 +28,63 @@ interface PaymentsTableProps {
   onApprovePayment: (paymentId: number) => void;
 }
 
+const ITEMS_PER_PAGE = 5;
+
 export function PaymentsTable({ payments, onApprovePayment }: PaymentsTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Calculate pagination values
+  const totalPages = Math.ceil(payments.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentPayments = payments.slice(startIndex, endIndex);
+  
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 3;
+    
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if there are few
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show first page, current page and neighbors, and last page
+      if (currentPage <= 2) {
+        // Near beginning
+        for (let i = 1; i <= 3; i++) {
+          pages.push(i);
+        }
+        pages.push("ellipsis");
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 1) {
+        // Near end
+        pages.push(1);
+        pages.push("ellipsis");
+        for (let i = totalPages - 2; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        // Middle
+        pages.push(1);
+        pages.push("ellipsis");
+        pages.push(currentPage - 1);
+        pages.push(currentPage);
+        pages.push(currentPage + 1);
+        pages.push("ellipsis");
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
+  };
+
   return (
     <CardContent>
       <table className="w-full">
@@ -35,7 +100,7 @@ export function PaymentsTable({ payments, onApprovePayment }: PaymentsTableProps
           </tr>
         </thead>
         <tbody>
-          {payments.map((payment) => (
+          {currentPayments.map((payment) => (
             <tr key={payment.id} className="border-b">
               <td className="py-3">{payment.name}</td>
               <td className="py-3">{payment.type}</td>
@@ -78,6 +143,48 @@ export function PaymentsTable({ payments, onApprovePayment }: PaymentsTableProps
           )}
         </tbody>
       </table>
+      
+      {payments.length > ITEMS_PER_PAGE && (
+        <div className="mt-4">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  href="#"
+                />
+              </PaginationItem>
+              
+              {getPageNumbers().map((page, index) => (
+                page === "ellipsis" ? (
+                  <PaginationItem key={`ellipsis-${index}`}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                ) : (
+                  <PaginationItem key={page}>
+                    <PaginationLink 
+                      href="#"
+                      isActive={page === currentPage}
+                      onClick={() => handlePageChange(Number(page))}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+              ))}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  href="#"
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </CardContent>
   );
 }
