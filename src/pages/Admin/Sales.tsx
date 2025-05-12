@@ -1,230 +1,120 @@
 
-import React, { useState } from "react";
-import { AdminLayout } from "./AdminLayout";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingCart, Calendar, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ShoppingCart, Search, Download } from "lucide-react";
 
 export default function AdminSales() {
-  const [isExporting, setIsExporting] = useState(false);
-  const [showExportDialog, setShowExportDialog] = useState(false);
-  const [exportFormat, setExportFormat] = useState<"csv" | "pdf" | "excel">("csv");
-  const [dateRange, setDateRange] = useState<"all" | "month" | "week">("all");
+  const salesData = [
+    { id: "#5624", customer: "João Silva", product: "Curso de Marketing Digital", date: "15/04/2025", total: "R$497,00", status: "completed" },
+    { id: "#5623", customer: "Maria Santos", product: "eBook: SEO Avançado", date: "14/04/2025", total: "R$47,00", status: "completed" },
+    { id: "#5622", customer: "Carlos Oliveira", product: "Mentoria Premium", date: "14/04/2025", total: "R$997,00", status: "processing" },
+    { id: "#5621", customer: "Ana Costa", product: "Curso de Copywriting", date: "13/04/2025", total: "R$397,00", status: "completed" },
+    { id: "#5620", customer: "Lucas Mendes", product: "Templates de Email Marketing", date: "12/04/2025", total: "R$67,00", status: "cancelled" },
+  ];
 
-  const handleExportReport = () => {
-    setShowExportDialog(true);
-  };
-
-  const startExport = () => {
-    setIsExporting(true);
-    
-    // Simulate API call to generate and download report
-    setTimeout(() => {
-      setIsExporting(false);
-      setShowExportDialog(false);
-      
-      const fileName = `vendas-${new Date().toISOString().split('T')[0]}.${exportFormat}`;
-      
-      toast.success("Relatório exportado com sucesso!", {
-        description: `O arquivo ${fileName} foi gerado.`
-      });
-      
-      // In a real implementation, we would trigger a file download here
-      // For demonstration purposes, we're just showing a toast notification
-    }, 1500);
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "completed":
+        return <Badge className="bg-green-500">Concluído</Badge>;
+      case "processing":
+        return <Badge variant="outline" className="text-amber-500 border-amber-500">Processando</Badge>;
+      case "cancelled":
+        return <Badge variant="destructive">Cancelado</Badge>;
+      default:
+        return null;
+    }
   };
 
   return (
-    <AdminLayout>
+    <>
       <div className="container py-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Histórico de Vendas</h1>
-          <Button onClick={handleExportReport}>
-            <Download className="mr-2 h-4 w-4" />
-            Exportar Relatório
-          </Button>
+          <div>
+            <h1 className="text-3xl font-bold">Vendas</h1>
+            <p className="text-muted-foreground">Gerencie todas as vendas da sua plataforma.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" className="gap-2">
+              <Download className="h-4 w-4" />
+              <span>Exportar</span>
+            </Button>
+          </div>
         </div>
-        
+
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <ShoppingCart className="h-5 w-5" />
-              Transações Recentes
+              Histórico de Vendas
             </CardTitle>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Buscar venda..." className="pl-9 w-[200px]" />
+              </div>
+              <Select defaultValue="all">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos status</SelectItem>
+                  <SelectItem value="completed">Concluído</SelectItem>
+                  <SelectItem value="processing">Processando</SelectItem>
+                  <SelectItem value="cancelled">Cancelado</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Pedido</TableHead>
-                  <TableHead>Produto</TableHead>
+                  <TableHead>ID</TableHead>
                   <TableHead>Cliente</TableHead>
+                  <TableHead>Produto</TableHead>
                   <TableHead>Data</TableHead>
                   <TableHead>Valor</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Ações</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell>#ORD-2546</TableCell>
-                  <TableCell>Curso de Marketing Digital</TableCell>
-                  <TableCell>João Silva</TableCell>
-                  <TableCell>12/05/2025</TableCell>
-                  <TableCell>€ 149,90</TableCell>
-                  <TableCell>
-                    <span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Pago</span>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="outline" size="sm">Detalhes</Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>#ORD-2545</TableCell>
-                  <TableCell>E-book Gestão Financeira</TableCell>
-                  <TableCell>Maria Oliveira</TableCell>
-                  <TableCell>11/05/2025</TableCell>
-                  <TableCell>€ 29,90</TableCell>
-                  <TableCell>
-                    <span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Pago</span>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="outline" size="sm">Detalhes</Button>
-                  </TableCell>
-                </TableRow>
+                {salesData.map((sale) => (
+                  <TableRow key={sale.id}>
+                    <TableCell>{sale.id}</TableCell>
+                    <TableCell className="font-medium">{sale.customer}</TableCell>
+                    <TableCell>{sale.product}</TableCell>
+                    <TableCell>{sale.date}</TableCell>
+                    <TableCell>{sale.total}</TableCell>
+                    <TableCell>{getStatusBadge(sale.status)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="outline" size="sm">Detalhes</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>
         </Card>
       </div>
-
-      <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Exportar Relatório de Vendas</DialogTitle>
-            <DialogDescription>
-              Escolha o formato e o período do relatório que deseja exportar.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <h4 className="font-medium">Formato</h4>
-              <div className="flex flex-wrap gap-4">
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="format" 
-                    value="csv" 
-                    checked={exportFormat === "csv"} 
-                    onChange={() => setExportFormat("csv")}
-                    className="radio"
-                  />
-                  <span>CSV</span>
-                </label>
-                
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="format" 
-                    value="pdf" 
-                    checked={exportFormat === "pdf"} 
-                    onChange={() => setExportFormat("pdf")}
-                    className="radio"
-                  />
-                  <span>PDF</span>
-                </label>
-                
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="format" 
-                    value="excel" 
-                    checked={exportFormat === "excel"} 
-                    onChange={() => setExportFormat("excel")}
-                    className="radio"
-                  />
-                  <span>Excel</span>
-                </label>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="font-medium">Período</h4>
-              <div className="flex flex-wrap gap-4">
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="period" 
-                    value="all" 
-                    checked={dateRange === "all"} 
-                    onChange={() => setDateRange("all")}
-                    className="radio"
-                  />
-                  <span>Todas as vendas</span>
-                </label>
-                
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="period" 
-                    value="month" 
-                    checked={dateRange === "month"} 
-                    onChange={() => setDateRange("month")}
-                    className="radio"
-                  />
-                  <span>Último mês</span>
-                </label>
-                
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="period" 
-                    value="week" 
-                    checked={dateRange === "week"} 
-                    onChange={() => setDateRange("week")}
-                    className="radio"
-                  />
-                  <span>Última semana</span>
-                </label>
-              </div>
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowExportDialog(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={startExport} disabled={isExporting}>
-              {isExporting ? (
-                <>Exportando...</>
-              ) : (
-                <>
-                  <Download className="mr-2 h-4 w-4" />
-                  Exportar
-                </>
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </AdminLayout>
+    </>
   );
 }

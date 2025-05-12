@@ -1,160 +1,159 @@
 
-import React, { useState } from "react";
-import { AdminLayout } from "./AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Settings } from "lucide-react";
+import React from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function AdminSettings() {
-  const [platformSettings, setPlatformSettings] = useState({
-    platformName: "ClickCenter",
-    contactEmail: "contato@clickcenter.com",
-    affiliateCommission: 15,
-    platformCommission: 10
-  });
-
-  const [isSaving, setIsSaving] = useState(false);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setPlatformSettings({
-      ...platformSettings,
-      [name]: name.includes("Commission") ? Number(value) : value
-    });
-  };
-
-  const handleSaveSettings = () => {
-    setIsSaving(true);
-    
-    // Simulação de uma requisição ao servidor
-    setTimeout(() => {
-      setIsSaving(false);
-      toast.success("Configurações salvas com sucesso!", {
-        description: "As alterações foram aplicadas na plataforma."
-      });
-    }, 800);
-  };
-
   return (
-    <AdminLayout>
+    <>
       <div className="container py-6">
-        <h1 className="text-3xl font-bold mb-6">Configurações da Plataforma</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold">Configurações</h1>
+        </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+        <Tabs defaultValue="general" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsTrigger value="general">Geral</TabsTrigger>
+            <TabsTrigger value="payments">Pagamentos</TabsTrigger>
+            <TabsTrigger value="emails">Emails</TabsTrigger>
+            <TabsTrigger value="advanced">Avançado</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="general">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Configurações Gerais
-                </CardTitle>
+                <CardTitle>Configurações Gerais</CardTitle>
                 <CardDescription>
-                  Configure os detalhes básicos da plataforma
+                  Gerencie as configurações básicas da sua plataforma.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div>
-                  <h3 className="font-medium mb-2">Nome da Plataforma</h3>
-                  <input 
-                    type="text" 
-                    name="platformName"
-                    className="w-full px-3 py-2 border rounded-md"
-                    value={platformSettings.platformName}
-                    onChange={handleInputChange}
-                  />
+                <div className="space-y-4">
+                  <h3 className="font-medium text-lg">Informações da Plataforma</h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="platform-name">Nome da Plataforma</Label>
+                      <Input id="platform-name" value="ClickCenter" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="platform-url">URL da Plataforma</Label>
+                      <Input id="platform-url" value="https://clickcenter.com.br" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="platform-description">Descrição</Label>
+                    <Textarea id="platform-description" value="A melhor plataforma para hospedagem e venda de produtos digitais e físicos." />
+                  </div>
                 </div>
-
-                <div>
-                  <h3 className="font-medium mb-2">Email de Contato</h3>
-                  <input 
-                    type="email" 
-                    name="contactEmail"
-                    className="w-full px-3 py-2 border rounded-md"
-                    value={platformSettings.contactEmail}
-                    onChange={handleInputChange}
-                  />
-                </div>
-
+                
                 <Separator />
                 
-                <div>
-                  <h3 className="font-medium mb-2">Comissão de Afiliados (Padrão)</h3>
-                  <div className="flex items-center">
-                    <input 
-                      type="number" 
-                      name="affiliateCommission"
-                      className="w-20 px-3 py-2 border rounded-md"
-                      value={platformSettings.affiliateCommission}
-                      onChange={handleInputChange}
-                    />
-                    <span className="ml-2">%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="font-medium mb-2">Comissão da Plataforma</h3>
-                  <div className="flex items-center">
-                    <input 
-                      type="number" 
-                      name="platformCommission"
-                      className="w-20 px-3 py-2 border rounded-md"
-                      value={platformSettings.platformCommission}
-                      onChange={handleInputChange}
-                    />
-                    <span className="ml-2">%</span>
+                <div className="space-y-4">
+                  <h3 className="font-medium text-lg">Funcionalidades</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Label htmlFor="affiliate-toggle" className="font-medium">Programa de Afiliados</Label>
+                        <p className="text-sm text-muted-foreground">Permitir que usuários se tornem afiliados e vendam produtos.</p>
+                      </div>
+                      <Switch id="affiliate-toggle" defaultChecked />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Label htmlFor="creator-toggle" className="font-medium">Portal de Criadores</Label>
+                        <p className="text-sm text-muted-foreground">Permitir que usuários criem e vendam seus próprios produtos.</p>
+                      </div>
+                      <Switch id="creator-toggle" defaultChecked />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Label htmlFor="maintenance-toggle" className="font-medium">Modo de Manutenção</Label>
+                        <p className="text-sm text-muted-foreground">Ativar o modo de manutenção para realizar atualizações.</p>
+                      </div>
+                      <Switch id="maintenance-toggle" />
+                    </div>
                   </div>
                 </div>
                 
-                <Button 
-                  className="mt-4" 
-                  onClick={handleSaveSettings}
-                  disabled={isSaving}
-                >
-                  {isSaving ? "Salvando..." : "Salvar Alterações"}
-                </Button>
+                <div className="flex justify-end">
+                  <Button>Salvar Configurações</Button>
+                </div>
               </CardContent>
             </Card>
-          </div>
+          </TabsContent>
           
-          <div>
+          <TabsContent value="payments">
             <Card>
               <CardHeader>
-                <CardTitle>Integrações</CardTitle>
+                <CardTitle>Configurações de Pagamento</CardTitle>
                 <CardDescription>
-                  Configure integrações com serviços externos
+                  Gerencie os métodos e integrações de pagamento.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-3 border rounded-md">
-                  <div>
-                    <p className="font-medium">Processador de Pagamento</p>
-                    <p className="text-sm text-muted-foreground">Stripe</p>
-                  </div>
-                  <Button variant="outline" size="sm">Configurar</Button>
+              <CardContent className="space-y-6">
+                {/* Payment settings content */}
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Configurações de pagamento em desenvolvimento.</p>
                 </div>
                 
-                <div className="flex items-center justify-between p-3 border rounded-md">
-                  <div>
-                    <p className="font-medium">Email Marketing</p>
-                    <p className="text-sm text-muted-foreground">Não configurado</p>
-                  </div>
-                  <Button variant="outline" size="sm">Configurar</Button>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 border rounded-md">
-                  <div>
-                    <p className="font-medium">Analytics</p>
-                    <p className="text-sm text-muted-foreground">Google Analytics</p>
-                  </div>
-                  <Button variant="outline" size="sm">Configurar</Button>
+                <div className="flex justify-end">
+                  <Button>Salvar Configurações</Button>
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
+          </TabsContent>
+          
+          <TabsContent value="emails">
+            <Card>
+              <CardHeader>
+                <CardTitle>Configurações de Emails</CardTitle>
+                <CardDescription>
+                  Configure os modelos de email e notificações.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Email settings content */}
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Configurações de email em desenvolvimento.</p>
+                </div>
+                
+                <div className="flex justify-end">
+                  <Button>Salvar Configurações</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="advanced">
+            <Card>
+              <CardHeader>
+                <CardTitle>Configurações Avançadas</CardTitle>
+                <CardDescription>
+                  Configurações avançadas da plataforma.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Advanced settings content */}
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Configurações avançadas em desenvolvimento.</p>
+                </div>
+                
+                <div className="flex justify-end">
+                  <Button>Salvar Configurações</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-    </AdminLayout>
+    </>
   );
 }

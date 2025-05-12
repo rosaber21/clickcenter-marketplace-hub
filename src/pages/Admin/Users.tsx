@@ -1,253 +1,178 @@
 
 import React, { useState } from "react";
-import { AdminLayout } from "./AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Plus, Save, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle 
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
 } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search, UserPlus, User } from "lucide-react";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 
 export default function AdminUsers() {
-  const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false);
-  const [newUser, setNewUser] = useState({
-    name: "",
-    email: "",
-    userType: "cliente",
-    password: "",
-    confirmPassword: "",
-  });
-  const { toast } = useToast();
-
-  const handleAddUser = (e: React.FormEvent) => {
-    e.preventDefault();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  
+  const usersData = [
+    { id: 1, name: "João Silva", email: "joao@example.com", role: "customer", status: "active", dateJoined: "10/01/2025" },
+    { id: 2, name: "Maria Souza", email: "maria@example.com", role: "affiliate", status: "active", dateJoined: "15/01/2025" },
+    { id: 3, name: "Pedro Santos", email: "pedro@example.com", role: "creator", status: "active", dateJoined: "22/02/2025" },
+    { id: 4, name: "Ana Oliveira", email: "ana@example.com", role: "customer", status: "inactive", dateJoined: "05/03/2025" },
+    { id: 5, name: "Lucas Costa", email: "lucas@example.com", role: "admin", status: "active", dateJoined: "01/12/2024" },
+    { id: 6, name: "Carla Mendes", email: "carla@example.com", role: "affiliate", status: "active", dateJoined: "18/03/2025" },
+    { id: 7, name: "Roberto Alves", email: "roberto@example.com", role: "customer", status: "active", dateJoined: "25/03/2025" },
+    { id: 8, name: "Juliana Lima", email: "juliana@example.com", role: "creator", status: "inactive", dateJoined: "02/04/2025" },
+  ];
+  
+  const filteredUsers = usersData.filter(user => {
+    const matchesSearch = 
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      user.email.toLowerCase().includes(searchQuery.toLowerCase());
     
-    // Validate inputs
-    if (!newUser.name || !newUser.email || !newUser.userType || !newUser.password) {
-      toast({
-        title: "Erro ao adicionar usuário",
-        description: "Por favor, preencha todos os campos obrigatórios.",
-        variant: "destructive",
-      });
-      return;
+    const matchesRole = roleFilter === "all" || user.role === roleFilter;
+    
+    return matchesSearch && matchesRole;
+  });
+  
+  const getRoleBadge = (role: string) => {
+    switch (role) {
+      case "admin":
+        return <Badge className="bg-purple-500">Admin</Badge>;
+      case "creator":
+        return <Badge className="bg-blue-500">Criador</Badge>;
+      case "affiliate":
+        return <Badge variant="outline" className="border-green-500 text-green-500">Afiliado</Badge>;
+      case "customer":
+        return <Badge variant="outline" className="border-gray-500 text-gray-500">Cliente</Badge>;
+      default:
+        return null;
     }
-
-    if (newUser.password !== newUser.confirmPassword) {
-      toast({
-        title: "Erro ao adicionar usuário",
-        description: "As senhas não coincidem.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // In a real app, you would call your API or Supabase here
-    // For demo purposes, just show success toast
-    toast({
-      title: "Usuário adicionado com sucesso",
-      description: `${newUser.name} foi adicionado como ${newUser.userType}.`,
-      variant: "success",
-    });
-
-    // Close dialog and reset form
-    setIsAddUserDialogOpen(false);
-    setNewUser({
-      name: "",
-      email: "",
-      userType: "cliente",
-      password: "",
-      confirmPassword: "",
-    });
   };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewUser({
-      ...newUser,
-      [name]: value,
-    });
+  
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "active":
+        return <Badge variant="outline" className="border-green-500 text-green-500">Ativo</Badge>;
+      case "inactive":
+        return <Badge variant="outline" className="border-amber-500 text-amber-500">Inativo</Badge>;
+      default:
+        return null;
+    }
   };
 
   return (
-    <AdminLayout>
+    <>
       <div className="container py-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Gerenciar Usuários</h1>
-          <Button className="gap-2" onClick={() => setIsAddUserDialogOpen(true)}>
-            <Plus size={16} />
+          <h1 className="text-3xl font-bold">Usuários</h1>
+          <Button className="gap-2">
+            <UserPlus className="h-4 w-4" />
             <span>Adicionar Usuário</span>
           </Button>
         </div>
         
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Lista de Usuários
+              <User className="h-5 w-5" />
+              Gerenciar Usuários
             </CardTitle>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Buscar por nome ou email..." 
+                  className="pl-9 w-[250px]" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="Filtrar por tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos tipos</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="creator">Criador</SelectItem>
+                  <SelectItem value="affiliate">Afiliado</SelectItem>
+                  <SelectItem value="customer">Cliente</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>ID</TableHead>
                   <TableHead>Nome</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Tipo</TableHead>
-                  <TableHead>Data de Registro</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Ações</TableHead>
+                  <TableHead>Data de Cadastro</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell className="py-3">Ana Pereira</TableCell>
-                  <TableCell className="py-3">ana@exemplo.com</TableCell>
-                  <TableCell className="py-3">Cliente</TableCell>
-                  <TableCell className="py-3">10/04/2025</TableCell>
-                  <TableCell className="py-3">
-                    <span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Ativo</span>
-                  </TableCell>
-                  <TableCell className="py-3 flex space-x-2">
-                    <Button variant="outline" size="sm">Editar</Button>
-                    <Button variant="outline" size="sm" className="text-red-500">Suspender</Button>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="py-3">Carlos Santos</TableCell>
-                  <TableCell className="py-3">carlos@exemplo.com</TableCell>
-                  <TableCell className="py-3">Afiliado</TableCell>
-                  <TableCell className="py-3">05/05/2025</TableCell>
-                  <TableCell className="py-3">
-                    <span className="bg-green-100 text-green-800 rounded-full px-2 py-1 text-xs">Ativo</span>
-                  </TableCell>
-                  <TableCell className="py-3 flex space-x-2">
-                    <Button variant="outline" size="sm">Editar</Button>
-                    <Button variant="outline" size="sm" className="text-red-500">Suspender</Button>
-                  </TableCell>
-                </TableRow>
+                {filteredUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.id}</TableCell>
+                    <TableCell className="font-medium">{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{getRoleBadge(user.role)}</TableCell>
+                    <TableCell>{getStatusBadge(user.status)}</TableCell>
+                    <TableCell>{user.dateJoined}</TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            Ações
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                          <DropdownMenuItem>Ver Detalhes</DropdownMenuItem>
+                          <DropdownMenuItem>Editar Usuário</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-amber-500">Alterar Tipo</DropdownMenuItem>
+                          {user.status === "active" ? (
+                            <DropdownMenuItem className="text-amber-500">Desativar</DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem className="text-green-500">Ativar</DropdownMenuItem>
+                          )}
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-red-500">Excluir</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>
         </Card>
-
-        {/* Add User Dialog */}
-        <Dialog open={isAddUserDialogOpen} onOpenChange={setIsAddUserDialogOpen}>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>Adicionar Novo Usuário</DialogTitle>
-              <DialogDescription>
-                Preencha os dados do novo usuário para adicioná-lo ao sistema.
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleAddUser}>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Nome
-                  </Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={newUser.name}
-                    onChange={handleInputChange}
-                    className="col-span-3"
-                    placeholder="Nome completo"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="email" className="text-right">
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={newUser.email}
-                    onChange={handleInputChange}
-                    className="col-span-3"
-                    placeholder="email@exemplo.com"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="userType" className="text-right">
-                    Tipo
-                  </Label>
-                  <Select
-                    value={newUser.userType}
-                    onValueChange={(value) => setNewUser({...newUser, userType: value})}
-                  >
-                    <SelectTrigger className="col-span-3">
-                      <SelectValue placeholder="Selecione o tipo de usuário" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="cliente">Cliente</SelectItem>
-                      <SelectItem value="afiliado">Afiliado</SelectItem>
-                      <SelectItem value="admin">Administrador</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="password" className="text-right">
-                    Senha
-                  </Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={newUser.password}
-                    onChange={handleInputChange}
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="confirmPassword" className="text-right">
-                    Confirmar Senha
-                  </Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={newUser.confirmPassword}
-                    onChange={handleInputChange}
-                    className="col-span-3"
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setIsAddUserDialogOpen(false)}>
-                  <X className="mr-2 h-4 w-4" /> Cancelar
-                </Button>
-                <Button type="submit">
-                  <Save className="mr-2 h-4 w-4" /> Salvar
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
       </div>
-    </AdminLayout>
+    </>
   );
 }
