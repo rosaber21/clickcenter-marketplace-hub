@@ -43,7 +43,7 @@ const AdminLogin = () => {
 
   const onSubmit = (data: AdminLoginFormValues) => {
     // Verificação com as novas credenciais
-    if (data.email === "rb9356670@gmail.com" && data.password === "123") {
+    if (data.email === "rb9356670@gmail.com" && data.password === "123455") {
       toast({
         title: "Login bem-sucedido",
         description: "Bem-vindo ao painel administrativo.",
