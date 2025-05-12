@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
@@ -22,22 +21,15 @@ const Login = () => {
     setTimeout(() => {
       setIsLoading(false);
       
-      // Check login role and navigate accordingly
-      if (data.email.includes("admin")) {
-        toast({
-          title: "Login bem-sucedido!",
-          description: "Bem-vindo administrador.",
-          variant: "success",
-        });
-        navigate("/admin");
-      } else if (data.email.includes("criador")) {
+      // Navigate based on account type
+      if (data.accountType === "criador") {
         toast({
           title: "Login bem-sucedido!",
           description: "Bem-vindo ao painel de criador.",
           variant: "success",
         });
         navigate("/criador");
-      } else if (data.email.includes("afiliado")) {
+      } else if (data.accountType === "afiliado") {
         toast({
           title: "Login bem-sucedido!",
           description: "Bem-vindo ao painel de afiliado.",

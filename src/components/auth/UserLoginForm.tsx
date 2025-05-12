@@ -15,11 +15,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, LogIn } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Login schema validation
 const loginSchema = z.object({
   email: z.string().email("Digite um email válido"),
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+  accountType: z.enum(["aluno", "afiliado", "criador"]),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
@@ -37,6 +45,7 @@ export const UserLoginForm = ({ onSubmit, isLoading = false }: UserLoginFormProp
     defaultValues: {
       email: "",
       password: "",
+      accountType: "aluno",
     },
   });
 
@@ -82,6 +91,32 @@ export const UserLoginForm = ({ onSubmit, isLoading = false }: UserLoginFormProp
                   </Button>
                 </div>
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="accountType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tipo de Conta</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                disabled={isLoading}
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione um tipo de conta" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="aluno">Aluno/Cliente</SelectItem>
+                  <SelectItem value="afiliado">Afiliado</SelectItem>
+                  <SelectItem value="criador">Criador de Produtos</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
