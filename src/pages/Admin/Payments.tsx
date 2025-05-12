@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { AdminLayout } from "./AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -102,7 +101,7 @@ export default function AdminPayments() {
       toast({
         title: "Pagamento processado",
         description: `Pagamento de €${selectedPayment.amount.toLocaleString('pt-PT', { minimumFractionDigits: 2 })} para ${selectedPayment.recipient} foi processado com sucesso.`,
-        variant: "success"
+        variant: "default"
       });
       
       setIsProcessingDialogOpen(false);
@@ -118,7 +117,7 @@ export default function AdminPayments() {
     toast({
       title: "Pagamentos processados",
       description: `${pendingPayments.length} pagamentos foram processados com sucesso.`,
-      variant: "success"
+      variant: "default"
     });
   };
   

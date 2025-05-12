@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { AdminLayout } from "./AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -90,7 +89,7 @@ export default function AdminProducts() {
     toast({
       title: "Produto criado",
       description: "O produto foi adicionado com sucesso.",
-      variant: "success"
+      variant: "default"
     });
     
     // Reset form
@@ -109,7 +108,7 @@ export default function AdminProducts() {
     toast({
       title: "Produto aprovado",
       description: "O produto foi aprovado com sucesso.",
-      variant: "success"
+      variant: "default"
     });
   };
   

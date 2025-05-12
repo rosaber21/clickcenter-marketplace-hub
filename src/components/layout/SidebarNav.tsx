@@ -44,6 +44,11 @@ export function SidebarNav() {
         : "text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
     );
 
+  // Helper function to check user role
+  const hasRole = (roles: UserRole[]) => {
+    return roles.includes(userRole);
+  };
+
   return (
     <Sidebar
       className={cn(
@@ -80,7 +85,7 @@ export function SidebarNav() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
 
-                  {(userRole === "afiliado" || userRole === "criador" || userRole === "admin") && (
+                  {hasRole(["afiliado", "criador", "admin"]) && (
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <NavLink to="/afiliados" className={getNavLinkClass}>
@@ -91,7 +96,7 @@ export function SidebarNav() {
                     </SidebarMenuItem>
                   )}
 
-                  {(userRole === "criador" || userRole === "admin") && (
+                  {hasRole(["criador", "admin"]) && (
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
                         <NavLink to="/novo-produto" className={getNavLinkClass}>
@@ -102,7 +107,7 @@ export function SidebarNav() {
                     </SidebarMenuItem>
                   )}
 
-                  {userRole === "admin" && (
+                  {hasRole(["admin"]) && (
                     <>
                       <SidebarMenuItem>
                         <SidebarMenuButton asChild>

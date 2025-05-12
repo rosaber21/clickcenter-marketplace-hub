@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { AdminLayout } from "./AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -143,7 +142,7 @@ export default function AdminUsers() {
     toast({
       title: newStatus === "active" ? "Usuário desbloqueado" : "Usuário bloqueado",
       description: `${user?.name} foi ${newStatus === "active" ? "desbloqueado" : "bloqueado"} com sucesso.`,
-      variant: newStatus === "active" ? "success" : "destructive"
+      variant: newStatus === "active" ? "default" : "destructive"
     });
   };
   
