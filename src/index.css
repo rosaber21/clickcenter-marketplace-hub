@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%; /* Mudando para um tom mais suave de azul claro */
+    --background: 222 47% 96%; /* Fundo mais claro e profissional */
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -46,13 +46,13 @@
   }
 
   .dark {
-    --background: 222.2 47% 11%; /* Fundo escuro mais elegante */
+    --background: 222.2 36% 12%; /* Fundo escuro mais premium */
     --foreground: 210 40% 98%;
 
-    --card: 222.2 47% 11%;
+    --card: 222.2 36% 12%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 47% 11%;
+    --popover: 222.2 36% 12%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 226 71% 50%; 
@@ -92,8 +92,6 @@
 
   body {
     @apply bg-background text-foreground;
-    background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
-    background-attachment: fixed;
   }
 }
 
@@ -112,7 +110,14 @@
   }
 
   .main-gradient-bg {
-    background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+    background-image: linear-gradient(to right, #e2e8f0, #f8fafc);
+    background-attachment: fixed;
+  }
+
+  /* Versão dark mode do gradiente */
+  .dark .main-gradient-bg {
+    background-image: linear-gradient(to right, #1e293b, #0f172a);
     background-attachment: fixed;
   }
 }
+
