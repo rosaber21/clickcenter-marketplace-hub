@@ -19,19 +19,13 @@ export const AuthContainer: React.FC<AuthContainerProps> = ({
   isLoading
 }) => {
   return (
-    <div className="flex flex-col gap-8 py-10">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-center">
-          <div className="w-full max-w-md">
-            <UserAuth 
-              onLoginSubmit={onLoginSubmit}
-              onRegisterSubmit={onRegisterSubmit}
-              onAdminLoginSubmit={onAdminLoginSubmit}
-              isLoading={isLoading}
-            />
-          </div>
-        </div>
-      </div>
+    <div className="w-full max-w-md">
+      <UserAuth 
+        onLoginSubmit={onLoginSubmit}
+        onRegisterSubmit={onRegisterSubmit}
+        onAdminLoginSubmit={onAdminLoginSubmit}
+        isLoading={isLoading}
+      />
     </div>
   );
 };

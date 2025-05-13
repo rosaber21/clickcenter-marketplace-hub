@@ -9,12 +9,14 @@ const Login = () => {
 
   return (
     <MainLayout>
-      <AuthContainer 
-        onLoginSubmit={onLoginSubmit}
-        onRegisterSubmit={onRegisterSubmit}
-        onAdminLoginSubmit={onAdminLoginSubmit}
-        isLoading={isLoading}
-      />
+      <div className="flex justify-center items-center min-h-[calc(100vh-180px)]">
+        <AuthContainer 
+          onLoginSubmit={onLoginSubmit}
+          onRegisterSubmit={onRegisterSubmit}
+          onAdminLoginSubmit={onAdminLoginSubmit}
+          isLoading={isLoading}
+        />
+      </div>
     </MainLayout>
   );
 };
