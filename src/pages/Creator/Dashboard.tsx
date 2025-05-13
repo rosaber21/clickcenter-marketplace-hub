@@ -7,7 +7,8 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { useDashboardTabs } from "@/components/creator/dashboard/useDashboardTabs";
 import { useDashboardData } from "@/components/creator/dashboard/useDashboardData";
 import { useToastNotifications } from "@/components/creator/dashboard/useToastNotifications";
-import { AffiliateDialogHandler } from "@/components/creator/dashboard/AffiliateDialogHandler";
+// Changed from component import to hook import
+import { useAffiliateDialogHandler } from "@/components/creator/dashboard/AffiliateDialogHandler";
 import { ProductDialogHandler } from "@/components/creator/dashboard/ProductDialogHandler";
 
 // Import the dashboard components
@@ -39,7 +40,7 @@ export default function CreatorDashboard() {
     handleDeleteProduct 
   } = useToastNotifications();
 
-  // Get affiliate dialog handler
+  // Get affiliate dialog handler from the hook instead of component
   const { 
     handleNewAffiliate, 
     affiliateDialogOpen, 
@@ -48,7 +49,7 @@ export default function CreatorDashboard() {
     setNewAffiliateEmail, 
     handleAddAffiliate, 
     isAddingAffiliate 
-  } = AffiliateDialogHandler();
+  } = useAffiliateDialogHandler();
 
   return (
     <MainLayout>

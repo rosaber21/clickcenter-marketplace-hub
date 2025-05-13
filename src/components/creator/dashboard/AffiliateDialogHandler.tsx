@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
-export const AffiliateDialogHandler = () => {
+// Changed from a component to a hook (note the "use" prefix in the name)
+export const useAffiliateDialogHandler = () => {
   const { toast } = useToast();
   const [affiliateDialogOpen, setAffiliateDialogOpen] = useState(false);
   const [newAffiliateEmail, setNewAffiliateEmail] = useState("");
