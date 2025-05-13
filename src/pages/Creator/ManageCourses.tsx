@@ -14,7 +14,8 @@ import {
   Search,
   Edit,
   Copy,
-  Trash
+  Trash,
+  Eye
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { mockCourseData } from "@/data/mockCourseData";

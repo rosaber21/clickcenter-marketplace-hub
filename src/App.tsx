@@ -13,6 +13,7 @@ import AffiliateCategories from "@/pages/AffiliateCategories";
 import AffiliateProducts from "@/pages/Affiliate/Products";
 import Contact from "@/pages/Contact";
 import CreatorDashboard from "@/pages/Creator/Dashboard";
+import CreatorProducts from "@/pages/Creator/Products";
 import ManageAffiliates from "@/pages/Creator/ManageAffiliates";
 import ManageCourses from "@/pages/Creator/ManageCourses";
 import CoursePreview from "@/pages/Creator/CoursePreview";
@@ -62,6 +63,16 @@ function App() {
 
               {/* Creator routes */}
               <Route path="/criador" element={<CreatorDashboard />} />
+              <Route path="/criador/produtos" element={<CreatorProducts />} />
+              <Route path="/criador/comunidades" element={<NotFound />} />
+              <Route path="/criador/moderacao" element={<NotFound />} />
+              <Route path="/criador/membros" element={<NotFound />} />
+              <Route path="/criador/vendas" element={<NotFound />} />
+              <Route path="/criador/combos" element={<NotFound />} />
+              <Route path="/criador/personalizacao" element={<NotFound />} />
+              <Route path="/criador/gamificacao" element={<NotFound />} />
+              <Route path="/criador/analytics" element={<NotFound />} />
+              <Route path="/criador/configuracoes" element={<NotFound />} />
               <Route path="/criador/gerenciar-afiliados" element={<ManageAffiliates />} />
               <Route path="/criador/gerenciar-cursos" element={<ManageCourses />} />
               <Route path="/criador/curso-preview" element={<CoursePreview />} />
