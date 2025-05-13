@@ -23,7 +23,14 @@ const engagementData = [
   { name: "Dom", value: 3.2 },
 ];
 
-const contentEngagementData = [
+interface ContentEngagementData {
+  content: string;
+  views: number;
+  completionRate: string;
+  avgTime: string;
+}
+
+const contentEngagementData: ContentEngagementData[] = [
   { content: "Aula 1: Introdução", views: 876, completionRate: "92%", avgTime: "15:24" },
   { content: "Aula 2: Conceitos Básicos", views: 742, completionRate: "85%", avgTime: "28:12" },
   { content: "Aula 3: Técnicas Avançadas", views: 631, completionRate: "76%", avgTime: "32:45" },
@@ -32,10 +39,10 @@ const contentEngagementData = [
 ];
 
 const tableColumns = [
-  { key: "content", label: "Conteúdo" },
-  { key: "views", label: "Visualizações" },
-  { key: "completionRate", label: "Taxa de Conclusão" },
-  { key: "avgTime", label: "Tempo Médio" },
+  { key: "content" as keyof ContentEngagementData, label: "Conteúdo" },
+  { key: "views" as keyof ContentEngagementData, label: "Visualizações" },
+  { key: "completionRate" as keyof ContentEngagementData, label: "Taxa de Conclusão" },
+  { key: "avgTime" as keyof ContentEngagementData, label: "Tempo Médio" },
 ];
 
 export const EngagementTab = () => {

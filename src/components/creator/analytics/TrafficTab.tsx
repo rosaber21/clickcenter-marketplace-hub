@@ -21,7 +21,14 @@ const data = [
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-const referralData = [
+interface ReferralData {
+  source: string;
+  visits: number;
+  conversions: number;
+  rate: string;
+}
+
+const referralData: ReferralData[] = [
   { source: "Google", visits: 1432, conversions: 58, rate: "4.1%" },
   { source: "Facebook", visits: 958, conversions: 41, rate: "4.3%" },
   { source: "Instagram", visits: 842, conversions: 32, rate: "3.8%" },
@@ -30,10 +37,10 @@ const referralData = [
 ];
 
 const tableColumns = [
-  { key: "source", label: "Fonte" },
-  { key: "visits", label: "Visitas" },
-  { key: "conversions", label: "Conversões" },
-  { key: "rate", label: "Taxa" },
+  { key: "source" as keyof ReferralData, label: "Fonte" },
+  { key: "visits" as keyof ReferralData, label: "Visitas" },
+  { key: "conversions" as keyof ReferralData, label: "Conversões" },
+  { key: "rate" as keyof ReferralData, label: "Taxa" },
 ];
 
 export const TrafficTab = () => {
