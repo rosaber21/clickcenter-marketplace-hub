@@ -199,6 +199,52 @@ export default function Sales() {
               <TabsTrigger value="completed">Concluídas</TabsTrigger>
               <TabsTrigger value="refunded">Estornadas</TabsTrigger>
             </TabsList>
+          
+            {/* Sales Table */}
+            <div className="border rounded-md mt-4">
+              {loading ? (
+                <div className="p-4">
+                  <div className="space-y-2">
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-12 w-full" />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <TabsContent value="all" className="m-0">
+                    <DataTable
+                      data={salesData}
+                      columns={columns}
+                      caption="Todas as vendas"
+                    />
+                  </TabsContent>
+                  <TabsContent value="pending" className="m-0">
+                    <DataTable
+                      data={salesData.filter(sale => sale.status === "Pendente")}
+                      columns={columns}
+                      caption="Vendas pendentes"
+                    />
+                  </TabsContent>
+                  <TabsContent value="completed" className="m-0">
+                    <DataTable
+                      data={salesData.filter(sale => sale.status === "Pago")}
+                      columns={columns}
+                      caption="Vendas concluídas"
+                    />
+                  </TabsContent>
+                  <TabsContent value="refunded" className="m-0">
+                    <DataTable
+                      data={salesData.filter(sale => sale.status === "Estornado")}
+                      columns={columns}
+                      caption="Vendas estornadas"
+                    />
+                  </TabsContent>
+                </>
+              )}
+            </div>
           </Tabs>
           
           <div className="flex items-center gap-2 w-full md:w-auto">
@@ -219,52 +265,6 @@ export default function Sales() {
               Colunas
             </Button>
           </div>
-        </div>
-
-        {/* Sales Table */}
-        <div className="border rounded-md">
-          {loading ? (
-            <div className="p-4">
-              <div className="space-y-2">
-                <Skeleton className="h-6 w-full" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-              </div>
-            </div>
-          ) : (
-            <>
-              <TabsContent value="all" className="m-0">
-                <DataTable
-                  data={salesData}
-                  columns={columns}
-                  caption="Todas as vendas"
-                />
-              </TabsContent>
-              <TabsContent value="pending" className="m-0">
-                <DataTable
-                  data={salesData.filter(sale => sale.status === "Pendente")}
-                  columns={columns}
-                  caption="Vendas pendentes"
-                />
-              </TabsContent>
-              <TabsContent value="completed" className="m-0">
-                <DataTable
-                  data={salesData.filter(sale => sale.status === "Pago")}
-                  columns={columns}
-                  caption="Vendas concluídas"
-                />
-              </TabsContent>
-              <TabsContent value="refunded" className="m-0">
-                <DataTable
-                  data={salesData.filter(sale => sale.status === "Estornado")}
-                  columns={columns}
-                  caption="Vendas estornadas"
-                />
-              </TabsContent>
-            </>
-          )}
         </div>
 
         <div className="mt-4 text-center text-sm text-muted-foreground">
