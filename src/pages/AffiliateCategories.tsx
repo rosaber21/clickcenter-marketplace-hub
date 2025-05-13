@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { MainLayout } from "@/components/layout/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { 
   Tabs, 
@@ -63,73 +62,71 @@ const AffiliateCategories = () => {
   };
 
   return (
-    <MainLayout>
-      <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <Button 
-            variant="ghost" 
-            onClick={handleBackToHome}
-            className="gap-2 hover:bg-muted/50"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar para início
-          </Button>
-          
-          <Button 
-            variant="outline"
-            onClick={handleHowItWorks}
-          >
-            Como funciona?
-          </Button>
-        </div>
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <Button 
+          variant="ghost" 
+          onClick={handleBackToHome}
+          className="gap-2 hover:bg-muted/50"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Voltar para início
+        </Button>
         
-        {/* Hero section */}
-        <AffiliateHero onAffiliateSignup={handleAffiliateSignup} />
-        
-        {/* Navigation and filters */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">Categorias para Afiliação</h2>
-            <p className="text-muted-foreground">
-              Escolha uma categoria para ver os produtos disponíveis para afiliação
-            </p>
-          </div>
-          
-          <Tabs defaultValue="categories" className="w-full md:w-auto" value={selectedTab} onValueChange={setSelectedTab}>
-            <TabsList>
-              <TabsTrigger value="categories">
-                <Tag className="mr-2 h-4 w-4" />
-                Categorias
-              </TabsTrigger>
-              <TabsTrigger value="ranking">
-                <Users className="mr-2 h-4 w-4" />
-                Ranking
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-
-        {/* Main content */}
-        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="mt-0">
-          <TabsContent value="categories" className="mt-0">
-            <CategoriesSection 
-              categories={affiliateCategories} 
-              onViewProducts={handleViewProducts}
-            />
-          </TabsContent>
-
-          <TabsContent value="ranking" className="mt-0">
-            <AffiliateRanking 
-              affiliates={topAffiliates} 
-              onAffiliateSignup={handleAffiliateSignup}
-            />
-          </TabsContent>
-        </Tabs>
-
-        {/* FAQ Section */}
-        <FaqSection />
+        <Button 
+          variant="outline"
+          onClick={handleHowItWorks}
+        >
+          Como funciona?
+        </Button>
       </div>
-    </MainLayout>
+      
+      {/* Hero section */}
+      <AffiliateHero onAffiliateSignup={handleAffiliateSignup} />
+      
+      {/* Navigation and filters */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div>
+          <h2 className="text-3xl font-bold mb-2">Categorias para Afiliação</h2>
+          <p className="text-muted-foreground">
+            Escolha uma categoria para ver os produtos disponíveis para afiliação
+          </p>
+        </div>
+        
+        <Tabs defaultValue="categories" className="w-full md:w-auto" value={selectedTab} onValueChange={setSelectedTab}>
+          <TabsList>
+            <TabsTrigger value="categories">
+              <Tag className="mr-2 h-4 w-4" />
+              Categorias
+            </TabsTrigger>
+            <TabsTrigger value="ranking">
+              <Users className="mr-2 h-4 w-4" />
+              Ranking
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      {/* Main content */}
+      <Tabs value={selectedTab} onValueChange={setSelectedTab} className="mt-0">
+        <TabsContent value="categories" className="mt-0">
+          <CategoriesSection 
+            categories={affiliateCategories} 
+            onViewProducts={handleViewProducts}
+          />
+        </TabsContent>
+
+        <TabsContent value="ranking" className="mt-0">
+          <AffiliateRanking 
+            affiliates={topAffiliates} 
+            onAffiliateSignup={handleAffiliateSignup}
+          />
+        </TabsContent>
+      </Tabs>
+
+      {/* FAQ Section */}
+      <FaqSection />
+    </div>
   );
 };
 

@@ -56,7 +56,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Header */}
+      {/* Only one Header component */}
       <Header 
         scrolled={scrolled} 
         cartOpen={cartOpen}
