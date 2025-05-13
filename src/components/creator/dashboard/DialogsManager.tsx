@@ -10,7 +10,7 @@ interface DialogsManagerProps {
   setAffiliateDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   newAffiliateEmail: string;
   setNewAffiliateEmail: React.Dispatch<React.SetStateAction<string>>;
-  handleAddAffiliate: () => void;
+  handleAddAffiliate: (e: React.FormEvent) => Promise<void>;
   isAddingAffiliate: boolean;
 }
 
@@ -35,7 +35,7 @@ export const DialogsManager: React.FC<DialogsManagerProps> = ({
         onOpenChange={setAffiliateDialogOpen}
         newAffiliateEmail={newAffiliateEmail}
         onEmailChange={(e) => setNewAffiliateEmail(e.target.value)}
-        onSubmit={handleAddAffiliate}
+        onSubmit={(e) => handleAddAffiliate(e)}
         isAddingAffiliate={isAddingAffiliate}
       />
     </>
