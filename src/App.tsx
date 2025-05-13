@@ -53,12 +53,14 @@ function App() {
               {/* Creator routes */}
               <Route path="/criador" element={<CreatorDashboard />} />
 
-              {/* Affiliate routes */}
-              <Route path="/afiliado" element={<AffiliateLayout><AffiliateDashboard /></AffiliateLayout>} />
-              <Route path="/afiliado/produtos" element={<AffiliateLayout><AffiliateDashboard /></AffiliateLayout>} />
-              <Route path="/afiliado/conversoes" element={<AffiliateLayout><AffiliateDashboard /></AffiliateLayout>} />
-              <Route path="/afiliado/pagamentos" element={<AffiliateLayout><AffiliateDashboard /></AffiliateLayout>} />
-              <Route path="/afiliado/configuracoes" element={<AffiliateLayout><AffiliateDashboard /></AffiliateLayout>} />
+              {/* Affiliate routes with AffiliateLayout */}
+              <Route path="/afiliado" element={<AffiliateLayout />}>
+                <Route index element={<AffiliateDashboard />} />
+                <Route path="produtos" element={<AffiliateDashboard />} />
+                <Route path="conversoes" element={<AffiliateDashboard />} />
+                <Route path="pagamentos" element={<AffiliateDashboard />} />
+                <Route path="configuracoes" element={<AffiliateDashboard />} />
+              </Route>
 
               {/* 404 Not Found */}
               <Route path="*" element={<NotFound />} />
