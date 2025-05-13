@@ -28,6 +28,7 @@ export const ProductDialogHandler: React.FC<ProductDialogHandlerProps> = ({
   const { toast } = useToast();
   const [productDialogOpen, setProductDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [productImage, setProductImage] = useState<File | null>(null);
   
   useEffect(() => {
     const handleOpenProductDialog = () => {
@@ -46,6 +47,19 @@ export const ProductDialogHandler: React.FC<ProductDialogHandlerProps> = ({
     
     // Simulating API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Handling the image upload if an image was selected
+    if (productImage) {
+      // In a real application, this would upload the image to a server or Supabase storage
+      console.log("Uploading image:", productImage.name);
+      
+      // For now, just log that we would upload the image
+      toast({
+        title: "Imagem do produto enviada",
+        description: `Arquivo: ${productImage.name}`,
+        variant: "success",
+      });
+    }
     
     // Add the new product
     const newProduct = {
@@ -66,6 +80,11 @@ export const ProductDialogHandler: React.FC<ProductDialogHandlerProps> = ({
     
     setIsSubmitting(false);
     setProductDialogOpen(false);
+    setProductImage(null); // Reset the image state
+  };
+  
+  const handleImageChange = (file: File | null) => {
+    setProductImage(file);
   };
 
   return (
@@ -74,6 +93,8 @@ export const ProductDialogHandler: React.FC<ProductDialogHandlerProps> = ({
       onOpenChange={setProductDialogOpen}
       onSubmit={handleAddProduct}
       isSubmitting={isSubmitting}
+      onImageChange={handleImageChange}
+      productImage={productImage}
     />
   );
 };

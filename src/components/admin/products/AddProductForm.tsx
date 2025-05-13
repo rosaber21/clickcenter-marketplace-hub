@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useRef } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +23,8 @@ import {
 import {
   DialogFooter
 } from "@/components/ui/dialog";
+import { Upload, Image as ImageIcon } from "lucide-react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const productSchema = z.object({
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres"),
@@ -39,9 +41,17 @@ interface AddProductFormProps {
   onSubmit: (values: ProductFormValues) => Promise<void>;
   isSubmitting: boolean;
   onCancel: () => void;
+  onImageChange?: (file: File | null) => void;
+  productImage?: File | null;
 }
 
-export const AddProductForm = ({ onSubmit, isSubmitting, onCancel }: AddProductFormProps) => {
+export const AddProductForm = ({ 
+  onSubmit, 
+  isSubmitting, 
+  onCancel, 
+  onImageChange,
+  productImage 
+}: AddProductFormProps) => {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -51,10 +61,60 @@ export const AddProductForm = ({ onSubmit, isSubmitting, onCancel }: AddProductF
       creator: "",
     },
   });
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (onImageChange) {
+      onImageChange(file);
+    }
+  };
+  
+  const imagePreview = productImage ? URL.createObjectURL(productImage) : null;
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {/* Image Upload Section */}
+        <div className="mb-6">
+          <FormLabel className="block mb-2">Imagem do Produto</FormLabel>
+          <div 
+            className="border-2 border-dashed rounded-md p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
+            onClick={handleImageClick}
+          >
+            {imagePreview ? (
+              <div className="mx-auto w-full max-w-[200px]">
+                <AspectRatio ratio={1 / 1} className="bg-muted">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="rounded-md object-cover h-full w-full"
+                  />
+                </AspectRatio>
+                <p className="mt-2 text-sm text-gray-500">{productImage?.name}</p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center py-4">
+                <Upload className="h-10 w-10 text-muted-foreground mb-2" />
+                <p className="text-sm font-medium">Clique para fazer upload da imagem</p>
+                <p className="text-xs text-muted-foreground mt-1">JPG, PNG ou GIF até 5MB</p>
+              </div>
+            )}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+              accept="image/*"
+            />
+          </div>
+        </div>
+
         <FormField
           control={form.control}
           name="name"
