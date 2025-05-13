@@ -1,37 +1,27 @@
 
 import * as React from "react"
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-} from "@/components/ui/toast"
-import { useToast, toast } from "@/components/ui/use-toast"
+import { toast as sonnerToast } from "sonner"
 
-export function Toaster() {
-  const { toasts } = useToast()
-
-  return (
-    <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        )
-      })}
-      <ToastViewport />
-    </ToastProvider>
-  )
+type ToastProps = React.ComponentProps<typeof sonnerToast> & {
+  title?: string
+  description?: string
+  action?: React.ReactNode
+  variant?: "default" | "destructive" | "success"
 }
 
-export { useToast, toast }
+export function toast(props: ToastProps) {
+  const { title, description, variant, ...rest } = props
+  
+  return sonnerToast[variant === "destructive" ? "error" : variant === "success" ? "success" : "default"](title, {
+    description,
+    ...rest,
+  })
+}
+
+export function useToast() {
+  return {
+    toast,
+    dismiss: sonnerToast.dismiss,
+  }
+}
+

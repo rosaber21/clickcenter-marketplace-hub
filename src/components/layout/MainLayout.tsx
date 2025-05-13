@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -6,7 +5,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { MobileMenu } from "./MobileMenu";
 import { Cart } from "../cart/Cart";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -15,7 +14,6 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [cartOpen, setCartOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -37,8 +35,7 @@ export function MainLayout({ children }: MainLayoutProps) {
     const query = formData.get('query') as string;
     
     if (query.trim()) {
-      toast({
-        title: "Buscando produtos",
+      toast("Buscando produtos", {
         description: `Pesquisando por: ${query}`,
       });
       // Aqui implementaria a busca
@@ -48,8 +45,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const handleNavigation = (path: string, title: string) => {
     navigate(path);
     setMobileMenuOpen(false);
-    toast({
-      title: title,
+    toast(title, {
       description: "Navegando para a página solicitada",
     });
   };
