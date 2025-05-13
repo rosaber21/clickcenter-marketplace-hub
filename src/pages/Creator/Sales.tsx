@@ -1,209 +1,237 @@
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CreatorLayout } from "@/components/creator/layout/CreatorLayout";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
-import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  BarChart3,
+  BarChart,
   Download,
-  CalendarRange,
+  FileSpreadsheet,
   Filter,
-  ArrowUpDown,
-  CreditCard,
-  Wallet,
-  TrendingUp
+  Plus,
+  Search,
+  SlidersHorizontal,
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+// Define proper types for sales data
+interface SalesData {
+  id: string;
+  customer: string;
+  product: string;
+  date: string;
+  amount: string;
+  status: string;
+}
 
 export default function Sales() {
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("all");
   
-  // Mock data for sales
-  const salesData = [
-    { id: "1", customer: "João Silva", product: "Curso de Marketing Digital", date: "2025-05-10", amount: 297.00, status: "completed" },
-    { id: "2", customer: "Maria Santos", product: "Mentorias de Negócios", date: "2025-05-09", amount: 997.00, status: "completed" },
-    { id: "3", customer: "Carlos Oliveira", product: "Ebook: Estratégias de Vendas", date: "2025-05-08", amount: 47.00, status: "completed" },
-    { id: "4", customer: "Ana Pereira", product: "Workshop de Estratégias", date: "2025-05-07", amount: 127.00, status: "pending" },
-    { id: "5", customer: "Roberto Costa", product: "Curso de Marketing Digital", date: "2025-05-06", amount: 297.00, status: "completed" },
-    { id: "6", customer: "Fernanda Lima", product: "Mentorias de Negócios", date: "2025-05-05", amount: 997.00, status: "refunded" }
+  // Sample sales data with proper types
+  const salesData: SalesData[] = [
+    {
+      id: "INV-001",
+      customer: "João Silva",
+      product: "Curso Básico de Marketing Digital",
+      date: "05/05/2023",
+      amount: "R$ 297,00",
+      status: "Pago",
+    },
+    {
+      id: "INV-002",
+      customer: "Maria Souza",
+      product: "Curso Avançado de SEO",
+      date: "12/05/2023",
+      amount: "R$ 497,00",
+      status: "Pendente",
+    },
+    {
+      id: "INV-003",
+      customer: "Pedro Santos",
+      product: "Curso de Copywriting",
+      date: "15/05/2023",
+      amount: "R$ 197,00",
+      status: "Pago",
+    },
+    {
+      id: "INV-004",
+      customer: "Ana Rodrigues",
+      product: "Combo Marketing Digital Completo",
+      date: "22/05/2023",
+      amount: "R$ 997,00",
+      status: "Estornado",
+    },
+    {
+      id: "INV-005",
+      customer: "Lucas Oliveira",
+      product: "Curso de Tráfego Pago",
+      date: "01/06/2023",
+      amount: "R$ 397,00",
+      status: "Pago",
+    },
   ];
   
-  // Mock data for the sales summary
-  const summary = {
-    totalSales: "R$ 2.762,00",
-    totalOrders: 6,
-    averageOrder: "R$ 460,33",
-    conversionRate: "3.8%"
-  };
-  
-  // Columns for the sales table
-  const salesColumns = [
+  // Define table columns with proper types
+  const columns: { key: keyof SalesData; label: string }[] = [
     { key: "id", label: "ID" },
     { key: "customer", label: "Cliente" },
     { key: "product", label: "Produto" },
     { key: "date", label: "Data" },
-    { key: "amount", label: "Valor (R$)" },
-    { key: "status", label: "Status" }
+    { key: "amount", label: "Valor" },
+    { key: "status", label: "Status" },
   ];
 
-  const handleExportData = () => {
+  const handleExportCSV = () => {
     toast({
-      title: "Exportando dados",
-      description: "Os dados de vendas estão sendo exportados para CSV"
-    });
-  };
-  
-  const handleFilterDate = () => {
-    toast({
-      title: "Filtrar por data",
-      description: "Seletor de período aberto"
-    });
-  };
-  
-  const handleSortChange = () => {
-    toast({
-      title: "Ordenar dados",
-      description: "Opções de ordenação abertas"
+      title: "Exportação iniciada",
+      description: "Seus dados de vendas estão sendo exportados para CSV.",
     });
   };
 
+  const handleExportExcel = () => {
+    toast({
+      title: "Exportação iniciada",
+      description: "Seus dados de vendas estão sendo exportados para Excel.",
+    });
+  };
+
+  const handleNewSale = () => {
+    toast({
+      title: "Nova venda",
+      description: "Formulário de registro de nova venda aberto.",
+    });
+  };
+
+  const handleFilter = () => {
+    toast({
+      title: "Filtros",
+      description: "Painel de filtros de vendas aberto.",
+    });
+  };
+
+  const salesStats = [
+    { title: "Total de Vendas", value: "R$ 32.459,00", change: "+12%" },
+    { title: "Vendas do Mês", value: "R$ 8.912,00", change: "+5%" },
+    { title: "Ticket Médio", value: "R$ 347,00", change: "+2%" },
+    { title: "Taxa de Conversão", value: "3.2%", change: "+0.5%" },
+  ];
+  
   return (
     <CreatorLayout>
       <div className="container py-6">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold mb-2 text-primary">Vendas</h1>
-            <p className="text-muted-foreground">Acompanhe e gerencie todas as suas vendas de produtos digitais</p>
+            <h1 className="text-2xl font-bold">Gestão de Vendas</h1>
+            <p className="text-muted-foreground">
+              Gerencie e acompanhe suas vendas
+            </p>
           </div>
-          
-          <div className="flex items-center gap-2 mt-4 md:mt-0">
-            <Button variant="outline" className="flex items-center gap-2" onClick={handleFilterDate}>
-              <CalendarRange size={16} />
-              <span>Período</span>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={handleExportCSV}>
+              <Download size={16} className="mr-2" />
+              CSV
             </Button>
-            
-            <Button variant="outline" className="flex items-center gap-2" onClick={handleExportData}>
-              <Download size={16} />
-              <span>Exportar</span>
+            <Button variant="outline" size="sm" onClick={handleExportExcel}>
+              <FileSpreadsheet size={16} className="mr-2" />
+              Excel
+            </Button>
+            <Button size="sm" onClick={handleNewSale}>
+              <Plus size={16} className="mr-2" />
+              Nova Venda
             </Button>
           </div>
         </div>
-        
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card>
-            <CardContent className="p-6 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Vendido</p>
-                <h3 className="text-2xl font-bold mt-1">{summary.totalSales}</h3>
-              </div>
-              <Wallet className="h-8 w-8 text-primary opacity-80" />
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Pedidos</p>
-                <h3 className="text-2xl font-bold mt-1">{summary.totalOrders}</h3>
-              </div>
-              <CreditCard className="h-8 w-8 text-primary opacity-80" />
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Ticket Médio</p>
-                <h3 className="text-2xl font-bold mt-1">{summary.averageOrder}</h3>
-              </div>
-              <BarChart3 className="h-8 w-8 text-primary opacity-80" />
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Taxa de Conversão</p>
-                <h3 className="text-2xl font-bold mt-1">{summary.conversionRate}</h3>
-              </div>
-              <TrendingUp className="h-8 w-8 text-primary opacity-80" />
-            </CardContent>
-          </Card>
-        </div>
-        
-        {/* Tabs for different views */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="mb-4">
-            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-            <TabsTrigger value="transactions">Transações</TabsTrigger>
-            <TabsTrigger value="subscriptions">Assinaturas</TabsTrigger>
-            <TabsTrigger value="refunds">Reembolsos</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="overview">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Todas as Vendas</CardTitle>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" className="flex items-center gap-1">
-                      <Filter size={14} />
-                      <span>Filtrar</span>
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex items-center gap-1" onClick={handleSortChange}>
-                      <ArrowUpDown size={14} />
-                      <span>Ordenar</span>
-                    </Button>
-                  </div>
-                </div>
+
+        {/* Stats Cards */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+          {salesStats.map((stat, index) => (
+            <Card key={index}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  {stat.title}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <DataTable 
-                  data={salesData} 
-                  columns={salesColumns}
-                  caption="Listagem de todas as vendas realizadas"
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="transactions">
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-medium mb-4">Histórico de Transações</h3>
-                <p className="text-muted-foreground text-center py-8">
-                  Visualize o histórico detalhado de todas as suas transações
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <p className={`text-xs ${stat.change.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+                  {stat.change} desde o último mês
                 </p>
               </CardContent>
             </Card>
-          </TabsContent>
+          ))}
+        </div>
+
+        {/* Sales Filters and Tabs */}
+        <div className="flex justify-between items-center mb-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList>
+              <TabsTrigger value="all">Todas as Vendas</TabsTrigger>
+              <TabsTrigger value="pending">Pendentes</TabsTrigger>
+              <TabsTrigger value="completed">Concluídas</TabsTrigger>
+              <TabsTrigger value="refunded">Estornadas</TabsTrigger>
+            </TabsList>
+          </Tabs>
           
-          <TabsContent value="subscriptions">
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-medium mb-4">Assinaturas Ativas</h3>
-                <p className="text-muted-foreground text-center py-8">
-                  Gerencie as assinaturas recorrentes dos seus produtos
-                </p>
-              </CardContent>
-            </Card>
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <input
+                type="search"
+                placeholder="Buscar venda..."
+                className="rounded-md border border-input pl-8 pr-3 py-2 text-sm"
+              />
+            </div>
+            <Button variant="outline" size="sm" onClick={handleFilter}>
+              <Filter size={16} className="mr-2" />
+              Filtros
+            </Button>
+            <Button variant="outline" size="sm">
+              <SlidersHorizontal size={16} className="mr-2" />
+              Colunas
+            </Button>
+          </div>
+        </div>
+
+        {/* Sales Table */}
+        <div className="border rounded-md">
+          <TabsContent value="all" className="m-0">
+            <DataTable
+              data={salesData}
+              columns={columns}
+              caption="Todas as vendas"
+            />
           </TabsContent>
-          
-          <TabsContent value="refunds">
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-medium mb-4">Reembolsos e Cancelamentos</h3>
-                <p className="text-muted-foreground text-center py-8">
-                  Acompanhe solicitações de reembolso e cancelamentos
-                </p>
-              </CardContent>
-            </Card>
+          <TabsContent value="pending" className="m-0">
+            <DataTable
+              data={salesData.filter(sale => sale.status === "Pendente")}
+              columns={columns}
+              caption="Vendas pendentes"
+            />
           </TabsContent>
-        </Tabs>
+          <TabsContent value="completed" className="m-0">
+            <DataTable
+              data={salesData.filter(sale => sale.status === "Pago")}
+              columns={columns}
+              caption="Vendas concluídas"
+            />
+          </TabsContent>
+          <TabsContent value="refunded" className="m-0">
+            <DataTable
+              data={salesData.filter(sale => sale.status === "Estornado")}
+              columns={columns}
+              caption="Vendas estornadas"
+            />
+          </TabsContent>
+        </div>
+
+        <div className="mt-4 text-center text-sm text-muted-foreground">
+          Mostrando {salesData.length} de {salesData.length} vendas
+        </div>
       </div>
     </CreatorLayout>
   );
