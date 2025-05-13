@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Palette, Brush, PaintBucket, Swatch } from "lucide-react";
+import { Palette, Brush, PaintBucket, Globe } from "lucide-react";
 
 export default function Personalization() {
   const { toast } = useToast();
@@ -79,7 +79,7 @@ export default function Personalization() {
               Marca
             </TabsTrigger>
             <TabsTrigger value="domain">
-              <Swatch className="mr-2 h-4 w-4" />
+              <Globe className="mr-2 h-4 w-4" />
               Domínio
             </TabsTrigger>
             <TabsTrigger value="advanced">
