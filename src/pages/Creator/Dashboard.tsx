@@ -1,13 +1,16 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainLayout } from "@/components/layout/MainLayout";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
-import { AddProductDialog } from "@/components/admin/products/AddProductDialog";
-import { ProductFormValues } from "@/components/admin/products/AddProductForm";
 
-// Import the new components
+// Import custom hooks
+import { useDashboardTabs } from "@/components/creator/dashboard/useDashboardTabs";
+import { useDashboardData } from "@/components/creator/dashboard/useDashboardData";
+import { useToastNotifications } from "@/components/creator/dashboard/useToastNotifications";
+import { AffiliateDialogHandler } from "@/components/creator/dashboard/AffiliateDialogHandler";
+import { ProductDialogHandler } from "@/components/creator/dashboard/ProductDialogHandler";
+
+// Import the dashboard components
 import { StatsCards } from "@/components/creator/dashboard/StatsCards";
 import { OverviewTab } from "@/components/creator/dashboard/OverviewTab";
 import { ProductsTab } from "@/components/creator/dashboard/ProductsTab";
@@ -15,151 +18,37 @@ import { AffiliatesTab } from "@/components/creator/dashboard/AffiliatesTab";
 import { AffiliateDialog } from "@/components/creator/dashboard/AffiliateDialog";
 
 export default function CreatorDashboard() {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("overview");
-  const [totalSales, setTotalSales] = useState(7829.45);
-  const [activeProducts, setActiveProducts] = useState(12);
-  const [pendingCommissions, setPendingCommissions] = useState(1245.50);
+  // Use custom hooks
+  const { activeTab, setActiveTab } = useDashboardTabs();
+  const { 
+    totalSales, 
+    activeProducts, 
+    pendingCommissions, 
+    products, 
+    setProducts,
+    monthlySalesData,
+    monthlySalesLabels,
+    productSalesData,
+    productSalesLabels
+  } = useDashboardData();
   
-  // State for Product Dialog
-  const [productDialogOpen, setProductDialogOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // State for Affiliate Dialog
-  const [affiliateDialogOpen, setAffiliateDialogOpen] = useState(false);
-  const [newAffiliateEmail, setNewAffiliateEmail] = useState("");
-  const [isAddingAffiliate, setIsAddingAffiliate] = useState(false);
-  
-  const [products, setProducts] = useState([
-    {
-      name: "Digital Marketing Course",
-      creator: "You",
-      category: "Marketing",
-      price: "€ 149,90",
-      status: "Ativo" as const
-    },
-    {
-      name: "Financial Management E-book",
-      creator: "You",
-      category: "Finance",
-      price: "€ 29,90",
-      status: "Ativo" as const
-    },
-    {
-      name: "Business Consulting",
-      creator: "You",
-      category: "Consulting",
-      price: "€ 399,00",
-      status: "Pendente" as const
-    }
-  ]);
-  
-  // Mock data for charts
-  const monthlySalesData = [5430, 4290, 6540, 7829, 8210, 7450, 7829];
-  const monthlySalesLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
-  
-  const productSalesData = [32, 68, 7, 41, 25];
-  const productSalesLabels = ["Marketing Digital", "E-book Finance", "Business Consulting", "Templates", "Course XYZ"];
+  const { 
+    handleViewAllProducts, 
+    handleManageAffiliates, 
+    handleEditProduct, 
+    handleDeleteProduct 
+  } = useToastNotifications();
 
-  // Action handlers
-  const handleNewProduct = () => {
-    setProductDialogOpen(true);
-  };
-
-  const handleAddProduct = async (values: ProductFormValues) => {
-    setIsSubmitting(true);
-    
-    // Simulating API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Add the new product
-    const newProduct = {
-      name: values.name,
-      creator: "You",
-      category: values.category,
-      price: `€ ${values.price}`,
-      status: "Pendente" as const
-    };
-    
-    setProducts([...products, newProduct]);
-    
-    toast({
-      title: "Produto adicionado com sucesso!",
-      description: "Seu novo produto está aguardando aprovação.",
-      variant: "success",
-    });
-    
-    setIsSubmitting(false);
-    setProductDialogOpen(false);
-  };
-  
-  // New affiliate handlers
-  const handleNewAffiliate = () => {
-    setAffiliateDialogOpen(true);
-  };
-  
-  const handleAddAffiliate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!newAffiliateEmail.trim()) {
-      toast({
-        title: "Erro",
-        description: "Por favor, insira um email válido.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    setIsAddingAffiliate(true);
-    
-    // Simulating API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Convite enviado com sucesso!",
-      description: `Um convite foi enviado para ${newAffiliateEmail}`,
-      variant: "success",
-    });
-    
-    setIsAddingAffiliate(false);
-    setAffiliateDialogOpen(false);
-    setNewAffiliateEmail("");
-  };
-
-  const handleViewAllProducts = () => {
-    toast({
-      title: "All Products",
-      description: "Redirecting to products page",
-      variant: "default",
-    });
-    navigate("/meus-produtos");
-  };
-
-  const handleManageAffiliates = () => {
-    toast({
-      title: "Manage Affiliates",
-      description: "Redirecting to affiliates management page",
-      variant: "default", 
-    });
-    navigate("/gerenciar-afiliados");
-  };
-
-  const handleEditProduct = (product: any) => {
-    toast({
-      title: "Edit Product",
-      description: "Editing product details",
-      variant: "default",
-    });
-  };
-
-  const handleDeleteProduct = (product: any) => {
-    toast({
-      title: "Delete Product",
-      description: "Are you sure you want to delete this product?",
-      variant: "destructive",
-    });
-  };
+  // Get affiliate dialog handler
+  const { 
+    handleNewAffiliate, 
+    affiliateDialogOpen, 
+    setAffiliateDialogOpen, 
+    newAffiliateEmail, 
+    setNewAffiliateEmail, 
+    handleAddAffiliate, 
+    isAddingAffiliate 
+  } = AffiliateDialogHandler();
 
   return (
     <MainLayout>
@@ -194,7 +83,7 @@ export default function CreatorDashboard() {
               products={products}
               onEdit={handleEditProduct}
               onDelete={handleDeleteProduct}
-              onAddProduct={handleNewProduct}
+              onAddProduct={() => document.dispatchEvent(new CustomEvent('openProductDialog'))}
               onViewAllProducts={handleViewAllProducts}
             />
           </TabsContent>
@@ -212,12 +101,7 @@ export default function CreatorDashboard() {
       </div>
       
       {/* Product Dialog */}
-      <AddProductDialog
-        open={productDialogOpen}
-        onOpenChange={setProductDialogOpen}
-        onSubmit={handleAddProduct}
-        isSubmitting={isSubmitting}
-      />
+      <ProductDialogHandler products={products} setProducts={setProducts} />
       
       {/* Add Affiliate Dialog */}
       <AffiliateDialog 
