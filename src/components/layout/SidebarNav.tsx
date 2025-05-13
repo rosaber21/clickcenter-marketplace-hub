@@ -1,6 +1,6 @@
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   SidebarContent,
@@ -23,12 +23,16 @@ import {
   Plus,
   BarChart3,
   UserCog,
+  Home
 } from "lucide-react";
 import { UserRole } from "@/types";
+import { useToast } from "@/hooks/use-toast";
 
 export function SidebarNav() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const navigate = useNavigate();
+  const { toast } = useToast();
   
   // Poderia vir de um estado global de autenticação
   const isAuthenticated = false;
@@ -45,6 +49,14 @@ export function SidebarNav() {
   // Helper function to check user role
   const hasRole = (roles: UserRole[]) => {
     return roles.includes(userRole);
+  };
+  
+  const handleNavigation = (path: string, title: string) => {
+    navigate(path);
+    toast({
+      title: `Navegando para ${title}`,
+      description: "Redirecionando para a página solicitada",
+    });
   };
 
   return (
@@ -67,11 +79,21 @@ export function SidebarNav() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/" className={getNavLinkClass} end>
+                    <Home className="h-5 w-5" />
+                    {!collapsed && <span>Início</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/produtos" className={getNavLinkClass}>
                     <ShoppingCart className="h-5 w-5" />
                     {!collapsed && <span>Produtos</span>}
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              
               {isAuthenticated ? (
                 <>
                   <SidebarMenuItem>
@@ -97,9 +119,9 @@ export function SidebarNav() {
                   {hasRole(["criador", "admin"]) && (
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild>
-                        <NavLink to="/novo-produto" className={getNavLinkClass}>
+                        <NavLink to="/criador" className={getNavLinkClass}>
                           <Plus className="h-5 w-5" />
-                          {!collapsed && <span>Criar Produto</span>}
+                          {!collapsed && <span>Painel Criador</span>}
                         </NavLink>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
