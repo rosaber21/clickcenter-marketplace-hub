@@ -34,11 +34,21 @@ export const AffiliatesTab = ({
   const { 
     handleViewAffiliate, 
     handleViewAllAffiliates, 
-    handleGenerateReport 
+    handleGenerateReport,
+    handleManageAffiliates: localHandleManageAffiliates
   } = useAffiliateActions();
   
-  // Get affiliate data from our new hook
+  // Get affiliate data from our hook
   const { topAffiliates, metricsData } = useAffiliateData();
+  
+  // Use the provided onManageAffiliates from props or fall back to the local handler
+  const handleManageAffiliatesClick = () => {
+    if (onManageAffiliates) {
+      onManageAffiliates();
+    } else {
+      localHandleManageAffiliates();
+    }
+  };
   
   return (
     <Card className="shadow-md">
@@ -51,7 +61,7 @@ export const AffiliatesTab = ({
           <AffiliateActions 
             onGenerateReport={handleGenerateReport}
             onViewAllAffiliates={handleViewAllAffiliates}
-            onManageAffiliates={onManageAffiliates}
+            onManageAffiliates={handleManageAffiliatesClick}
           />
         </div>
       </CardHeader>
@@ -74,7 +84,7 @@ export const AffiliatesTab = ({
         <AffiliateActions 
           onGenerateReport={handleGenerateReport}
           onViewAllAffiliates={handleViewAllAffiliates}
-          onManageAffiliates={onManageAffiliates}
+          onManageAffiliates={handleManageAffiliatesClick}
         />
       </CardFooter>
     </Card>

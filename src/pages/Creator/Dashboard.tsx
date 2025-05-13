@@ -17,8 +17,11 @@ import { OverviewTab } from "@/components/creator/dashboard/OverviewTab";
 import { ProductsTab } from "@/components/creator/dashboard/ProductsTab";
 import { AffiliatesTab } from "@/components/creator/dashboard/AffiliatesTab";
 import { AffiliateDialog } from "@/components/creator/dashboard/AffiliateDialog";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatorDashboard() {
+  const navigate = useNavigate();
+  
   // Use custom hooks
   const { activeTab, setActiveTab } = useDashboardTabs();
   const { 
@@ -35,7 +38,7 @@ export default function CreatorDashboard() {
   
   const { 
     handleViewAllProducts, 
-    handleManageAffiliates, 
+    handleManageAffiliates: toastHandleManageAffiliates, 
     handleEditProduct, 
     handleDeleteProduct 
   } = useToastNotifications();
@@ -50,6 +53,14 @@ export default function CreatorDashboard() {
     handleAddAffiliate, 
     isAddingAffiliate 
   } = useAffiliateDialogHandler();
+  
+  // Enhanced handler for managing affiliates with proper navigation
+  const handleManageAffiliates = () => {
+    // Call the toast notification
+    toastHandleManageAffiliates();
+    // Navigate to the affiliates management page
+    navigate("/criador/gerenciar-afiliados");
+  };
 
   return (
     <MainLayout>

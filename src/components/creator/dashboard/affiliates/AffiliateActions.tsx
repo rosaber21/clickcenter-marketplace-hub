@@ -39,6 +39,7 @@ export const AffiliateActions: React.FC<AffiliateActionsProps> = ({
       <Button 
         className="w-full flex items-center justify-center gap-2"
         onClick={onManageAffiliates}
+        variant="secondary"
       >
         <Users className="h-4 w-4" />
         Gerenciar Afiliados

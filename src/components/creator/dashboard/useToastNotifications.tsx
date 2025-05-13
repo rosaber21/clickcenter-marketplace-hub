@@ -17,11 +17,11 @@ export const useToastNotifications = () => {
 
   const handleManageAffiliates = () => {
     toast({
-      title: "Manage Affiliates",
-      description: "Redirecting to affiliates management page",
-      variant: "default", 
+      title: "Gerenciar Afiliados",
+      description: "Acessando página de gerenciamento de afiliados",
+      variant: "success", 
     });
-    navigate("/gerenciar-afiliados");
+    // Navigation is now handled in the component to avoid duplicate navigations
   };
 
   const handleEditProduct = (product: any) => {
