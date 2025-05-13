@@ -6,7 +6,6 @@ import { SearchAndFilters } from "@/components/home/SearchAndFilters";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { BenefitsSection } from "@/components/home/BenefitsSection";
 import { useProducts } from "@/hooks/use-products";
-import { MainLayout } from "@/components/layout/MainLayout";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -29,7 +28,7 @@ const Index = () => {
   };
 
   return (
-    <MainLayout>
+    <>
       <HeroBanner onViewAllProducts={handleViewAllProducts} />
       
       <SearchAndFilters 
@@ -47,7 +46,7 @@ const Index = () => {
       />
       
       <BenefitsSection animate={animate} />
-    </MainLayout>
+    </>
   );
 };
 
