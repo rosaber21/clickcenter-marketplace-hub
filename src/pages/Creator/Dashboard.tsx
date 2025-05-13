@@ -7,9 +7,9 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { useDashboardTabs } from "@/components/creator/dashboard/useDashboardTabs";
 import { useDashboardData } from "@/components/creator/dashboard/useDashboardData";
 import { useToastNotifications } from "@/components/creator/dashboard/useToastNotifications";
-// Changed from component import to hook import
 import { useAffiliateDialogHandler } from "@/components/creator/dashboard/AffiliateDialogHandler";
 import { ProductDialogHandler } from "@/components/creator/dashboard/ProductDialogHandler";
+import { useVideoMemberEdit } from "@/components/creator/dashboard/useVideoMemberEdit";
 
 // Import the dashboard components
 import { StatsCards } from "@/components/creator/dashboard/StatsCards";
@@ -54,6 +54,12 @@ export default function CreatorDashboard() {
     isAddingAffiliate 
   } = useAffiliateDialogHandler();
   
+  // Get video and member area editing handlers
+  const {
+    handleEditVideos,
+    handleManageMembers
+  } = useVideoMemberEdit();
+  
   // Enhanced handler for managing affiliates with proper navigation
   const handleManageAffiliates = () => {
     // Call the toast notification
@@ -97,6 +103,8 @@ export default function CreatorDashboard() {
               onDelete={handleDeleteProduct}
               onAddProduct={() => document.dispatchEvent(new CustomEvent('openProductDialog'))}
               onViewAllProducts={handleViewAllProducts}
+              onEditVideos={handleEditVideos}
+              onManageMembers={handleManageMembers}
             />
           </TabsContent>
           

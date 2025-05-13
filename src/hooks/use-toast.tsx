@@ -1,26 +1,26 @@
 
-import * as React from "react"
-import { toast as sonnerToast } from "sonner"
+import { toast as sonnerToast, type ToastT } from "sonner";
 
-type ToastProps = {
-  title?: string
-  description?: string
-  action?: React.ReactNode
-  variant?: "default" | "destructive" | "success"
+export interface ToastProps {
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  variant?: "default" | "destructive" | "success";
 }
 
-export function toast(props: ToastProps) {
-  const { title, description, variant, ...rest } = props
-  
-  return sonnerToast[variant === "destructive" ? "error" : variant === "success" ? "success" : "default"](title, {
-    description,
-    ...rest,
-  })
+export interface ToastActionElement {
+  altText: string;
+  onClick: () => void;
+  children: React.ReactNode;
 }
 
 export function useToast() {
-  return {
-    toast,
-    dismiss: sonnerToast.dismiss,
-  }
+  const toast = ({ title, description, variant = "default" }: ToastProps) => {
+    return sonnerToast(title as string, {
+      description,
+      className: variant === "destructive" ? "destructive" : 
+                variant === "success" ? "success" : "",
+    });
+  };
+
+  return { toast };
 }
