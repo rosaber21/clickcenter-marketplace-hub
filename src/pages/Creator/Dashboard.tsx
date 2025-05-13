@@ -1,26 +1,20 @@
 
 import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronDown, Book, Settings, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { CreatorLayout } from "@/components/creator/layout/CreatorLayout";
 
 // Import custom hooks
 import { useDashboardTabs } from "@/components/creator/dashboard/useDashboardTabs";
 import { useDashboardData } from "@/components/creator/dashboard/useDashboardData";
 import { useToastNotifications } from "@/components/creator/dashboard/useToastNotifications";
 import { useAffiliateDialogHandler } from "@/components/creator/dashboard/AffiliateDialogHandler";
-import { ProductDialogHandler } from "@/components/creator/dashboard/ProductDialogHandler";
 import { useVideoMemberEdit } from "@/components/creator/dashboard/useVideoMemberEdit";
 
 // Import the dashboard components
 import { StatsCards } from "@/components/creator/dashboard/StatsCards";
-import { OverviewTab } from "@/components/creator/dashboard/OverviewTab";
-import { ProductsTab } from "@/components/creator/dashboard/ProductsTab";
-import { AffiliatesTab } from "@/components/creator/dashboard/AffiliatesTab";
-import { AffiliateDialog } from "@/components/creator/dashboard/AffiliateDialog";
-import { CreatorLayout } from "@/components/creator/layout/CreatorLayout";
+import { DashboardHeader } from "@/components/creator/dashboard/DashboardHeader";
+import { DashboardTabs } from "@/components/creator/dashboard/DashboardTabs";
+import { DialogsManager } from "@/components/creator/dashboard/DialogsManager";
 
 export default function CreatorDashboard() {
   const navigate = useNavigate();
@@ -46,7 +40,7 @@ export default function CreatorDashboard() {
     handleDeleteProduct 
   } = useToastNotifications();
 
-  // Get affiliate dialog handler from the hook instead of component
+  // Get affiliate dialog handler from the hook
   const { 
     handleNewAffiliate, 
     affiliateDialogOpen, 
@@ -79,56 +73,28 @@ export default function CreatorDashboard() {
     navigate("/criador/curso-preview");
   };
 
+  // Collect all handlers to pass to DashboardTabs
+  const handlers = {
+    handleEditProduct,
+    handleDeleteProduct,
+    handleViewAllProducts,
+    handleEditVideos,
+    handleManageMembers,
+    handleNewAffiliate,
+    handleManageAffiliates
+  };
+
   return (
     <CreatorLayout>
       <div className="container py-6">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold mb-2 text-primary">Painel do Produtor</h1>
-            <p className="text-muted-foreground">Gerencie seus produtos e acompanhe suas vendas</p>
-          </div>
-          
-          {/* Course Selection Dropdown */}
-          <div className="mt-4 md:mt-0 flex gap-3">
-            <Select value={activeCourse} onValueChange={handleChangeCourse}>
-              <SelectTrigger className="w-[240px] bg-white border-primary/20">
-                <div className="flex items-center gap-2">
-                  <Book size={18} className="text-primary" />
-                  <SelectValue placeholder="Selecione um curso" />
-                </div>
-              </SelectTrigger>
-              <SelectContent>
-                {courses.map((course) => (
-                  <SelectItem key={course.id} value={course.id}>
-                    <div className="flex items-center gap-2">
-                      <span>{course.title}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-                <div className="px-2 py-2 border-t mt-1">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="w-full flex items-center gap-2"
-                    onClick={() => navigate("/criador/gerenciar-cursos")}
-                  >
-                    <Settings size={16} />
-                    <span>Gerenciar Cursos</span>
-                  </Button>
-                </div>
-              </SelectContent>
-            </Select>
-            
-            <Button 
-              variant="outline" 
-              className="flex items-center gap-2"
-              onClick={handleViewPreview}
-            >
-              <Eye size={16} />
-              Como está ficando
-            </Button>
-          </div>
-        </div>
+        <DashboardHeader
+          title="Painel do Produtor"
+          subtitle="Gerencie seus produtos e acompanhe suas vendas"
+          activeCourse={activeCourse}
+          handleChangeCourse={handleChangeCourse}
+          handleViewPreview={handleViewPreview}
+          courses={courses}
+        />
         
         <StatsCards 
           totalSales={totalSales} 
@@ -136,77 +102,26 @@ export default function CreatorDashboard() {
           pendingCommissions={pendingCommissions} 
         />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="mb-4">
-            <TabsTrigger value="overview">Conteúdo</TabsTrigger>
-            <TabsTrigger value="products">Configurações</TabsTrigger>
-            <TabsTrigger value="affiliates">Personalização</TabsTrigger>
-            <TabsTrigger value="users">Usuários</TabsTrigger>
-            <TabsTrigger value="comments">Comentários</TabsTrigger>
-            <TabsTrigger value="communities">Comunidades</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="overview">
-            <OverviewTab 
-              monthlySalesData={monthlySalesData}
-              monthlySalesLabels={monthlySalesLabels}
-              productSalesData={productSalesData}
-              productSalesLabels={productSalesLabels}
-            />
-          </TabsContent>
-          
-          <TabsContent value="products">
-            <ProductsTab 
-              products={products}
-              onEdit={handleEditProduct}
-              onDelete={handleDeleteProduct}
-              onAddProduct={() => document.dispatchEvent(new CustomEvent('openProductDialog'))}
-              onViewAllProducts={handleViewAllProducts}
-              onEditVideos={handleEditVideos}
-              onManageMembers={handleManageMembers}
-            />
-          </TabsContent>
-          
-          <TabsContent value="affiliates">
-            <AffiliatesTab
-              products={products}
-              onEdit={handleEditProduct}
-              onDelete={handleDeleteProduct}
-              onAddAffiliate={handleNewAffiliate}
-              onManageAffiliates={handleManageAffiliates}
-            />
-          </TabsContent>
-          
-          <TabsContent value="users">
-            <div className="text-center p-8 text-muted-foreground">
-              Gerenciamento de usuários será exibido aqui
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="comments">
-            <div className="text-center p-8 text-muted-foreground">
-              Comentários serão exibidos aqui
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="communities">
-            <div className="text-center p-8 text-muted-foreground">
-              Comunidades serão exibidas aqui
-            </div>
-          </TabsContent>
-        </Tabs>
+        <DashboardTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          products={products}
+          monthlySalesData={monthlySalesData}
+          monthlySalesLabels={monthlySalesLabels}
+          productSalesData={productSalesData}
+          productSalesLabels={productSalesLabels}
+          handlers={handlers}
+        />
       </div>
       
-      {/* Product Dialog */}
-      <ProductDialogHandler products={products} setProducts={setProducts} />
-      
-      {/* Add Affiliate Dialog */}
-      <AffiliateDialog 
-        open={affiliateDialogOpen}
-        onOpenChange={setAffiliateDialogOpen}
+      <DialogsManager
+        products={products}
+        setProducts={setProducts}
+        affiliateDialogOpen={affiliateDialogOpen}
+        setAffiliateDialogOpen={setAffiliateDialogOpen}
         newAffiliateEmail={newAffiliateEmail}
-        onEmailChange={(e) => setNewAffiliateEmail(e.target.value)}
-        onSubmit={handleAddAffiliate}
+        setNewAffiliateEmail={setNewAffiliateEmail}
+        handleAddAffiliate={handleAddAffiliate}
         isAddingAffiliate={isAddingAffiliate}
       />
     </CreatorLayout>
