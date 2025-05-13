@@ -14,8 +14,9 @@ interface AddProductDialogProps {
   onOpenChange: (open: boolean) => void;
   onSubmit: (values: ProductFormValues) => Promise<void>;
   isSubmitting: boolean;
-  onImageChange?: (file: File | null) => void;
-  productImage?: File | null;
+  onMediaChange?: (file: File | null) => void;
+  productMedia?: File | null;
+  mediaType?: "image" | "video" | null;
 }
 
 export const AddProductDialog = ({ 
@@ -23,8 +24,9 @@ export const AddProductDialog = ({
   onOpenChange, 
   onSubmit, 
   isSubmitting,
-  onImageChange,
-  productImage
+  onMediaChange,
+  productMedia,
+  mediaType
 }: AddProductDialogProps) => {
   
   const handleCancel = () => {
@@ -45,8 +47,9 @@ export const AddProductDialog = ({
           onSubmit={onSubmit} 
           isSubmitting={isSubmitting}
           onCancel={handleCancel}
-          onImageChange={onImageChange}
-          productImage={productImage}
+          onMediaChange={onMediaChange}
+          productMedia={productMedia}
+          mediaType={mediaType}
         />
       </DialogContent>
     </Dialog>

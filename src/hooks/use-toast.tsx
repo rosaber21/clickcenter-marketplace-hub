@@ -2,7 +2,7 @@
 import * as React from "react"
 import { toast as sonnerToast } from "sonner"
 
-type ToastProps = React.ComponentProps<typeof sonnerToast> & {
+type ToastProps = {
   title?: string
   description?: string
   action?: React.ReactNode
@@ -24,4 +24,3 @@ export function useToast() {
     dismiss: sonnerToast.dismiss,
   }
 }
-

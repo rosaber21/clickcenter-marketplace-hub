@@ -28,7 +28,8 @@ export const ProductDialogHandler: React.FC<ProductDialogHandlerProps> = ({
   const { toast } = useToast();
   const [productDialogOpen, setProductDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [productImage, setProductImage] = useState<File | null>(null);
+  const [productMedia, setProductMedia] = useState<File | null>(null);
+  const [mediaType, setMediaType] = useState<"image" | "video" | null>(null);
   
   useEffect(() => {
     const handleOpenProductDialog = () => {
@@ -48,15 +49,15 @@ export const ProductDialogHandler: React.FC<ProductDialogHandlerProps> = ({
     // Simulating API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Handling the image upload if an image was selected
-    if (productImage) {
-      // In a real application, this would upload the image to a server or Supabase storage
-      console.log("Uploading image:", productImage.name);
+    // Handling the media upload if a file was selected
+    if (productMedia) {
+      // In a real application, this would upload the file to a server or Supabase storage
+      console.log("Uploading media:", productMedia.name, "Type:", mediaType);
       
-      // For now, just log that we would upload the image
+      // For now, just log that we would upload the file
       toast({
-        title: "Imagem do produto enviada",
-        description: `Arquivo: ${productImage.name}`,
+        title: mediaType === "video" ? "Vídeo do produto enviado" : "Imagem do produto enviada",
+        description: `Arquivo: ${productMedia.name}`,
         variant: "success",
       });
     }
@@ -80,11 +81,20 @@ export const ProductDialogHandler: React.FC<ProductDialogHandlerProps> = ({
     
     setIsSubmitting(false);
     setProductDialogOpen(false);
-    setProductImage(null); // Reset the image state
+    setProductMedia(null); // Reset the media state
+    setMediaType(null); // Reset the media type
   };
   
-  const handleImageChange = (file: File | null) => {
-    setProductImage(file);
+  const handleMediaChange = (file: File | null) => {
+    setProductMedia(file);
+    
+    if (file) {
+      // Determine if the file is an image or video
+      const fileType = file.type.split('/')[0];
+      setMediaType(fileType === 'video' ? 'video' : 'image');
+    } else {
+      setMediaType(null);
+    }
   };
 
   return (
@@ -93,8 +103,9 @@ export const ProductDialogHandler: React.FC<ProductDialogHandlerProps> = ({
       onOpenChange={setProductDialogOpen}
       onSubmit={handleAddProduct}
       isSubmitting={isSubmitting}
-      onImageChange={handleImageChange}
-      productImage={productImage}
+      onMediaChange={handleMediaChange}
+      productMedia={productMedia}
+      mediaType={mediaType}
     />
   );
 };

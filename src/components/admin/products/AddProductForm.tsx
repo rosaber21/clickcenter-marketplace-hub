@@ -23,7 +23,7 @@ import {
 import {
   DialogFooter
 } from "@/components/ui/dialog";
-import { Upload, Image as ImageIcon } from "lucide-react";
+import { Upload, Image as ImageIcon, Video } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const productSchema = z.object({
@@ -41,16 +41,18 @@ interface AddProductFormProps {
   onSubmit: (values: ProductFormValues) => Promise<void>;
   isSubmitting: boolean;
   onCancel: () => void;
-  onImageChange?: (file: File | null) => void;
-  productImage?: File | null;
+  onMediaChange?: (file: File | null) => void;
+  productMedia?: File | null;
+  mediaType?: "image" | "video" | null;
 }
 
 export const AddProductForm = ({ 
   onSubmit, 
   isSubmitting, 
   onCancel, 
-  onImageChange,
-  productImage 
+  onMediaChange,
+  productMedia,
+  mediaType 
 }: AddProductFormProps) => {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -64,45 +66,55 @@ export const AddProductForm = ({
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageClick = () => {
+  const handleMediaClick = () => {
     fileInputRef.current?.click();
   };
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
-    if (onImageChange) {
-      onImageChange(file);
+    if (onMediaChange) {
+      onMediaChange(file);
     }
   };
   
-  const imagePreview = productImage ? URL.createObjectURL(productImage) : null;
+  const mediaPreview = productMedia ? URL.createObjectURL(productMedia) : null;
+  const isVideo = mediaType === "video";
+  const isImage = mediaType === "image";
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {/* Image Upload Section */}
+        {/* Media Upload Section */}
         <div className="mb-6">
-          <FormLabel className="block mb-2">Imagem do Produto</FormLabel>
+          <FormLabel className="block mb-2">Mídia do Produto (Imagem ou Vídeo)</FormLabel>
           <div 
             className="border-2 border-dashed rounded-md p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
-            onClick={handleImageClick}
+            onClick={handleMediaClick}
           >
-            {imagePreview ? (
+            {mediaPreview ? (
               <div className="mx-auto w-full max-w-[200px]">
-                <AspectRatio ratio={1 / 1} className="bg-muted">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="rounded-md object-cover h-full w-full"
-                  />
+                <AspectRatio ratio={16 / 9} className="bg-muted">
+                  {isVideo ? (
+                    <video
+                      src={mediaPreview}
+                      controls
+                      className="rounded-md object-cover h-full w-full"
+                    />
+                  ) : (
+                    <img
+                      src={mediaPreview}
+                      alt="Preview"
+                      className="rounded-md object-cover h-full w-full"
+                    />
+                  )}
                 </AspectRatio>
-                <p className="mt-2 text-sm text-gray-500">{productImage?.name}</p>
+                <p className="mt-2 text-sm text-gray-500">{productMedia?.name}</p>
               </div>
             ) : (
               <div className="flex flex-col items-center py-4">
                 <Upload className="h-10 w-10 text-muted-foreground mb-2" />
-                <p className="text-sm font-medium">Clique para fazer upload da imagem</p>
-                <p className="text-xs text-muted-foreground mt-1">JPG, PNG ou GIF até 5MB</p>
+                <p className="text-sm font-medium">Clique para fazer upload de imagem ou vídeo</p>
+                <p className="text-xs text-muted-foreground mt-1">JPG, PNG, GIF ou MP4 até 10MB</p>
               </div>
             )}
             <input
@@ -110,7 +122,7 @@ export const AddProductForm = ({
               ref={fileInputRef}
               onChange={handleFileChange}
               className="hidden"
-              accept="image/*"
+              accept="image/*,video/*"
             />
           </div>
         </div>
