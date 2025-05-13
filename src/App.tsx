@@ -14,6 +14,8 @@ import AffiliateProducts from "@/pages/Affiliate/Products";
 import Contact from "@/pages/Contact";
 import CreatorDashboard from "@/pages/Creator/Dashboard";
 import ManageAffiliates from "@/pages/Creator/ManageAffiliates";
+import ManageCourses from "@/pages/Creator/ManageCourses";
+import CoursePreview from "@/pages/Creator/CoursePreview";
 import AdminDashboard from "@/pages/Admin/Dashboard";
 import AdminProducts from "@/pages/Admin/Products";
 import AdminPayments from "@/pages/Admin/Payments";
@@ -61,6 +63,8 @@ function App() {
               {/* Creator routes */}
               <Route path="/criador" element={<CreatorDashboard />} />
               <Route path="/criador/gerenciar-afiliados" element={<ManageAffiliates />} />
+              <Route path="/criador/gerenciar-cursos" element={<ManageCourses />} />
+              <Route path="/criador/curso-preview" element={<CoursePreview />} />
 
               {/* Affiliate routes with AffiliateLayout */}
               <Route path="/afiliado" element={<AffiliateLayout />}>
