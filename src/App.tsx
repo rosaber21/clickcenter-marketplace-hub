@@ -33,8 +33,8 @@ function App() {
         <CartProvider>
           <Router>
             <Routes>
-              {/* Páginas principais com MainLayout */}
-              <Route path="/" element={<MainLayout><Index /></MainLayout>} />
+              {/* Páginas principais */}
+              <Route path="/" element={<Index />} />
               <Route path="/produto/:id" element={<MainLayout><ProductDetails /></MainLayout>} />
               <Route path="/afiliados" element={<MainLayout><AffiliateCategories /></MainLayout>} />
               <Route path="/categorias" element={<MainLayout><AffiliateCategories /></MainLayout>} />

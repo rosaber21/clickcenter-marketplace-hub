@@ -1,20 +1,23 @@
 
 import * as React from "react";
+
+// Import types from toast component but rename ToastProps to avoid conflict
 import {
   ToastActionElement,
-  ToastProps,
+  type ToastProps as UIToastProps,
 } from "@/components/ui/toast";
 
 const TOAST_LIMIT = 5;
 const TOAST_REMOVE_DELAY = 1000000;
 
+// Define ToasterToastProps without circular reference
 type ToasterToastProps = {
   id: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
   variant?: "default" | "destructive" | "success";
-} & ToastProps;
+} & UIToastProps;
 
 const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
@@ -137,9 +140,10 @@ function dispatch(action: Action) {
   });
 }
 
-type ToastProps = Omit<ToasterToastProps, "id">;
+// Define a separate type for the toast function props to avoid circular reference
+type ToastFunctionProps = Omit<ToasterToastProps, "id">;
 
-function toast({ ...props }: ToastProps) {
+function toast({ ...props }: ToastFunctionProps) {
   const id = genId();
 
   const update = (props: ToasterToastProps) =>
