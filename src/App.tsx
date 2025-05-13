@@ -34,7 +34,7 @@ function App() {
           <Router>
             <Routes>
               {/* Páginas principais */}
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<MainLayout><Index /></MainLayout>} />
               <Route path="/produto/:id" element={<MainLayout><ProductDetails /></MainLayout>} />
               <Route path="/afiliados" element={<MainLayout><AffiliateCategories /></MainLayout>} />
               <Route path="/categorias" element={<MainLayout><AffiliateCategories /></MainLayout>} />
