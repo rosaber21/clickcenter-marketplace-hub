@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 40% 98%; /* Mudando para um tom mais suave de azul claro */
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -46,13 +46,13 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 222.2 47% 11%; /* Fundo escuro mais elegante */
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 47% 11%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 222.2 47% 11%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 226 71% 50%; 
@@ -92,6 +92,8 @@
 
   body {
     @apply bg-background text-foreground;
+    background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+    background-attachment: fixed;
   }
 }
 
@@ -107,5 +109,10 @@
   
   .clickcenter-button-secondary {
     @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 px-4 py-2 rounded-md;
+  }
+
+  .main-gradient-bg {
+    background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+    background-attachment: fixed;
   }
 }
