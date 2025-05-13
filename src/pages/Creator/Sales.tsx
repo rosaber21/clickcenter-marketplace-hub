@@ -1,11 +1,12 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import { CreatorLayout } from "@/components/creator/layout/CreatorLayout";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   BarChart,
   Download,
@@ -15,7 +16,6 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 // Define proper types for sales data
 interface SalesData {
@@ -28,9 +28,9 @@ interface SalesData {
 }
 
 export default function Sales() {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("all");
+  const [loading, setLoading] = useState(false);
   
   // Sample sales data with proper types
   const salesData: SalesData[] = [
@@ -87,17 +87,27 @@ export default function Sales() {
   ];
 
   const handleExportCSV = () => {
-    toast({
-      title: "Exportação iniciada",
-      description: "Seus dados de vendas estão sendo exportados para CSV.",
-    });
+    setLoading(true);
+    
+    setTimeout(() => {
+      toast({
+        title: "Exportação iniciada",
+        description: "Seus dados de vendas estão sendo exportados para CSV.",
+      });
+      setLoading(false);
+    }, 800);
   };
 
   const handleExportExcel = () => {
-    toast({
-      title: "Exportação iniciada",
-      description: "Seus dados de vendas estão sendo exportados para Excel.",
-    });
+    setLoading(true);
+    
+    setTimeout(() => {
+      toast({
+        title: "Exportação iniciada",
+        description: "Seus dados de vendas estão sendo exportados para Excel.",
+      });
+      setLoading(false);
+    }, 800);
   };
 
   const handleNewSale = () => {
@@ -132,15 +142,29 @@ export default function Sales() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={handleExportCSV}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleExportCSV}
+              disabled={loading}
+            >
               <Download size={16} className="mr-2" />
               CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={handleExportExcel}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleExportExcel}
+              disabled={loading}
+            >
               <FileSpreadsheet size={16} className="mr-2" />
               Excel
             </Button>
-            <Button size="sm" onClick={handleNewSale}>
+            <Button 
+              size="sm" 
+              onClick={handleNewSale}
+              disabled={loading}
+            >
               <Plus size={16} className="mr-2" />
               Nova Venda
             </Button>
@@ -167,9 +191,9 @@ export default function Sales() {
         </div>
 
         {/* Sales Filters and Tabs */}
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList>
+            <TabsList className="w-full md:w-auto">
               <TabsTrigger value="all">Todas as Vendas</TabsTrigger>
               <TabsTrigger value="pending">Pendentes</TabsTrigger>
               <TabsTrigger value="completed">Concluídas</TabsTrigger>
@@ -177,13 +201,13 @@ export default function Sales() {
             </TabsList>
           </Tabs>
           
-          <div className="flex items-center gap-2">
-            <div className="relative">
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <div className="relative flex-1 md:flex-auto">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <input
                 type="search"
                 placeholder="Buscar venda..."
-                className="rounded-md border border-input pl-8 pr-3 py-2 text-sm"
+                className="rounded-md border border-input pl-8 pr-3 py-2 text-sm w-full"
               />
             </div>
             <Button variant="outline" size="sm" onClick={handleFilter}>
@@ -199,38 +223,56 @@ export default function Sales() {
 
         {/* Sales Table */}
         <div className="border rounded-md">
-          <TabsContent value="all" className="m-0">
-            <DataTable
-              data={salesData}
-              columns={columns}
-              caption="Todas as vendas"
-            />
-          </TabsContent>
-          <TabsContent value="pending" className="m-0">
-            <DataTable
-              data={salesData.filter(sale => sale.status === "Pendente")}
-              columns={columns}
-              caption="Vendas pendentes"
-            />
-          </TabsContent>
-          <TabsContent value="completed" className="m-0">
-            <DataTable
-              data={salesData.filter(sale => sale.status === "Pago")}
-              columns={columns}
-              caption="Vendas concluídas"
-            />
-          </TabsContent>
-          <TabsContent value="refunded" className="m-0">
-            <DataTable
-              data={salesData.filter(sale => sale.status === "Estornado")}
-              columns={columns}
-              caption="Vendas estornadas"
-            />
-          </TabsContent>
+          {loading ? (
+            <div className="p-4">
+              <div className="space-y-2">
+                <Skeleton className="h-6 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            </div>
+          ) : (
+            <>
+              <TabsContent value="all" className="m-0">
+                <DataTable
+                  data={salesData}
+                  columns={columns}
+                  caption="Todas as vendas"
+                />
+              </TabsContent>
+              <TabsContent value="pending" className="m-0">
+                <DataTable
+                  data={salesData.filter(sale => sale.status === "Pendente")}
+                  columns={columns}
+                  caption="Vendas pendentes"
+                />
+              </TabsContent>
+              <TabsContent value="completed" className="m-0">
+                <DataTable
+                  data={salesData.filter(sale => sale.status === "Pago")}
+                  columns={columns}
+                  caption="Vendas concluídas"
+                />
+              </TabsContent>
+              <TabsContent value="refunded" className="m-0">
+                <DataTable
+                  data={salesData.filter(sale => sale.status === "Estornado")}
+                  columns={columns}
+                  caption="Vendas estornadas"
+                />
+              </TabsContent>
+            </>
+          )}
         </div>
 
         <div className="mt-4 text-center text-sm text-muted-foreground">
-          Mostrando {salesData.length} de {salesData.length} vendas
+          {loading ? (
+            <Skeleton className="h-4 w-40 mx-auto" />
+          ) : (
+            <span>Mostrando {salesData.length} de {salesData.length} vendas</span>
+          )}
         </div>
       </div>
     </CreatorLayout>
