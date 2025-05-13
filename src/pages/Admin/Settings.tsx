@@ -36,7 +36,7 @@ export default function AdminSettings() {
     toast({
       title: "Configurações salvas",
       description: "As configurações de pagamento foram atualizadas com sucesso.",
-      className: "bg-green-50 border-green-200",
+      variant: "success",
     });
   };
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -5,7 +6,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { MobileMenu } from "./MobileMenu";
 import { Cart } from "../cart/Cart";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 interface MainLayoutProps {
   children: React.ReactNode;

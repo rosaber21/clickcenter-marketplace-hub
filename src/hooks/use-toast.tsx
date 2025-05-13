@@ -1,4 +1,5 @@
 
+import * as React from "react";
 import { toast as sonnerToast, type ToastT } from "sonner";
 
 export interface ToastProps {
@@ -24,3 +25,12 @@ export function useToast() {
 
   return { toast };
 }
+
+// Export a direct toast function for convenience
+export const toast = ({ title, description, variant = "default" }: ToastProps) => {
+  return sonnerToast(title as string, {
+    description,
+    className: variant === "destructive" ? "destructive" : 
+              variant === "success" ? "success" : "",
+  });
+};

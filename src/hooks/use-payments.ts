@@ -109,7 +109,7 @@ export function usePayments() {
       toast({
         title: "Pagamentos processados",
         description: "Todos os pagamentos pendentes foram processados com sucesso.",
-        className: "bg-green-50 border-green-200",
+        variant: "success",
       });
     }, 1500);
   };
@@ -166,7 +166,7 @@ export function usePayments() {
     toast({
       title: "Pagamento aprovado",
       description: `O pagamento foi aprovado com sucesso via ${methodDisplay}.`,
-      className: "bg-green-50 border-green-200",
+      variant: "success",
     });
   };
 
