@@ -8,10 +8,10 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast"
-import { useToast as useToastPrimitive } from "@/components/ui/use-toast"
+import { useToast, toast } from "@/components/ui/use-toast"
 
 export function Toaster() {
-  const { toasts } = useToastPrimitive()
+  const { toasts } = useToast()
 
   return (
     <ToastProvider>
@@ -34,4 +34,4 @@ export function Toaster() {
   )
 }
 
-export { useToastPrimitive as useToast, toast } from "@/components/ui/use-toast"
+export { useToast, toast }
