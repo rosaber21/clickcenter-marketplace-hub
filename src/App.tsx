@@ -21,6 +21,7 @@ import Sales from "@/pages/Creator/Sales";
 import Combos from "@/pages/Creator/Combos";
 import Personalization from "@/pages/Creator/Personalization";
 import Gamification from "@/pages/Creator/Gamification";
+import Analytics from "@/pages/Creator/Analytics";
 import ManageAffiliates from "@/pages/Creator/ManageAffiliates";
 import ManageCourses from "@/pages/Creator/ManageCourses";
 import CoursePreview from "@/pages/Creator/CoursePreview";
@@ -78,7 +79,7 @@ function App() {
               <Route path="/criador/combos" element={<Combos />} />
               <Route path="/criador/personalizacao" element={<Personalization />} />
               <Route path="/criador/gamificacao" element={<Gamification />} />
-              <Route path="/criador/analytics" element={<NotFound />} />
+              <Route path="/criador/analytics" element={<Analytics />} />
               <Route path="/criador/configuracoes" element={<NotFound />} />
               <Route path="/criador/gerenciar-afiliados" element={<ManageAffiliates />} />
               <Route path="/criador/gerenciar-cursos" element={<ManageCourses />} />
