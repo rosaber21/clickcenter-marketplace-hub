@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CartItem } from "@/types";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface CartItemCardProps {
   item: CartItem;
@@ -12,13 +13,28 @@ interface CartItemCardProps {
 export function CartItemCard({ item }: CartItemCardProps) {
   const { product, quantity } = item;
   const { updateQuantity, removeItem } = useCart();
+  const { toast } = useToast();
   
   const handleUpdateQuantity = (newQuantity: number) => {
+    if (newQuantity < 1) return;
+    
     updateQuantity(item.id, newQuantity);
+    
+    toast({
+      title: "Quantidade atualizada",
+      description: `${product.title}: ${newQuantity} ${newQuantity === 1 ? 'unidade' : 'unidades'}`,
+      variant: "default",
+    });
   };
 
   const handleRemove = () => {
     removeItem(item.id);
+    
+    toast({
+      title: "Produto removido",
+      description: `${product.title} foi removido do seu carrinho`,
+      variant: "default",
+    });
   };
   
   return (
@@ -50,7 +66,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
               variant="outline" 
               size="icon" 
               className="w-6 h-6"
-              onClick={() => handleUpdateQuantity(Math.max(1, quantity - 1))}
+              onClick={() => handleUpdateQuantity(quantity - 1)}
               disabled={quantity <= 1}
             >
               <Minus className="h-3 w-3" />

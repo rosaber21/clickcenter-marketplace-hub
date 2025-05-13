@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Product } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/context/CartContext";
 
 // Dados de exemplo para simular produtos
 const MOCK_PRODUCTS: Product[] = [
@@ -79,6 +80,7 @@ export const useProducts = () => {
   const [activeFilter, setActiveFilter] = useState<"all" | "digital" | "physical">("all");
   const [animate, setAnimate] = useState(false);
   const { toast } = useToast();
+  const { addItem } = useCart();
   
   useEffect(() => {
     setAnimate(true);
@@ -93,12 +95,19 @@ export const useProducts = () => {
   });
 
   const handleAddToCart = (product: Product) => {
+    // Add to cart context
+    addItem({
+      id: product.id,
+      product: product,
+      quantity: 1
+    });
+    
+    // Show toast notification
     toast({
       title: "Produto adicionado ao carrinho",
       description: `${product.title} foi adicionado ao seu carrinho.`,
       variant: "success",
     });
-    // Aqui adicionaria ao contexto do carrinho
   };
 
   return {

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Product, User } from "@/types";
+import { useCart } from "@/context/CartContext";
 
 // Dados de exemplo para simular produtos e usuários
 const MOCK_PRODUCTS: Product[] = [
@@ -52,6 +53,7 @@ const MOCK_USERS: User[] = [
 export function useProductDetails(productId: string | undefined) {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addItem } = useCart();
   
   // Simula busca do produto pelo ID
   const product = MOCK_PRODUCTS.find(p => p.id === productId);
@@ -62,16 +64,30 @@ export function useProductDetails(productId: string | undefined) {
   const handleAddToCart = () => {
     if (!product) return;
     
+    // Add item to cart
+    addItem({
+      id: product.id,
+      product: product,
+      quantity: 1
+    });
+    
     toast({
       title: "Produto adicionado ao carrinho",
       description: `${product.title} foi adicionado ao seu carrinho.`,
       variant: "success",
     });
-    // Aqui adicionaria ao contexto do carrinho
   };
 
   const handleBuyNow = () => {
-    handleAddToCart();
+    if (!product) return;
+    
+    // Add item to cart first
+    addItem({
+      id: product.id,
+      product: product,
+      quantity: 1
+    });
+    
     toast({
       title: "Redirecionando para o checkout",
       description: "Processando sua compra...",

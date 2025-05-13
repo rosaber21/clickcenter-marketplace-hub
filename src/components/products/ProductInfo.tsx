@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, User } from "lucide-react";
 import { Product, User as UserType } from "@/types";
+import { useCart } from "@/context/CartContext";
 
 interface ProductInfoProps {
   product: Product;
@@ -12,6 +13,32 @@ interface ProductInfoProps {
 }
 
 export function ProductInfo({ product, creator, onAddToCart, onBuyNow }: ProductInfoProps) {
+  const { addItem } = useCart();
+  
+  const handleAddToCart = () => {
+    // Create cart item and add to cart
+    addItem({
+      id: product.id,
+      product: product,
+      quantity: 1
+    });
+    
+    // Still call the original handler for toast notifications
+    onAddToCart();
+  };
+  
+  const handleBuyNow = () => {
+    // Create cart item and add to cart first
+    addItem({
+      id: product.id,
+      product: product,
+      quantity: 1
+    });
+    
+    // Then call the original handler for checkout and notifications
+    onBuyNow();
+  };
+  
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -60,7 +87,7 @@ export function ProductInfo({ product, creator, onAddToCart, onBuyNow }: Product
       
       <div className="pt-4 space-y-3">
         <Button 
-          onClick={onAddToCart} 
+          onClick={handleAddToCart} 
           variant="outline" 
           className="w-full gap-2"
         >
@@ -68,7 +95,7 @@ export function ProductInfo({ product, creator, onAddToCart, onBuyNow }: Product
           Adicionar ao Carrinho
         </Button>
         <Button 
-          onClick={onBuyNow} 
+          onClick={handleBuyNow} 
           className="w-full"
         >
           Comprar Agora

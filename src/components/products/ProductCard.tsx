@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/context/CartContext";
 
 interface ProductCardProps {
   product: Product;
@@ -13,6 +14,23 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+  const { addItem } = useCart();
+  
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Create cart item and add to cart
+    addItem({
+      id: product.id,
+      product: product,
+      quantity: 1
+    });
+    
+    // Still call the original handler for toast notifications
+    onAddToCart();
+  };
+  
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-lg border border-muted bg-card shadow-sm transition-all hover:shadow-md">
       <Link to={`/produto/${product.id}`} className="flex-1">
@@ -62,11 +80,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       
       <div className="p-4 pt-0 mt-auto">
         <Button 
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onAddToCart();
-          }} 
+          onClick={handleAddToCart} 
           className="w-full gap-2 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
         >
           <ShoppingCart className="h-4 w-4" />
@@ -79,11 +93,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           size="icon"
           variant="secondary" 
           className="rounded-full shadow-md"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onAddToCart();
-          }}
+          onClick={handleAddToCart}
         >
           <Plus className="h-4 w-4" />
         </Button>
