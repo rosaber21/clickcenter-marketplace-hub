@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, DollarSign, Users, Link as LinkIcon, Download, ExternalLink, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { AffiliateProductsSection } from "@/components/creator/dashboard/affiliates/AffiliateProductsSection";
 
 const AffiliateDashboard = () => {
   // Sample data - in a real application, this would come from an API
@@ -35,11 +36,63 @@ const AffiliateDashboard = () => {
     { id: 4, name: "Planilha de Finanças", commission: "20%", sales: 12 },
   ];
   
+  // Sample products data for affiliate
+  const affiliateProducts = [
+    {
+      name: "Curso de Marketing Digital",
+      creator: "João Silva",
+      category: "Marketing",
+      price: "R$ 149,90",
+      status: "Ativo"
+    },
+    {
+      name: "Ebook de Produtividade",
+      creator: "Maria Oliveira",
+      category: "Produtividade",
+      price: "R$ 29,90",
+      status: "Ativo"
+    },
+    {
+      name: "Curso de Design Gráfico",
+      creator: "Carlos Pereira",
+      category: "Design",
+      price: "R$ 199,90",
+      status: "Pendente"
+    }
+  ];
+  
+  // Handle viewing available products for affiliation
   const handleViewProducts = () => {
     navigate("/afiliado/produtos");
     toast({
       title: "Produtos para afiliação",
       description: "Visualizando produtos disponíveis para promover",
+      variant: "success",
+    });
+  };
+  
+  // Handle product actions
+  const handleEditProduct = (product: any) => {
+    toast({
+      title: "Editar produto",
+      description: `Editando informações do produto ${product.name}`,
+      variant: "success",
+    });
+  };
+  
+  const handleDeleteProduct = (product: any) => {
+    toast({
+      title: "Remover produto",
+      description: `Produto ${product.name} removido da sua lista`,
+      variant: "destructive",
+    });
+  };
+  
+  const handleAddAffiliate = () => {
+    navigate("/afiliado/produtos");
+    toast({
+      title: "Adicionar produto para afiliação",
+      description: "Escolha novos produtos para promover",
       variant: "success",
     });
   };
@@ -160,6 +213,33 @@ const AffiliateDashboard = () => {
           </CardFooter>
         </Card>
       </div>
+      
+      {/* My Affiliate Products Section */}
+      <Card className="mb-8">
+        <CardHeader className="bg-primary/5 flex flex-row justify-between items-center">
+          <div>
+            <CardTitle className="text-primary">Meus Produtos Afiliados</CardTitle>
+            <CardDescription>Produtos que você está promovendo atualmente</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="py-4">
+          <AffiliateProductsSection 
+            products={affiliateProducts}
+            onEdit={handleEditProduct}
+            onDelete={handleDeleteProduct}
+            onAddAffiliate={handleAddAffiliate}
+          />
+        </CardContent>
+        <CardFooter>
+          <Button 
+            variant="outline" 
+            className="text-primary text-sm hover:text-primary/80 transition-colors flex items-center"
+            onClick={handleViewProducts}
+          >
+            Ver mais produtos para afiliar <span className="ml-1">→</span>
+          </Button>
+        </CardFooter>
+      </Card>
 
       {/* Tabs */}
       <Tabs defaultValue="sales" className="mb-8">
