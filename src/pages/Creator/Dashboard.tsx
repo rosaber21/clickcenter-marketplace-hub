@@ -2,6 +2,9 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ChevronDown, Book, Settings } from "lucide-react";
 
 // Import custom hooks
 import { useDashboardTabs } from "@/components/creator/dashboard/useDashboardTabs";
@@ -23,7 +26,7 @@ export default function CreatorDashboard() {
   const navigate = useNavigate();
   
   // Use custom hooks
-  const { activeTab, setActiveTab } = useDashboardTabs();
+  const { activeTab, setActiveTab, activeCourse, setActiveCourse, courses } = useDashboardTabs();
   const { 
     totalSales, 
     activeProducts, 
@@ -68,11 +71,51 @@ export default function CreatorDashboard() {
     navigate("/criador/gerenciar-afiliados");
   };
 
+  const handleChangeCourse = (courseId: string) => {
+    setActiveCourse(courseId);
+  };
+
   return (
     <MainLayout>
       <div className="container py-6">
-        <h1 className="text-3xl font-bold mb-2 text-primary">Creator Dashboard</h1>
-        <p className="text-muted-foreground mb-6">Manage your products and track your sales</p>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold mb-2 text-primary">Creator Dashboard</h1>
+            <p className="text-muted-foreground">Manage your products and track your sales</p>
+          </div>
+          
+          {/* Course Selection Dropdown */}
+          <div className="mt-4 md:mt-0">
+            <Select value={activeCourse} onValueChange={handleChangeCourse}>
+              <SelectTrigger className="w-[240px] bg-white border-primary/20">
+                <div className="flex items-center gap-2">
+                  <Book size={18} className="text-primary" />
+                  <SelectValue placeholder="Select a course" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                {courses.map((course) => (
+                  <SelectItem key={course.id} value={course.id}>
+                    <div className="flex items-center gap-2">
+                      <span>{course.title}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+                <div className="px-2 py-2 border-t mt-1">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full flex items-center gap-2"
+                    onClick={() => navigate("/criador/gerenciar-cursos")}
+                  >
+                    <Settings size={16} />
+                    <span>Gerenciar Cursos</span>
+                  </Button>
+                </div>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
         
         <StatsCards 
           totalSales={totalSales} 
