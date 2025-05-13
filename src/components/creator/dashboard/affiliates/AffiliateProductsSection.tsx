@@ -3,17 +3,10 @@ import React from "react";
 import { ProductsTable } from "@/components/admin/products/ProductsTable";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-
-interface Product {
-  name: string;
-  creator: string;
-  category: string;
-  price: string;
-  status: "Ativo" | "Pendente";
-}
+import { AffiliateProduct } from "@/hooks/use-affiliate-dashboard";
 
 interface AffiliateProductsSectionProps {
-  products: Product[];
+  products: AffiliateProduct[];
   onEdit: (product: any) => void;
   onDelete: (product: any) => void;
   onAddAffiliate: () => void;
