@@ -1,6 +1,5 @@
 
 import React from "react";
-import { MainLayout } from "@/components/layout/MainLayout";
 import { AuthContainer } from "@/components/auth/AuthContainer";
 import { useAuthHandlers } from "@/hooks/use-auth-handlers";
 
@@ -8,8 +7,8 @@ const Login = () => {
   const { isLoading, onLoginSubmit, onRegisterSubmit, onAdminLoginSubmit } = useAuthHandlers();
 
   return (
-    <MainLayout>
-      <div className="flex justify-center items-center min-h-[calc(100vh-180px)]">
+    <div className="min-h-screen flex flex-col bg-background">
+      <div className="flex-1 flex justify-center items-center min-h-[calc(100vh-40px)] py-10">
         <AuthContainer 
           onLoginSubmit={onLoginSubmit}
           onRegisterSubmit={onRegisterSubmit}
@@ -17,7 +16,7 @@ const Login = () => {
           isLoading={isLoading}
         />
       </div>
-    </MainLayout>
+    </div>
   );
 };
 
