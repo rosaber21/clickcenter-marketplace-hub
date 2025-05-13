@@ -8,7 +8,7 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast"
-import { useToast as useToastPrimitive } from "@/components/ui/use-toast"
+import { useToast as useToastPrimitive, toast } from "@radix-ui/react-toast"
 
 export function Toaster() {
   const { toasts } = useToastPrimitive()
@@ -34,4 +34,4 @@ export function Toaster() {
   )
 }
 
-export { useToastPrimitive as useToast, toast } from "@/components/ui/use-toast"
+export { useToastPrimitive as useToast, toast }
