@@ -1,12 +1,13 @@
+
 import React, { useState } from "react";
-import { AdminLayout } from "./AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, Plus } from "lucide-react";
+import { Package, Plus, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { ProductsTable } from "@/components/admin/products/ProductsTable";
 import { AddProductDialog } from "@/components/admin/products/AddProductDialog";
 import { ProductFormValues } from "@/components/admin/products/AddProductForm";
+import { useNavigate } from "react-router-dom";
 
 // Sample product data
 const sampleProducts = [
@@ -31,6 +32,7 @@ export default function AdminProducts() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [products, setProducts] = useState(sampleProducts);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async (values: ProductFormValues) => {
     setIsSubmitting(true);
@@ -62,22 +64,32 @@ export default function AdminProducts() {
 
   const handleEdit = (product: typeof products[0]) => {
     console.log("Editar produto:", product);
-    // A edição será implementada em uma futura iteração
     toast({
-      title: "Funcionalidade em desenvolvimento",
-      description: "A edição de produtos será implementada em breve.",
+      title: "Editando produto",
+      description: `${product.name}`,
       variant: "default",
     });
+    navigate(`/admin/produtos/editar/${product.name.toLowerCase().replace(/\s+/g, '-')}`);
   };
 
   const handleDelete = (product: typeof products[0]) => {
     console.log("Excluir produto:", product);
-    // A exclusão seria implementada com uma confirmação adicional
     toast({
-      title: "Funcionalidade em desenvolvimento",
-      description: "A exclusão de produtos será implementada em breve.",
+      title: "Tem certeza que deseja excluir?",
+      description: `Produto: ${product.name}`,
+      variant: "destructive",
+    });
+    // Implementação real teria uma confirmação adicional
+  };
+  
+  const handleViewDetails = (product: typeof products[0]) => {
+    console.log("Visualizar detalhes:", product);
+    toast({
+      title: "Visualizando detalhes",
+      description: `${product.name}`,
       variant: "default",
     });
+    navigate(`/admin/produtos/detalhes/${product.name.toLowerCase().replace(/\s+/g, '-')}`);
   };
 
   return (
@@ -103,6 +115,7 @@ export default function AdminProducts() {
               products={products} 
               onEdit={handleEdit} 
               onDelete={handleDelete}
+              onViewDetails={handleViewDetails}
             />
           </CardContent>
         </Card>

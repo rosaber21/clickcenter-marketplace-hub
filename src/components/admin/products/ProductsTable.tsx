@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus } from "lucide-react";
+import { Plus, Edit, Trash, Eye } from "lucide-react";
 
 interface Product {
   name: string;
@@ -26,6 +26,7 @@ interface ProductsTableProps {
   onAddProduct?: () => void;
   onAddAffiliate?: () => void;
   showAffiliateButton?: boolean;
+  onViewDetails?: (product: Product) => void;
 }
 
 export const ProductsTable = ({ 
@@ -34,7 +35,8 @@ export const ProductsTable = ({
   onDelete,
   onAddProduct,
   onAddAffiliate,
-  showAffiliateButton = false
+  showAffiliateButton = false,
+  onViewDetails
 }: ProductsTableProps) => {
   return (
     <div>
@@ -91,19 +93,32 @@ export const ProductsTable = ({
                 </span>
               </TableCell>
               <TableCell className="flex space-x-2">
+                {onViewDetails && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => onViewDetails(product)}
+                    title="Ver detalhes"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                )}
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={() => onEdit(product)}
+                  className="gap-1"
                 >
+                  <Edit className="h-4 w-4" />
                   Editar
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="text-red-500"
+                  className="text-red-500 gap-1"
                   onClick={() => onDelete(product)}
                 >
+                  <Trash className="h-4 w-4" />
                   Excluir
                 </Button>
               </TableCell>

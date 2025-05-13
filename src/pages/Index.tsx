@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { ProductCard } from "@/components/products/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Search, Filter, Tag, ShoppingBag, Zap } from "lucide-react";
+import { Search, Filter, Tag, ShoppingBag, Zap, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Product } from "@/types";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
@@ -105,6 +105,7 @@ const Index = () => {
     toast({
       title: "Produto adicionado ao carrinho",
       description: `${product.title} foi adicionado ao seu carrinho.`,
+      variant: "success",
     });
     // Aqui adicionaria ao contexto do carrinho
   };
@@ -118,8 +119,23 @@ const Index = () => {
   };
 
   const handleLearnMore = () => {
-    // Navigate to about or info page
     navigate("/afiliados");
+    toast({
+      title: "Programa de afiliados",
+      description: "Conheça nosso programa de afiliados",
+    });
+  };
+
+  const handleViewAllCategories = () => {
+    navigate("/categorias");
+    toast({
+      title: "Categorias",
+      description: "Explorando todas as categorias",
+    });
+  };
+
+  const handleViewProductDetails = (productId: string) => {
+    navigate(`/produto/${productId}`);
   };
 
   return (
@@ -228,10 +244,11 @@ const Index = () => {
           </h2>
           <Button 
             variant="link" 
-            className="text-primary font-medium"
-            onClick={() => setActiveFilter("all")}
+            className="text-primary font-medium gap-1"
+            onClick={handleViewAllCategories}
           >
             Ver todos
+            <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
 
@@ -245,6 +262,8 @@ const Index = () => {
                   transform: animate ? "translateY(0)" : "translateY(30px)",
                   transition: `all 0.5s ease-out ${0.3 + index * 0.1}s`
                 }}
+                onClick={() => handleViewProductDetails(product.id)}
+                className="cursor-pointer"
               >
                 <ProductCard
                   product={product}

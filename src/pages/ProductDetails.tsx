@@ -1,11 +1,11 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, User } from "lucide-react";
+import { ShoppingCart, User, ArrowLeft } from "lucide-react";
 import { Product, User as UserType } from "@/types";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 // Dados de exemplo para simular produtos e usuários
@@ -57,7 +57,7 @@ const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [selectedImage, setSelectedImage] = React.useState<number>(0);
+  const [selectedImage, setSelectedImage] = useState<number>(0);
   
   // Simula busca do produto pelo ID
   const product = MOCK_PRODUCTS.find(p => p.id === id);
@@ -72,7 +72,10 @@ const ProductDetails = () => {
         <div className="flex flex-col items-center justify-center py-12">
           <h1 className="text-2xl font-bold mb-4">Produto não encontrado</h1>
           <p className="text-muted-foreground mb-8">O produto que você está procurando não existe ou foi removido.</p>
-          <Button onClick={() => navigate("/")}>Voltar para a Página Inicial</Button>
+          <Button onClick={() => navigate("/")} className="gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Voltar para a Página Inicial
+          </Button>
         </div>
       </MainLayout>
     );
@@ -82,18 +85,43 @@ const ProductDetails = () => {
     toast({
       title: "Produto adicionado ao carrinho",
       description: `${product.title} foi adicionado ao seu carrinho.`,
+      variant: "success",
     });
     // Aqui adicionaria ao contexto do carrinho
   };
 
   const handleBuyNow = () => {
     handleAddToCart();
+    toast({
+      title: "Redirecionando para o checkout",
+      description: "Processando sua compra...",
+      variant: "success",
+    });
     // Redirecionar para página de checkout
     // navigate("/checkout");
   };
 
+  const handleBackToProducts = () => {
+    navigate("/");
+    toast({
+      title: "Voltando para produtos",
+      description: "Explorando mais opções",
+    });
+  };
+
   return (
     <MainLayout>
+      <div className="mb-6">
+        <Button 
+          variant="ghost" 
+          onClick={handleBackToProducts}
+          className="gap-2 hover:bg-muted/50"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Voltar para Produtos
+        </Button>
+      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Galeria de imagens */}
         <div className="space-y-4">

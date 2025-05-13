@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart3, DollarSign, Users, Link as LinkIcon, Download } from "lucide-react";
+import { BarChart3, DollarSign, Users, Link as LinkIcon, Download, ExternalLink, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -37,13 +37,20 @@ const AffiliateDashboard = () => {
   
   const handleViewProducts = () => {
     navigate("/afiliado/produtos");
+    toast({
+      title: "Produtos para afiliação",
+      description: "Visualizando produtos disponíveis para promover",
+      variant: "success",
+    });
   };
   
   const handleSaleDetails = (saleId: number) => {
     toast({
       title: "Detalhes da venda",
       description: `Visualizando detalhes da venda #${saleId}`,
+      variant: "success",
     });
+    navigate(`/afiliado/vendas/${saleId}`);
   };
   
   const handleGenerateLink = (productId: number, productName: string) => {
@@ -77,6 +84,20 @@ const AffiliateDashboard = () => {
   
   const handleViewAllMaterials = () => {
     navigate("/afiliado/materiais");
+    toast({
+      title: "Materiais de marketing",
+      description: "Visualizando todos os materiais disponíveis",
+      variant: "success",
+    });
+  };
+
+  const handleViewProductDetails = (productId: number) => {
+    navigate(`/afiliado/produtos/${productId}`);
+    toast({
+      title: "Detalhes do produto",
+      description: "Visualizando informações detalhadas do produto",
+      variant: "success",
+    });
   };
 
   return (
@@ -86,15 +107,15 @@ const AffiliateDashboard = () => {
           <h1 className="text-3xl font-bold">Painel de Afiliado</h1>
           <p className="text-muted-foreground">Gerencie suas promoções e acompanhe seus ganhos</p>
         </div>
-        <Button onClick={handleViewProducts}>
-          <LinkIcon className="mr-2 h-4 w-4" />
+        <Button onClick={handleViewProducts} className="gap-2">
+          <LinkIcon className="h-4 w-4" />
           Ver Produtos para Afiliar
         </Button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+        <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20 hover:shadow-md transition-shadow">
           <CardHeader className="pb-2">
             <CardDescription>Ganhos Totais</CardDescription>
             <CardTitle className="text-3xl">{stats.totalEarnings}</CardTitle>
@@ -109,7 +130,7 @@ const AffiliateDashboard = () => {
           </CardFooter>
         </Card>
 
-        <Card className="bg-gradient-to-br from-secondary/5 to-secondary/10 border-secondary/20">
+        <Card className="bg-gradient-to-br from-secondary/5 to-secondary/10 border-secondary/20 hover:shadow-md transition-shadow">
           <CardHeader className="pb-2">
             <CardDescription>Cliques este mês</CardDescription>
             <CardTitle className="text-3xl">{stats.clicksThisMonth}</CardTitle>
@@ -124,7 +145,7 @@ const AffiliateDashboard = () => {
           </CardFooter>
         </Card>
 
-        <Card className="bg-gradient-to-br from-primary/5 to-secondary/10 border-primary/20">
+        <Card className="bg-gradient-to-br from-primary/5 to-secondary/10 border-primary/20 hover:shadow-md transition-shadow">
           <CardHeader className="pb-2">
             <CardDescription>Taxa de conversão</CardDescription>
             <CardTitle className="text-3xl">{stats.conversionRate}</CardTitle>
@@ -168,7 +189,9 @@ const AffiliateDashboard = () => {
                         variant="ghost" 
                         size="sm"
                         onClick={() => handleSaleDetails(sale.id)}
+                        className="gap-1"
                       >
+                        <Eye className="h-4 w-4" />
                         Detalhes
                       </Button>
                     </td>
@@ -195,13 +218,21 @@ const AffiliateDashboard = () => {
                     <td className="py-3 px-4">{product.name}</td>
                     <td className="py-3 px-4 text-center">{product.commission}</td>
                     <td className="py-3 px-4 text-center">{product.sales}</td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3 px-4 text-right flex justify-end gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleViewProductDetails(product.id)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
                       <Button 
                         variant="outline" 
                         size="sm"
                         onClick={() => handleGenerateLink(product.id, product.name)}
+                        className="gap-1"
                       >
-                        <LinkIcon className="h-4 w-4 mr-1" /> Gerar Link
+                        <LinkIcon className="h-4 w-4" /> Gerar Link
                       </Button>
                     </td>
                   </tr>
@@ -234,10 +265,10 @@ const AffiliateDashboard = () => {
                 <Button 
                   variant="secondary" 
                   size="sm" 
-                  className="w-full"
+                  className="w-full gap-1"
                   onClick={() => handleDownloadMaterial(i)}
                 >
-                  <Download className="h-4 w-4 mr-1" />
+                  <Download className="h-4 w-4" />
                   Download
                 </Button>
               </div>
@@ -248,7 +279,9 @@ const AffiliateDashboard = () => {
           <Button 
             variant="outline" 
             onClick={handleViewAllMaterials}
+            className="gap-1"
           >
+            <ExternalLink className="h-4 w-4" />
             Ver Todos os Materiais
           </Button>
         </CardFooter>

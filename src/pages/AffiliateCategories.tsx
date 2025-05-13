@@ -8,8 +8,9 @@ import {
   TabsList, 
   TabsTrigger 
 } from "@/components/ui/tabs";
-import { Tag, Users } from "lucide-react";
+import { Tag, Users, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 // Components
 import { AffiliateHero } from "@/components/affiliates/AffiliateHero";
@@ -31,6 +32,7 @@ const AffiliateCategories = () => {
     toast({
       title: "Redirecionando para cadastro",
       description: "Você precisa fazer login para se tornar um afiliado.",
+      variant: "success",
     });
   };
 
@@ -40,12 +42,47 @@ const AffiliateCategories = () => {
     toast({
       title: "Carregando produtos",
       description: `Visualizando produtos da categoria ${affiliateCategories.find(cat => cat.id === categoryId)?.name}`,
+      variant: "success",
+    });
+  };
+  
+  const handleBackToHome = () => {
+    navigate("/");
+    toast({
+      title: "Voltando para a página inicial",
+      description: "Redirecionando...",
+    });
+  };
+  
+  const handleHowItWorks = () => {
+    navigate("/afiliados/como-funciona");
+    toast({
+      title: "Como funciona",
+      description: "Saiba mais sobre nosso programa de afiliados",
     });
   };
 
   return (
     <MainLayout>
       <div className="space-y-8">
+        <div className="flex justify-between items-center">
+          <Button 
+            variant="ghost" 
+            onClick={handleBackToHome}
+            className="gap-2 hover:bg-muted/50"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar para início
+          </Button>
+          
+          <Button 
+            variant="outline"
+            onClick={handleHowItWorks}
+          >
+            Como funciona?
+          </Button>
+        </div>
+        
         {/* Hero section */}
         <AffiliateHero onAffiliateSignup={handleAffiliateSignup} />
         
