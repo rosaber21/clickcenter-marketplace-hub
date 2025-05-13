@@ -11,6 +11,7 @@ import Index from "@/pages/Index";
 import ProductDetails from "@/pages/ProductDetails";
 import AffiliateCategories from "@/pages/AffiliateCategories";
 import AffiliateProducts from "@/pages/Affiliate/Products";
+import Contact from "@/pages/Contact";
 import CreatorDashboard from "@/pages/Creator/Dashboard";
 import AdminDashboard from "@/pages/Admin/Dashboard";
 import AdminProducts from "@/pages/Admin/Products";
@@ -41,6 +42,7 @@ function App() {
               <Route path="/afiliados" element={<MainLayout><AffiliateCategories /></MainLayout>} />
               <Route path="/afiliados/produtos" element={<MainLayout><AffiliateProducts /></MainLayout>} />
               <Route path="/categorias" element={<MainLayout><AffiliateCategories /></MainLayout>} />
+              <Route path="/contato" element={<MainLayout><Contact /></MainLayout>} />
               <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
 
               {/* Admin routes */}
