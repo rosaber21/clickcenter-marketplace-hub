@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "@/pages/Index";
 import ProductDetails from "@/pages/ProductDetails";
 import AffiliateCategories from "@/pages/AffiliateCategories";
+import AffiliateProducts from "@/pages/Affiliate/Products";
 import CreatorDashboard from "@/pages/Creator/Dashboard";
 import AdminDashboard from "@/pages/Admin/Dashboard";
 import AdminProducts from "@/pages/Admin/Products";
@@ -23,6 +24,7 @@ import AffiliateLayout from "@/pages/Affiliate/AffiliateLayout";
 import AffiliateDashboard from "@/pages/Affiliate/Dashboard";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
+import { AdminLayout } from "@/pages/Admin/AdminLayout";
 
 const queryClient = new QueryClient();
 
@@ -33,22 +35,25 @@ function App() {
         <CartProvider>
           <Router>
             <Routes>
-              {/* Páginas principais */}
+              {/* Main pages */}
               <Route path="/" element={<MainLayout><Index /></MainLayout>} />
               <Route path="/produto/:id" element={<MainLayout><ProductDetails /></MainLayout>} />
               <Route path="/afiliados" element={<MainLayout><AffiliateCategories /></MainLayout>} />
+              <Route path="/afiliados/produtos" element={<MainLayout><AffiliateProducts /></MainLayout>} />
               <Route path="/categorias" element={<MainLayout><AffiliateCategories /></MainLayout>} />
               <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
 
               {/* Admin routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/produtos" element={<AdminProducts />} />
-              <Route path="/admin/pagamentos" element={<AdminPayments />} />
-              <Route path="/admin/afiliados" element={<AdminAffiliates />} />
-              <Route path="/admin/usuarios" element={<AdminUsers />} />
-              <Route path="/admin/vendas" element={<AdminSales />} />
-              <Route path="/admin/configuracoes" element={<AdminSettings />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="produtos" element={<AdminProducts />} />
+                <Route path="pagamentos" element={<AdminPayments />} />
+                <Route path="afiliados" element={<AdminAffiliates />} />
+                <Route path="usuarios" element={<AdminUsers />} />
+                <Route path="vendas" element={<AdminSales />} />
+                <Route path="configuracoes" element={<AdminSettings />} />
+              </Route>
 
               {/* Creator routes */}
               <Route path="/criador" element={<CreatorDashboard />} />
