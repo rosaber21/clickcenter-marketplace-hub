@@ -2,16 +2,24 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { CartItem } from "@/types";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 interface CartItemCardProps {
   item: CartItem;
-  onRemove: () => void;
-  onUpdateQuantity: (quantity: number) => void;
 }
 
-export function CartItemCard({ item, onRemove, onUpdateQuantity }: CartItemCardProps) {
+export function CartItemCard({ item }: CartItemCardProps) {
   const { product, quantity } = item;
+  const { updateQuantity, removeItem } = useCart();
+  
+  const handleUpdateQuantity = (newQuantity: number) => {
+    updateQuantity(item.id, newQuantity);
+  };
+
+  const handleRemove = () => {
+    removeItem(item.id);
+  };
   
   return (
     <div className="flex gap-4 py-2 border-b last:border-0">
@@ -42,7 +50,7 @@ export function CartItemCard({ item, onRemove, onUpdateQuantity }: CartItemCardP
               variant="outline" 
               size="icon" 
               className="w-6 h-6"
-              onClick={() => onUpdateQuantity(Math.max(1, quantity - 1))}
+              onClick={() => handleUpdateQuantity(Math.max(1, quantity - 1))}
               disabled={quantity <= 1}
             >
               <Minus className="h-3 w-3" />
@@ -53,7 +61,7 @@ export function CartItemCard({ item, onRemove, onUpdateQuantity }: CartItemCardP
               variant="outline" 
               size="icon" 
               className="w-6 h-6"
-              onClick={() => onUpdateQuantity(quantity + 1)}
+              onClick={() => handleUpdateQuantity(quantity + 1)}
             >
               <Plus className="h-3 w-3" />
             </Button>
@@ -69,9 +77,10 @@ export function CartItemCard({ item, onRemove, onUpdateQuantity }: CartItemCardP
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={onRemove} 
+              onClick={handleRemove} 
               className="text-red-500 hover:text-red-700 p-0"
             >
+              <Trash2 className="h-4 w-4 mr-1" />
               Remover
             </Button>
           </div>
