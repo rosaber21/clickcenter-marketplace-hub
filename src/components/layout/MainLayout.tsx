@@ -36,7 +36,8 @@ export function MainLayout({ children }: MainLayoutProps) {
     const query = formData.get('query') as string;
     
     if (query.trim()) {
-      toast("Buscando produtos", {
+      toast({
+        title: "Buscando produtos",
         description: `Pesquisando por: ${query}`,
       });
       // Aqui implementaria a busca
@@ -46,7 +47,8 @@ export function MainLayout({ children }: MainLayoutProps) {
   const handleNavigation = (path: string, title: string) => {
     navigate(path);
     setMobileMenuOpen(false);
-    toast(title, {
+    toast({
+      title: title,
       description: "Navegando para a página solicitada",
     });
   };
