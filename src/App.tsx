@@ -16,6 +16,7 @@ import CreatorDashboard from "@/pages/Creator/Dashboard";
 import CreatorProducts from "@/pages/Creator/Products";
 import Communities from "@/pages/Creator/Communities";
 import Moderation from "@/pages/Creator/Moderation";
+import Members from "@/pages/Creator/Members";
 import ManageAffiliates from "@/pages/Creator/ManageAffiliates";
 import ManageCourses from "@/pages/Creator/ManageCourses";
 import CoursePreview from "@/pages/Creator/CoursePreview";
@@ -68,7 +69,7 @@ function App() {
               <Route path="/criador/produtos" element={<CreatorProducts />} />
               <Route path="/criador/comunidades" element={<Communities />} />
               <Route path="/criador/moderacao" element={<Moderation />} />
-              <Route path="/criador/membros" element={<NotFound />} />
+              <Route path="/criador/membros" element={<Members />} />
               <Route path="/criador/vendas" element={<NotFound />} />
               <Route path="/criador/combos" element={<NotFound />} />
               <Route path="/criador/personalizacao" element={<NotFound />} />
