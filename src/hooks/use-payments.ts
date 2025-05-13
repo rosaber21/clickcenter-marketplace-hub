@@ -140,6 +140,12 @@ export function usePayments() {
       case "paypal":
         methodDisplay = "PayPal";
         break;
+      case "international_transfer":
+        methodDisplay = "Transferência Internacional";
+        break;
+      case "wise":
+        methodDisplay = "Wise (Transferwise)";
+        break;
       default:
         methodDisplay = "Transferência Bancária";
     }

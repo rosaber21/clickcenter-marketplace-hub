@@ -96,6 +96,22 @@ export function PaymentMethodDialog({
                           <p className="text-sm text-gray-500">Pagamento via PayPal</p>
                         </Label>
                       </div>
+                      
+                      <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-slate-50 cursor-pointer border-blue-200">
+                        <RadioGroupItem value="international_transfer" id="international_transfer" />
+                        <Label htmlFor="international_transfer" className="flex-grow cursor-pointer">
+                          <div className="font-medium">Transferência Internacional</div>
+                          <p className="text-sm text-gray-500">SWIFT/BIC para contas internacionais</p>
+                        </Label>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-slate-50 cursor-pointer border-blue-200">
+                        <RadioGroupItem value="wise" id="wise" />
+                        <Label htmlFor="wise" className="flex-grow cursor-pointer">
+                          <div className="font-medium">Wise (Transferwise)</div>
+                          <p className="text-sm text-gray-500">Transferência internacional com taxas reduzidas</p>
+                        </Label>
+                      </div>
                     </RadioGroup>
                   </FormControl>
                 </FormItem>
