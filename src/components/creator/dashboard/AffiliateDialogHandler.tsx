@@ -1,9 +1,8 @@
 
 import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { AffiliateDialog } from "@/components/creator/dashboard/AffiliateDialog";
 
-export const AffiliateDialogHandler: React.FC = () => {
+export const AffiliateDialogHandler = () => {
   const { toast } = useToast();
   const [affiliateDialogOpen, setAffiliateDialogOpen] = useState(false);
   const [newAffiliateEmail, setNewAffiliateEmail] = useState("");
