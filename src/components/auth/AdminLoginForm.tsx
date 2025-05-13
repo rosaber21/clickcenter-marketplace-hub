@@ -110,8 +110,7 @@ export const AdminLoginForm = ({ onSubmit }: AdminLoginFormProps) => {
       </form>
       
       <div className="mt-4 text-xs text-center text-gray-500">
-        <p>Utilize as credenciais fornecidas pelo administrador do sistema</p>
-        <p className="mt-1">Email: rb9356670@gmail.com / Senha: 123455</p>
+        <p>Acesso restrito apenas para administradores autorizados da plataforma.</p>
       </div>
     </Form>
   );
