@@ -4,8 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Clock, BookOpen, Award, ExternalLink } from "lucide-react";
+import { Clock, BookOpen, Award, ExternalLink, Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 // Mock data for demonstration
 import { mockCourseData } from "@/data/mockCourseData";
@@ -48,8 +49,22 @@ export default function StudentDashboard() {
     });
   };
 
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const query = formData.get('query') as string;
+    
+    if (query) {
+      toast({
+        title: "Pesquisando cursos",
+        description: `Resultados para: ${query}`,
+        variant: "success",
+      });
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Meus Cursos</h1>
@@ -57,14 +72,26 @@ export default function StudentDashboard() {
             Continue de onde parou em seus cursos.
           </p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={handleViewAllCourses}
-          className="mt-2 sm:mt-0 gap-1"
-        >
-          <ExternalLink className="h-4 w-4" />
-          Ver Todos os Cursos
-        </Button>
+        <div className="flex gap-3 mt-3 sm:mt-0">
+          <form onSubmit={handleSearch} className="relative">
+            <input
+              name="query"
+              placeholder="Pesquisar cursos"
+              className="pl-3 pr-10 py-2 text-sm border rounded-md w-[200px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+            />
+            <button type="submit" className="absolute right-3 top-2.5 text-muted-foreground">
+              <Search className="h-4 w-4" />
+            </button>
+          </form>
+          <Button 
+            variant="outline" 
+            onClick={handleViewAllCourses}
+            className="gap-1"
+          >
+            <ExternalLink className="h-4 w-4" />
+            Ver Todos
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -74,11 +101,16 @@ export default function StudentDashboard() {
           
           return (
             <Card key={course.id} className="overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-              <div 
-                className="h-48 bg-cover bg-center cursor-pointer" 
-                style={{ backgroundImage: `url(${course.coverImage})` }}
-                onClick={() => handleContinueCourse(course.id)}
-              />
+              <div className="overflow-hidden">
+                <AspectRatio ratio={16/9}>
+                  <img 
+                    src={course.coverImage} 
+                    alt={course.title} 
+                    className="object-cover w-full h-full cursor-pointer transition-transform hover:scale-105"
+                    onClick={() => handleContinueCourse(course.id)}
+                  />
+                </AspectRatio>
+              </div>
               <CardHeader className="pb-2">
                 <CardTitle className="cursor-pointer hover:text-primary transition-colors" onClick={() => handleContinueCourse(course.id)}>
                   {course.title}

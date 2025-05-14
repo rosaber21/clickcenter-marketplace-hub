@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
@@ -38,7 +39,9 @@ import AffiliateDashboard from "@/pages/Affiliate/Dashboard";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
 import { AdminLayout } from "@/pages/Admin/AdminLayout";
-import AdminProfile from "@/pages/Admin/AdminProfile"; // Import AdminProfile
+import AdminProfile from "@/pages/Admin/AdminProfile";
+import StudentDashboard from "@/pages/Student/Dashboard";
+import CoursePage from "@/pages/Student/CoursePage";
 
 const queryClient = new QueryClient();
 
@@ -58,11 +61,16 @@ function App() {
               <Route path="/contato" element={<MainLayout><Contact /></MainLayout>} />
               <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
 
+              {/* Student Routes */}
+              <Route path="/aluno" element={<MainLayout><StudentDashboard /></MainLayout>} />
+              <Route path="/aluno/curso/:courseId" element={<CoursePage />} />
+              <Route path="/aluno/curso/:courseId/aula/:lessonId" element={<CoursePage />} />
+              
               {/* Admin routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
-                <Route path="perfil" element={<AdminProfile />} /> {/* Add AdminProfile route */}
+                <Route path="perfil" element={<AdminProfile />} />
                 <Route path="produtos" element={<AdminProducts />} />
                 <Route path="pagamentos" element={<AdminPayments />} />
                 <Route path="afiliados" element={<AdminAffiliates />} />
