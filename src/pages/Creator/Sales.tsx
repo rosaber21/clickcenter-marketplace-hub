@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { CreatorLayout } from "@/components/creator/layout/CreatorLayout";
@@ -8,76 +7,71 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  BarChart,
   Download,
   FileSpreadsheet,
   Filter,
   Plus,
   Search,
   SlidersHorizontal,
+  AlertCircle,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Tables } from "@/integrations/supabase/types"; // Import Supabase generated types
 
-// Define proper types for sales data
-interface SalesData {
+// Interface para os dados de venda formatados para a DataTable
+interface FormattedSale {
   id: string;
   customer: string;
   product: string;
   date: string;
-  amount: string;
+  amount: string; // DataTable expects 'amount' as per current 'columns'
   status: string;
 }
+
+// Função para buscar as vendas do criador
+const fetchCreatorSales = async (): Promise<FormattedSale[]> => {
+  // A RLS "Producers can view sales of their products" filtrará automaticamente
+  // as vendas para o produtor logado no backend do Supabase.
+  const { data, error } = await supabase
+    .from('sales')
+    .select(`
+      id,
+      sale_date,
+      status,
+      amount,
+      product:products (name),
+      buyer:profiles!sales_buyer_id_fkey (full_name)
+    `)
+    .order('sale_date', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching creator sales:', error);
+    throw new Error(`Failed to fetch creator sales: ${error.message}`);
+  }
+
+  return data.map((sale) => ({
+    id: sale.id, // Usar o ID completo ou formatar como #INV-001 etc.
+    customer: sale.buyer?.full_name || 'N/A',
+    product: sale.product?.name || 'N/A',
+    date: sale.sale_date ? new Date(sale.sale_date).toLocaleDateString('pt-BR') : 'N/A',
+    amount: `R$ ${sale.amount.toFixed(2)}`, // Corresponde à coluna 'amount' na DataTable
+    status: sale.status as string, // ex: 'Pago', 'Pendente', 'Estornado'
+  }));
+};
+
 
 export default function Sales() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("all");
-  const [loading, setLoading] = useState(false);
   
-  // Sample sales data with proper types
-  const salesData: SalesData[] = [
-    {
-      id: "INV-001",
-      customer: "João Silva",
-      product: "Curso Básico de Marketing Digital",
-      date: "05/05/2023",
-      amount: "R$ 297,00",
-      status: "Pago",
-    },
-    {
-      id: "INV-002",
-      customer: "Maria Souza",
-      product: "Curso Avançado de SEO",
-      date: "12/05/2023",
-      amount: "R$ 497,00",
-      status: "Pendente",
-    },
-    {
-      id: "INV-003",
-      customer: "Pedro Santos",
-      product: "Curso de Copywriting",
-      date: "15/05/2023",
-      amount: "R$ 197,00",
-      status: "Pago",
-    },
-    {
-      id: "INV-004",
-      customer: "Ana Rodrigues",
-      product: "Combo Marketing Digital Completo",
-      date: "22/05/2023",
-      amount: "R$ 997,00",
-      status: "Estornado",
-    },
-    {
-      id: "INV-005",
-      customer: "Lucas Oliveira",
-      product: "Curso de Tráfego Pago",
-      date: "01/06/2023",
-      amount: "R$ 397,00",
-      status: "Pago",
-    },
-  ];
-  
-  // Define table columns with proper types
-  const columns: { key: keyof SalesData; label: string }[] = [
+  const { data: salesData, isLoading, isError, error: queryError } = useQuery<FormattedSale[], Error>({
+    queryKey: ['creatorSales'],
+    queryFn: fetchCreatorSales,
+  });
+
+  // Colunas para a DataTable (a chave 'key' deve corresponder às props de FormattedSale)
+  const columns: { key: keyof FormattedSale; label: string }[] = [
     { key: "id", label: "ID" },
     { key: "customer", label: "Cliente" },
     { key: "product", label: "Produto" },
@@ -87,26 +81,24 @@ export default function Sales() {
   ];
 
   const handleExportCSV = () => {
-    setLoading(true);
-    
+    // setLoading(true); // isLoading from useQuery can be used
     setTimeout(() => {
       toast({
         title: "Exportação iniciada",
         description: "Seus dados de vendas estão sendo exportados para CSV.",
       });
-      setLoading(false);
+      // setLoading(false);
     }, 800);
   };
 
   const handleExportExcel = () => {
-    setLoading(true);
-    
+    // setLoading(true);
     setTimeout(() => {
       toast({
         title: "Exportação iniciada",
         description: "Seus dados de vendas estão sendo exportados para Excel.",
       });
-      setLoading(false);
+      // setLoading(false);
     }, 800);
   };
 
@@ -124,6 +116,7 @@ export default function Sales() {
     });
   };
 
+
   const salesStats = [
     { title: "Total de Vendas", value: "R$ 32.459,00", change: "+12%" },
     { title: "Vendas do Mês", value: "R$ 8.912,00", change: "+5%" },
@@ -131,6 +124,26 @@ export default function Sales() {
     { title: "Taxa de Conversão", value: "3.2%", change: "+0.5%" },
   ];
   
+  // Filtrar dados para as abas (precisa ajustar os status se forem diferentes dos mock)
+  // Os status do banco são 'completed', 'processing', 'cancelled'.
+  // Os status do mock eram 'Pago', 'Pendente', 'Estornado'. Vamos mapeá-los ou usar os do banco.
+  // Para simplificar, vou usar os status do banco e ajustar os filtros.
+  // 'completed' -> 'Pago'
+  // 'processing' -> 'Pendente'
+  // 'cancelled' -> 'Estornado'
+
+  const getFilteredSales = (status?: 'completed' | 'processing' | 'cancelled') => {
+    if (!salesData) return [];
+    if (!status) return salesData;
+    return salesData.filter(sale => sale.status === status);
+  };
+  
+  const allSales = salesData || [];
+  const pendingSales = getFilteredSales('processing'); // Mapear para 'Pendente'
+  const completedSales = getFilteredSales('completed'); // Mapear para 'Pago'
+  const refundedSales = getFilteredSales('cancelled'); // Mapear para 'Estornado'
+
+
   return (
     <CreatorLayout>
       <div className="container py-6">
@@ -146,7 +159,7 @@ export default function Sales() {
               variant="outline" 
               size="sm" 
               onClick={handleExportCSV}
-              disabled={loading}
+              disabled={isLoading}
             >
               <Download size={16} className="mr-2" />
               CSV
@@ -155,7 +168,7 @@ export default function Sales() {
               variant="outline" 
               size="sm" 
               onClick={handleExportExcel}
-              disabled={loading}
+              disabled={isLoading}
             >
               <FileSpreadsheet size={16} className="mr-2" />
               Excel
@@ -163,7 +176,7 @@ export default function Sales() {
             <Button 
               size="sm" 
               onClick={handleNewSale}
-              disabled={loading}
+              disabled={isLoading}
             >
               <Plus size={16} className="mr-2" />
               Nova Venda
@@ -195,51 +208,55 @@ export default function Sales() {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="w-full md:w-auto">
               <TabsTrigger value="all">Todas as Vendas</TabsTrigger>
-              <TabsTrigger value="pending">Pendentes</TabsTrigger>
+              <TabsTrigger value="pending">Pendentes (Processando)</TabsTrigger>
               <TabsTrigger value="completed">Concluídas</TabsTrigger>
-              <TabsTrigger value="refunded">Estornadas</TabsTrigger>
+              <TabsTrigger value="refunded">Canceladas (Estornadas)</TabsTrigger>
             </TabsList>
           
             {/* Sales Table */}
             <div className="border rounded-md mt-4">
-              {loading ? (
+              {isLoading && (
                 <div className="p-4">
                   <div className="space-y-2">
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-12 w-full" />
+                    {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-12 w-full rounded-md" />)}
                   </div>
                 </div>
-              ) : (
+              )}
+              {isError && (
+                <div className="flex flex-col items-center justify-center p-8 text-red-500">
+                  <AlertCircle className="h-10 w-10 mb-2" />
+                  <p className="text-lg font-medium">Erro ao carregar vendas</p>
+                  <p className="text-sm">{queryError?.message || "Tente novamente mais tarde."}</p>
+                </div>
+              )}
+              {!isLoading && !isError && salesData && (
                 <>
                   <TabsContent value="all" className="m-0">
                     <DataTable
-                      data={salesData}
+                      data={allSales}
                       columns={columns}
-                      caption="Todas as vendas"
+                      caption={`Todas as vendas (${allSales.length})`}
                     />
                   </TabsContent>
                   <TabsContent value="pending" className="m-0">
                     <DataTable
-                      data={salesData.filter(sale => sale.status === "Pendente")}
+                      data={pendingSales}
                       columns={columns}
-                      caption="Vendas pendentes"
+                      caption={`Vendas pendentes (${pendingSales.length})`}
                     />
                   </TabsContent>
                   <TabsContent value="completed" className="m-0">
                     <DataTable
-                      data={salesData.filter(sale => sale.status === "Pago")}
+                      data={completedSales}
                       columns={columns}
-                      caption="Vendas concluídas"
+                      caption={`Vendas concluídas (${completedSales.length})`}
                     />
                   </TabsContent>
                   <TabsContent value="refunded" className="m-0">
                     <DataTable
-                      data={salesData.filter(sale => sale.status === "Estornado")}
+                      data={refundedSales}
                       columns={columns}
-                      caption="Vendas estornadas"
+                      caption={`Vendas canceladas/estornadas (${refundedSales.length})`}
                     />
                   </TabsContent>
                 </>
@@ -268,11 +285,11 @@ export default function Sales() {
         </div>
 
         <div className="mt-4 text-center text-sm text-muted-foreground">
-          {loading ? (
+          {isLoading ? (
             <Skeleton className="h-4 w-40 mx-auto" />
-          ) : (
+          ) : !isError && salesData ? (
             <span>Mostrando {salesData.length} de {salesData.length} vendas</span>
-          )}
+          ) : null}
         </div>
       </div>
     </CreatorLayout>

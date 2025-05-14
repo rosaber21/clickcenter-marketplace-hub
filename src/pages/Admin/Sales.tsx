@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -19,16 +18,56 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ShoppingCart, Search, Download } from "lucide-react";
+import { ShoppingCart, Search, Download, AlertCircle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Tables } from "@/integrations/supabase/types"; // Import Supabase generated types
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Interface para os dados de venda formatados para a tabela
+interface FormattedSale {
+  id: string;
+  customer: string;
+  product: string;
+  date: string;
+  total: string;
+  status: string;
+}
+
+// Função para buscar as vendas do admin
+const fetchAdminSales = async (): Promise<FormattedSale[]> => {
+  const { data, error } = await supabase
+    .from('sales')
+    .select(`
+      id,
+      sale_date,
+      status,
+      amount,
+      product:products (name),
+      buyer:profiles!sales_buyer_id_fkey (full_name)
+    `)
+    .order('sale_date', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching admin sales:', error);
+    throw new Error(`Failed to fetch admin sales: ${error.message}`);
+  }
+
+  return data.map((sale) => ({
+    id: `#${sale.id.substring(0, 6)}...`, // Usar um ID mais curto ou o ID completo
+    customer: sale.buyer?.full_name || 'N/A',
+    product: sale.product?.name || 'N/A',
+    date: sale.sale_date ? new Date(sale.sale_date).toLocaleDateString('pt-BR') : 'N/A',
+    total: `R$${sale.amount.toFixed(2)}`,
+    status: sale.status as string, // status from db is 'completed', 'processing', or 'cancelled'
+  }));
+};
 
 export default function AdminSales() {
-  const salesData = [
-    { id: "#5624", customer: "João Silva", product: "Curso de Marketing Digital", date: "15/04/2025", total: "R$497,00", status: "completed" },
-    { id: "#5623", customer: "Maria Santos", product: "eBook: SEO Avançado", date: "14/04/2025", total: "R$47,00", status: "completed" },
-    { id: "#5622", customer: "Carlos Oliveira", product: "Mentoria Premium", date: "14/04/2025", total: "R$997,00", status: "processing" },
-    { id: "#5621", customer: "Ana Costa", product: "Curso de Copywriting", date: "13/04/2025", total: "R$397,00", status: "completed" },
-    { id: "#5620", customer: "Lucas Mendes", product: "Templates de Email Marketing", date: "12/04/2025", total: "R$67,00", status: "cancelled" },
-  ];
+  const { data: salesData, isLoading, isError, error } = useQuery<FormattedSale[], Error>({
+    queryKey: ['adminSales'],
+    queryFn: fetchAdminSales,
+  });
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -39,7 +78,7 @@ export default function AdminSales() {
       case "cancelled":
         return <Badge variant="destructive">Cancelado</Badge>;
       default:
-        return null;
+        return <Badge variant="secondary">{status}</Badge>;
     }
   };
 
@@ -84,34 +123,56 @@ export default function AdminSales() {
             </div>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Cliente</TableHead>
-                  <TableHead>Produto</TableHead>
-                  <TableHead>Data</TableHead>
-                  <TableHead>Valor</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {salesData.map((sale) => (
-                  <TableRow key={sale.id}>
-                    <TableCell>{sale.id}</TableCell>
-                    <TableCell className="font-medium">{sale.customer}</TableCell>
-                    <TableCell>{sale.product}</TableCell>
-                    <TableCell>{sale.date}</TableCell>
-                    <TableCell>{sale.total}</TableCell>
-                    <TableCell>{getStatusBadge(sale.status)}</TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="outline" size="sm">Detalhes</Button>
-                    </TableCell>
+            {isLoading && (
+              <div className="space-y-2 p-4">
+                {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}
+              </div>
+            )}
+            {isError && (
+              <div className="flex flex-col items-center justify-center p-8 text-red-500">
+                <AlertCircle className="h-10 w-10 mb-2" />
+                <p className="text-lg font-medium">Erro ao carregar vendas</p>
+                <p className="text-sm">{error?.message || "Tente novamente mais tarde."}</p>
+              </div>
+            )}
+            {!isLoading && !isError && salesData && (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>ID</TableHead>
+                    <TableHead>Cliente</TableHead>
+                    <TableHead>Produto</TableHead>
+                    <TableHead>Data</TableHead>
+                    <TableHead>Valor</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {salesData.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center h-24">
+                        Nenhuma venda encontrada.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    salesData.map((sale) => (
+                      <TableRow key={sale.id}>
+                        <TableCell>{sale.id}</TableCell>
+                        <TableCell className="font-medium">{sale.customer}</TableCell>
+                        <TableCell>{sale.product}</TableCell>
+                        <TableCell>{sale.date}</TableCell>
+                        <TableCell>{sale.total}</TableCell>
+                        <TableCell>{getStatusBadge(sale.status)}</TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="outline" size="sm">Detalhes</Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
       </div>
