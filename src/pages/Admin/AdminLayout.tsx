@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
 import { 
@@ -8,9 +7,9 @@ import {
   ShoppingCart, 
   Settings,
   CreditCard,
-  Link as LinkIcon,
+  Link as LinkIcon, // Renomeado para evitar conflito com o componente Link do react-router-dom
   LogOut,
-  User
+  User // Adicionado o ícone User
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -44,6 +43,10 @@ export function AdminLayout() {
           <NavLink to="/admin" end className={getNavLinkClass}>
             <BarChart3 className="h-4 w-4" />
             <span>Dashboard</span>
+          </NavLink>
+          <NavLink to="/admin/perfil" className={getNavLinkClass}> {/* Novo link para Perfil */}
+            <User className="h-4 w-4" />
+            <span>Perfil</span>
           </NavLink>
           <NavLink to="/admin/produtos" className={getNavLinkClass}>
             <Package className="h-4 w-4" />
