@@ -1,11 +1,10 @@
-import React, { useCallback } from 'react'; // useEffect, useState removed as data comes from useQuery
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { BarChart3, ShoppingCart, Settings, Users, Package, CreditCard } from 'lucide-react';
+// import { BarChart3, ShoppingCart, Settings, Users, Package, CreditCard } from 'lucide-react'; // Icons are used in subcomponents
 import { StatsCards } from '@/components/affiliate/dashboard/StatsCards';
 import { SalesAndProductsTabs } from '@/components/affiliate/dashboard/SalesAndProductsTabs';
 import { MarketingMaterials } from '@/components/affiliate/dashboard/MarketingMaterials';
-// MyAffiliateProducts is not used on this page in current code
 import { DashboardHeader } from '@/components/affiliate/dashboard/DashboardHeader';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -18,7 +17,7 @@ interface AffiliateProductData {
   sales: number;
   imageUrl: string;
   category: string;
-  price: number; 
+  price: number;
 }
 interface SaleData {
   id: string;
@@ -44,10 +43,18 @@ interface TabAffiliateSale {
 }
 
 interface TabTopProduct {
-  id: number;
+  id: number; // Kept as number for SalesAndProductsTabs
   name: string;
   commission: string;
   sales: number;
+}
+
+// Type for individual marketing material item
+interface MarketingMaterialItem {
+  id: string;
+  type: string;
+  name: string;
+  previewUrl: string;
 }
 
 
@@ -55,6 +62,7 @@ const fetchAffiliateDashboardData = async (): Promise<{
   stats: DashboardStatsData;
   products: AffiliateProductData[];
   sales: SaleData[];
+  marketingMaterials: MarketingMaterialItem[]; // Added marketing materials to fetch
 }> => {
   await new Promise(resolve => setTimeout(resolve, 1000));
   return {
@@ -67,6 +75,11 @@ const fetchAffiliateDashboardData = async (): Promise<{
       { id: 'sale1', productName: 'Curso Online de React', date: '2024-07-15', amount: 99.90, commissionEarned: 19.98, status: 'Concluída' },
       { id: 'sale2', productName: 'Ebook de Marketing Digital', date: '2024-07-16', amount: 29.90, commissionEarned: 4.48, status: 'Pendente' },
     ],
+    marketingMaterials: [ // Sample marketing materials data
+      { id: 'banner1', type: 'Banner', name: 'Banner Promocional Curso React', previewUrl: '/placeholder.svg' },
+      { id: 'email1', type: 'Email', name: 'Modelo de Email Lançamento', previewUrl: '/placeholder.svg' },
+      { id: 'video_ad1', type: 'Vídeo Ad', name: 'Anúncio em Vídeo - Novo Curso', previewUrl: '/placeholder.svg' },
+    ],
   };
 };
 
@@ -75,16 +88,16 @@ const AffiliateDashboard = () => {
   const { toast } = useToast();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['affiliateDashboardData'], // Changed queryKey to avoid conflict with useAffiliateDashboard hook
+    queryKey: ['affiliateDashboardDataWithMaterials'], // Changed queryKey
     queryFn: fetchAffiliateDashboardData,
   });
 
   const handleViewDetails = useCallback((productId: string | number) => {
     console.log("Ver detalhes do produto:", productId);
     navigate(`/produto/${productId}`);
-  }, [navigate, toast]);
+  }, [navigate]);
 
-  const handleViewSaleDetails = useCallback((saleId: string) => { // Accepts string ID
+  const handleViewSaleDetails = useCallback((saleId: string) => {
     console.log("Ver detalhes da venda:", saleId);
     toast({ title: "Detalhes da Venda", description: `Carregando detalhes para venda ${saleId}.` });
   }, [toast]);
@@ -103,9 +116,14 @@ const AffiliateDashboard = () => {
     toast({ title: "Material de Marketing", description: `Abrindo material ${materialId}.` });
   }, [toast]);
   
-  const handleGenerateLink = useCallback((productId: number, productName: string) => {
+  const handleViewAllMarketingMaterials = useCallback(() => {
+    console.log("Ver todos os materiais de marketing");
+    toast({ title: "Todos os Materiais", description: "Navegando para a página de todos os materiais de marketing (simulado)." });
+    // navigate('/afiliado/materiais-marketing'); // Example navigation
+  }, [toast]);
+
+  const handleGenerateLink = useCallback((productId: number, productName: string) => { // productId is number here
     toast({ title: "Link de Afiliado Gerado", description: `Link para ${productName} (ID: ${productId}) foi copiado (simulado).` });
-    // Lógica para copiar para o clipboard pode ser adicionada aqui
     navigator.clipboard.writeText(`https://sua-plataforma.com/produto/${productId}?ref=SEU_CODIGO_AFILIADO`).then(() => {
       toast({ title: "Link Copiado!", description: "Link de afiliado copiado para a área de transferência."});
     }).catch(err => {
@@ -113,6 +131,11 @@ const AffiliateDashboard = () => {
       toast({ title: "Erro ao Copiar", description: "Não foi possível copiar o link.", variant: "destructive"});
     });
   }, [toast]);
+
+  const handleViewAffiliateProducts = useCallback(() => {
+    navigate('/afiliado/produtos'); // Navigate to affiliate products page
+    toast({ title: "Ver Produtos", description: "Navegando para a lista de produtos para afiliação." });
+  }, [navigate, toast]);
 
 
   if (isLoading) {
@@ -138,9 +161,8 @@ const AffiliateDashboard = () => {
     return <div className="p-4 md:p-6">Nenhum dado encontrado.</div>;
   }
   
-  // Transform data for SalesAndProductsTabs
   const topProductsForTabs: TabTopProduct[] = data.products.map(p => ({
-    id: parseInt(p.id.replace('prod',''), 10) || 0, // Ensure ID is a number
+    id: parseInt(p.id.replace('prod',''), 10) || 0,
     name: p.name,
     commission: `${p.commission}%`,
     sales: p.sales,
@@ -149,7 +171,7 @@ const AffiliateDashboard = () => {
   const recentSalesForTabs: TabAffiliateSale[] = data.sales.map(s => ({
     id: s.id,
     product: s.productName,
-    date: new Date(s.date).toLocaleDateString('pt-BR'), // Format date
+    date: new Date(s.date).toLocaleDateString('pt-BR'),
     commission: `R$ ${s.commissionEarned.toFixed(2)}`,
   }));
 
@@ -159,6 +181,7 @@ const AffiliateDashboard = () => {
       <DashboardHeader 
         onEditProfile={handleEditProfile}
         onRequestPayout={handleRequestPayout}
+        onViewProducts={handleViewAffiliateProducts} // Added this prop
       />
       <main className="flex-1 p-4 md:p-6 space-y-6 overflow-auto">
         <StatsCards stats={data.stats} />
@@ -166,17 +189,15 @@ const AffiliateDashboard = () => {
         <SalesAndProductsTabs
           topProducts={topProductsForTabs}
           recentSales={recentSalesForTabs}
-          onViewProductDetails={(productId: number) => handleViewDetails(String(productId))}
+          onViewProductDetails={(productId: number) => handleViewDetails(String(productId))} // Ensure ID type matches
           onSaleDetails={handleViewSaleDetails}
           onGenerateLink={handleGenerateLink}
         />
 
         <MarketingMaterials 
-          marketingMaterials={[ // Assuming 'marketingMaterials' is the correct prop name
-            { id: 'banner1', type: 'Banner', name: 'Banner Promocional Curso React', previewUrl: '/placeholder.svg' },
-            { id: 'email1', type: 'Email', name: 'Modelo de Email Lançamento', previewUrl: '/placeholder.svg' },
-          ]}
+          materials={data.marketingMaterials || []} // Pass fetched materials
           onViewMaterial={handleViewMarketingMaterial}
+          onViewAllMaterials={handleViewAllMarketingMaterials} // Pass the handler for "View All"
         />
       </main>
     </div>

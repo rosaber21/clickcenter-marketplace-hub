@@ -2,27 +2,29 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle, Search, Settings } from "lucide-react"; // Removed unused icons
+import { PlusCircle, Search, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
-// Table, Badge, DropdownMenu components are used by TopAffiliatesTable (read-only)
-import { AffiliatePerformanceMetrics } from "./affiliates/AffiliatePerformanceMetrics";
+import { AffiliatePerformanceMetrics } from "./affiliates/AffiliatePerformanceMetrics"; // Corrected import path if necessary
 import { TopAffiliatesTable } from "./affiliates/TopAffiliatesTable";
 import { AffiliateProductsSection } from "./affiliates/AffiliateProductsSection";
 
+// Interface for Product, consistent with AffiliateProductsSection's needs if it can't use global
 interface Product {
   id: string;
-  name: string;
+  name: string; // ProductCard might use 'name' or 'title'. AffiliateProductsSection will handle mapping if needed.
   price: number;
   category?: string;
   imageUrl?: string;
   status?: string;
   creator?: string;
-  // Fields expected by AffiliateProductsSection (read-only component)
-  title?: string; // 'name' might serve as title
-  type?: string;  // 'category' might serve as type
-  createdById?: string; // 'creator' might be related
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
+  description?: string; // Added to match usage in AffiliateProductsSection
+  // Fields required by the global Product type, if AffiliateProductsSection starts using it.
+  // title?: string;
+  // type?: "digital" | "physical";
+  // createdById?: string;
+  // createdAt?: string | Date;
+  // updatedAt?: string | Date;
+  // images?: string[];
 }
 
 interface Affiliate {
@@ -33,15 +35,14 @@ interface Affiliate {
   conversionRate: number;
   earnings: number;
   status: 'active' | 'pending' | 'inactive';
-  // Fields expected by TopAffiliatesTable (read-only component)
-  commission?: string | number; 
-  productCount?: number; 
+  commission?: number; // Changed to number as per error indication for TopAffiliatesTable
+  productCount?: number;
 }
 
 interface AffiliatesTabProps {
-  products: Product[]; 
-  onEdit: (product: Product) => void; 
-  onDelete: (product: Product) => void; 
+  products: Product[];
+  onEdit: (product: Product) => void;
+  onDelete: (product: Product) => void;
   onAddAffiliate: () => void;
   onManageAffiliates: () => void;
 }
@@ -55,17 +56,26 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const performanceMetrics = {
+  // This data should align with AffiliateMetricsProps in AffiliatePerformanceMetrics.tsx
+  const performanceMetricsData = {
     totalAffiliates: 120,
-    activeAffiliates: 85,
-    totalAffiliateSales: 15600.75,
-    averageConversionRate: 8.5,
+    activeAffiliates: 85, // Assuming this maps to 'newAffiliatesThisMonth' or similar if structure differs
+    totalAffiliateSales: 15600.75, // Assuming this maps to 'affiliateSalesAmount'
+    averageConversionRate: 8.5, // This might not directly map, or could be part of derived metrics
+    // Ensure all props expected by AffiliatePerformanceMetrics are provided
+    // Mapping to AffiliatePerformanceMetrics props:
+    newAffiliatesThisMonth: 30, // Example value, adjust as needed
+    affiliateSalesAmount: 15600.75,
+    totalSalesPercentage: 60, // Example value
+    commissionsAmount: 3120.15, // Example value
+    commissionsPercentage: 20, // Example value
   };
 
+
   const topAffiliatesData: Affiliate[] = [
-    { id: '1', name: 'Affiliate One', email: 'one@example.com', sales: 150, conversionRate: 12, earnings: 2500, status: 'active', commission: 'R$250', productCount: 5 },
-    { id: '2', name: 'Affiliate Two', email: 'two@example.com', sales: 120, conversionRate: 10, earnings: 1800, status: 'active', commission: 'R$180', productCount: 3 },
-    { id: '3', name: 'Affiliate Three', email: 'three@example.com', sales: 90, conversionRate: 7, earnings: 1200, status: 'pending', commission: 'R$120', productCount: 2 },
+    { id: '1', name: 'Affiliate One', email: 'one@example.com', sales: 150, conversionRate: 12, earnings: 2500, status: 'active', commission: 250, productCount: 5 },
+    { id: '2', name: 'Affiliate Two', email: 'two@example.com', sales: 120, conversionRate: 10, earnings: 1800, status: 'active', commission: 180, productCount: 3 },
+    { id: '3', name: 'Affiliate Three', email: 'three@example.com', sales: 90, conversionRate: 7, earnings: 1200, status: 'pending', commission: 120, productCount: 2 },
   ];
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,8 +105,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
         </div>
       </div>
 
-      {/* Assuming AffiliatePerformanceMetrics expects a 'metrics' prop */}
-      <AffiliatePerformanceMetrics metrics={performanceMetrics} />
+      <AffiliatePerformanceMetrics {...performanceMetricsData} />
 
       <Card>
         <CardHeader>
@@ -116,16 +125,16 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
           </div>
         </CardHeader>
         <CardContent>
-          <TopAffiliatesTable 
-            affiliates={filteredAffiliates} 
-            onEditAffiliate={(affiliateId) => console.log('Edit affiliate', affiliateId)} // Adjusted to pass ID if component expects that
-            onDeleteAffiliate={(affiliateId) => console.log('Delete affiliate', affiliateId)} // Adjusted to pass ID
+          <TopAffiliatesTable
+            affiliates={filteredAffiliates}
+            onEditAffiliate={(affiliateId) => console.log('Edit affiliate', affiliateId)}
+            onDeleteAffiliate={(affiliateId) => console.log('Delete affiliate', affiliateId)}
           />
         </CardContent>
       </Card>
 
       <AffiliateProductsSection
-        products={products}
+        products={products as any} // Using 'as any' for now, ideally products type should align with what AffiliateProductsSection expects
         onEditProduct={onEdit}
         onDeleteProduct={onDelete}
         onLinkProductToAffiliate={(productId, affiliateId) => console.log(`Link product ${productId} to affiliate ${affiliateId}`)}
@@ -133,4 +142,3 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
     </div>
   );
 };
-
