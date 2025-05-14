@@ -1,5 +1,42 @@
 
-export const mockCourseData = [
+export interface Material {
+  id: string;
+  title: string;
+  type: "pdf" | "zip" | string; // More specific types like "video", "link" could be added
+  url: string;
+}
+
+export interface Comment {
+  id: string;
+  userName: string;
+  userAvatar: string;
+  content: string;
+  date: string; // Ideally, this would be a Date object or ISO string
+  likes: number;
+}
+
+export interface Lesson {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  videoUrl: string;
+  completed: boolean;
+  liked: boolean;
+  materials: Material[];
+  comments: Comment[];
+}
+
+export interface Course {
+  id: string;
+  title: string;
+  coverImage: string;
+  description: string;
+  duration: string;
+  lessons: Lesson[];
+}
+
+export const mockCourseData: Course[] = [
   {
     id: "curso-1",
     title: "Desenvolvimento Web Completo",

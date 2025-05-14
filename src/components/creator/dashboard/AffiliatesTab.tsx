@@ -18,12 +18,12 @@ interface LocalAffiliate {
   conversionRate: number;
   earnings: number;
   status: 'active' | 'pending' | 'inactive';
-  commission: number; // Changed to number only
+  commission: number;
   productCount?: number;
 }
 
 interface AffiliatesTabProps {
-  products: Product[]; // Using the global Product type
+  products: Product[];
   onEdit: (product: Product) => void;
   onDelete: (product: Product) => void;
   onAddAffiliate: () => void;
@@ -42,7 +42,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
   // Affiliate performance metrics data
   const performanceMetricsData = {
     totalAffiliates: 120,
-    activeAffiliates: 85, // Reverted to activeAffiliates as per error
+    activeAffiliates: 85, 
     totalAffiliateSales: 15600.75,
     averageConversionRate: 8.5,
     newAffiliatesThisMonth: 30,
@@ -88,7 +88,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
 
       <AffiliatePerformanceMetrics 
         totalAffiliates={performanceMetricsData.totalAffiliates}
-        activeAffiliates={performanceMetricsData.activeAffiliates} // Reverted to activeAffiliates
+        activeAffiliatesCount={performanceMetricsData.activeAffiliates} 
         totalAffiliateSales={performanceMetricsData.totalAffiliateSales}
         averageConversionRate={performanceMetricsData.averageConversionRate}
         newAffiliatesThisMonth={performanceMetricsData.newAffiliatesThisMonth}
@@ -117,7 +117,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
         </CardHeader>
         <CardContent>
           <TopAffiliatesTable
-            affiliates={filteredAffiliates as any}
+            affiliates={filteredAffiliates as any} // Consider defining a proper type for TopAffiliatesTableProps's affiliates
             onViewAffiliate={(affiliateId) => console.log('View affiliate details', affiliateId)}
           />
         </CardContent>
@@ -129,7 +129,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
         onDeleteProduct={onDelete}
         onLinkProductToAffiliate={(productId, affiliateId) => {
           console.log(`Link product ${productId} to affiliate ${affiliateId}`);
-          onAddAffiliate(); // Call the provided handler when linking products
+          onAddAffiliate(); 
         }}
       />
     </div>
