@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
@@ -39,6 +38,7 @@ import AffiliateDashboard from "@/pages/Affiliate/Dashboard";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
 import { AdminLayout } from "@/pages/Admin/AdminLayout";
+import AdminProfile from "@/pages/Admin/AdminProfile"; // Import AdminProfile
 
 const queryClient = new QueryClient();
 
@@ -62,6 +62,7 @@ function App() {
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
+                <Route path="perfil" element={<AdminProfile />} /> {/* Add AdminProfile route */}
                 <Route path="produtos" element={<AdminProducts />} />
                 <Route path="pagamentos" element={<AdminPayments />} />
                 <Route path="afiliados" element={<AdminAffiliates />} />

@@ -1,60 +1,42 @@
 
-import React from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, DollarSign, Users } from "lucide-react";
-import { DashboardStats } from "@/hooks/use-affiliate-dashboard";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DollarSign, ShoppingCart, Users, BarChart } from "lucide-react";
+
+// Define DashboardStats locally as a workaround for it not being exported from the read-only hook
+interface DashboardStats {
+  totalSales: number;
+  totalEarnings: number;
+  conversionRate: number;
+  totalClicks: number;
+}
 
 interface StatsCardsProps {
   stats: DashboardStats;
 }
 
-export const StatsCards = ({ stats }: StatsCardsProps) => {
+export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
+  const cardData = [
+    { title: "Vendas Totais", value: stats.totalSales, icon: <ShoppingCart className="h-5 w-5 text-muted-foreground" />, description: "Número total de vendas" },
+    { title: "Ganhos Totais", value: `R$ ${stats.totalEarnings.toFixed(2)}`, icon: <DollarSign className="h-5 w-5 text-muted-foreground" />, description: "Ganhos totais acumulados" },
+    { title: "Taxa de Conversão", value: `${stats.conversionRate.toFixed(1)}%`, icon: <BarChart className="h-5 w-5 text-muted-foreground" />, description: "Percentual de cliques que resultaram em vendas" },
+    { title: "Cliques Totais", value: stats.totalClicks, icon: <Users className="h-5 w-5 text-muted-foreground" />, description: "Número total de cliques nos links" },
+  ];
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20 hover:shadow-md transition-shadow">
-        <CardHeader className="pb-2">
-          <CardDescription>Ganhos Totais</CardDescription>
-          <CardTitle className="text-3xl">{stats.totalEarnings}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Pendente: <span className="font-medium">{stats.pendingPayment}</span>
-          </p>
-        </CardContent>
-        <CardFooter>
-          <DollarSign className="h-5 w-5 text-primary opacity-70" />
-        </CardFooter>
-      </Card>
-
-      <Card className="bg-gradient-to-br from-secondary/5 to-secondary/10 border-secondary/20 hover:shadow-md transition-shadow">
-        <CardHeader className="pb-2">
-          <CardDescription>Cliques este mês</CardDescription>
-          <CardTitle className="text-3xl">{stats.clicksThisMonth}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Conversões: <span className="font-medium">{stats.conversionsThisMonth}</span>
-          </p>
-        </CardContent>
-        <CardFooter>
-          <Users className="h-5 w-5 text-secondary opacity-70" />
-        </CardFooter>
-      </Card>
-
-      <Card className="bg-gradient-to-br from-primary/5 to-secondary/10 border-primary/20 hover:shadow-md transition-shadow">
-        <CardHeader className="pb-2">
-          <CardDescription>Taxa de conversão</CardDescription>
-          <CardTitle className="text-3xl">{stats.conversionRate}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Média do setor: <span className="font-medium">1.2%</span>
-          </p>
-        </CardContent>
-        <CardFooter>
-          <BarChart3 className="h-5 w-5 text-primary/70" />
-        </CardFooter>
-      </Card>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {cardData.map((card, index) => (
+        <Card key={index}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+            {card.icon}
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{card.value}</div>
+            <p className="text-xs text-muted-foreground">{card.description}</p>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 };
