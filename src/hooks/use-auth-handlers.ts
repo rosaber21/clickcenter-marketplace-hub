@@ -75,7 +75,7 @@ export function useAuthHandlers() {
     setTimeout(() => {
       setIsLoading(false);
       
-      if (data.email === "rb9356670@gmail.com" && data.password === "123456") {
+      if (data.email === "chacalabuata@gmail.com" && data.password === "123456") {
         toast({
           title: "Login administrativo bem-sucedido!",
           description: "Bem-vindo ao painel administrativo.",

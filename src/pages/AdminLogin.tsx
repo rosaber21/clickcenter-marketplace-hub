@@ -12,10 +12,11 @@ const AdminLogin = () => {
 
   const onAdminLoginSubmit = (data: AdminLoginFormValues) => {
     // Admin credentials check
-    if (data.email === "rb9356670@gmail.com" && data.password === "123456") {
+    if (data.email === "chacalabuata@gmail.com" && data.password === "123456") {
       toast({
         title: "Login bem-sucedido",
         description: "Bem-vindo ao painel administrativo.",
+        variant: "success", // Added variant for consistency
       });
       navigate("/admin");
     } else {
