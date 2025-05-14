@@ -42,7 +42,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
   // Affiliate performance metrics data
   const performanceMetricsData = {
     totalAffiliates: 120,
-    activeAffiliatesCount: 85, // Renamed to match expected prop name
+    activeAffiliates: 85, // Reverted to activeAffiliates as per error
     totalAffiliateSales: 15600.75,
     averageConversionRate: 8.5,
     newAffiliatesThisMonth: 30,
@@ -88,7 +88,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
 
       <AffiliatePerformanceMetrics 
         totalAffiliates={performanceMetricsData.totalAffiliates}
-        activeAffiliatesCount={performanceMetricsData.activeAffiliatesCount}
+        activeAffiliates={performanceMetricsData.activeAffiliates} // Reverted to activeAffiliates
         totalAffiliateSales={performanceMetricsData.totalAffiliateSales}
         averageConversionRate={performanceMetricsData.averageConversionRate}
         newAffiliatesThisMonth={performanceMetricsData.newAffiliatesThisMonth}
