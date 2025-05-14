@@ -1,7 +1,6 @@
 
 import React from "react";
 import { useParams } from "react-router-dom";
-import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { ProductImages } from "@/components/products/ProductImages";
@@ -16,14 +15,14 @@ const ProductDetails = () => {
   // Se o produto não for encontrado, mostra uma mensagem
   if (!product) {
     return (
-      <MainLayout>
+      <div className="container py-6">
         <ProductNotFound />
-      </MainLayout>
+      </div>
     );
   }
 
   return (
-    <MainLayout>
+    <div className="container py-6">
       <div className="mb-6">
         <Button 
           variant="ghost" 
@@ -47,7 +46,7 @@ const ProductDetails = () => {
           onBuyNow={handleBuyNow}
         />
       </div>
-    </MainLayout>
+    </div>
   );
 };
 
