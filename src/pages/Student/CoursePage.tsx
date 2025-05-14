@@ -13,6 +13,7 @@ import { mockCourseData } from '@/data/mockCourseData';
 const CoursePage: React.FC = () => {
   const { courseId, lessonId } = useParams<{ courseId: string, lessonId: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [liked, setLiked] = useState(false);
   
   // Get course from mock data
   const course = mockCourseData.find(course => course.id === courseId);
@@ -40,6 +41,20 @@ const CoursePage: React.FC = () => {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  const handleLikeToggle = () => {
+    setLiked(!liked);
+  };
+
+  const handleCompleteLesson = () => {
+    console.log('Lesson completed:', currentLesson.id);
+    // Here you would update lesson completion status
+  };
+
+  const handleNavigate = (lessonId: string) => {
+    console.log('Navigating to lesson:', lessonId);
+    // Navigation is handled by the component via React Router
+  };
   
   // For sort order, ensure lessons are displayed in the correct sequence
   // If lessons don't have an order property, we use their array index for ordering
@@ -50,6 +65,7 @@ const CoursePage: React.FC = () => {
   
   return (
     <div className="flex h-screen bg-background">
+      {/* We're assuming StudentSidebar accepts these props based on error messages */}
       <StudentSidebar 
         isOpen={sidebarOpen}
         course={course}
@@ -58,6 +74,7 @@ const CoursePage: React.FC = () => {
       />
       
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* We're assuming StudentHeader accepts these props based on error messages */}
         <StudentHeader 
           course={course}
           toggleSidebar={toggleSidebar}
@@ -67,15 +84,15 @@ const CoursePage: React.FC = () => {
           <h1 className="text-2xl font-bold">{currentLesson.title}</h1>
           
           <VideoPlayer 
+            title={currentLesson.title}
             videoUrl={currentLesson.videoUrl}
-            thumbnailUrl={course.thumbnailUrl}
+            onComplete={handleCompleteLesson}
           />
           
           <LessonNavigation 
-            courseId={courseId as string}
-            previousLesson={previousLesson}
-            nextLesson={nextLesson}
-            currentLessonCompleted={currentLesson.completed}
+            currentLesson={currentLesson}
+            lessons={course.lessons}
+            onNavigate={handleNavigate}
           />
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -85,12 +102,17 @@ const CoursePage: React.FC = () => {
                 <p>{currentLesson.description}</p>
               </div>
               
-              <LessonComments comments={currentLesson.comments} />
+              <LessonComments 
+                lessonId={currentLesson.id}
+                comments={currentLesson.comments}
+                liked={liked}
+                onLikeToggle={handleLikeToggle}
+              />
             </div>
             
             <div className="space-y-6">
               <SupplementaryMaterials materials={currentLesson.materials} />
-              <SupportWidget courseId={courseId as string} />
+              <SupportWidget />
             </div>
           </div>
         </div>

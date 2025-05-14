@@ -42,7 +42,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
   // Affiliate performance metrics data
   const performanceMetricsData = {
     totalAffiliates: 120,
-    activeAffiliates: 85,
+    activeAffiliatesCount: 85, // Renamed to match expected prop name
     totalAffiliateSales: 15600.75,
     averageConversionRate: 8.5,
     newAffiliatesThisMonth: 30,
@@ -88,7 +88,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
 
       <AffiliatePerformanceMetrics 
         totalAffiliates={performanceMetricsData.totalAffiliates}
-        activeAffiliates={performanceMetricsData.activeAffiliates}
+        activeAffiliatesCount={performanceMetricsData.activeAffiliatesCount}
         totalAffiliateSales={performanceMetricsData.totalAffiliateSales}
         averageConversionRate={performanceMetricsData.averageConversionRate}
         newAffiliatesThisMonth={performanceMetricsData.newAffiliatesThisMonth}
@@ -117,9 +117,8 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
         </CardHeader>
         <CardContent>
           <TopAffiliatesTable
-            affiliates={filteredAffiliates as any} // Type assertion to avoid errors with internal TopAffiliatesTable typing
-            onEditAffiliate={(affiliateId) => console.log('Edit affiliate', affiliateId)}
-            onDeleteAffiliate={(affiliateId) => console.log('Delete affiliate', affiliateId)}
+            affiliates={filteredAffiliates as any}
+            onViewAffiliate={(affiliateId) => console.log('View affiliate details', affiliateId)}
           />
         </CardContent>
       </Card>
