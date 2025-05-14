@@ -1,56 +1,42 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AffiliateProductsSection } from "@/components/creator/dashboard/affiliates/AffiliateProductsSection";
-import { AffiliateProduct } from "@/hooks/use-affiliate-dashboard"; // This now has .price
-
-// This interface must align with what AffiliateProductsSection expects for its 'products' prop.
-// The Product type from AffiliatesTab.tsx requires price, and potentially title, type etc.
-// AffiliateProduct from the hook now has 'price'. If other fields are strictly needed by AffiliateProductsSection,
-// they would need to be added to AffiliateProduct type in the hook or mapped here.
-// For now, ensuring 'price' is present.
-interface MappedProductForAffiliateSection {
-  id: string; // AffiliateProductsSection Product id is string
-  name: string;
-  price: number;
-  category?: string;
-  imageUrl?: string;
-  status?: string;
-  creator?: string;
-  // Optional fields from AffiliatesTab.Product, if strictly needed by AffiliateProductsSection
-  title?: string;
-  type?: string;
-  createdById?: string;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
-}
-
+import { AffiliateProduct } from "@/hooks/use-affiliate-dashboard";
+import { Product } from "@/types"; // Import the global Product type
 
 interface MyAffiliateProductsProps {
-  products: AffiliateProduct[]; // From use-affiliate-dashboard (id: number, price: number)
-  onEdit: (product: any) => void; // Change 'any' to a more specific type if possible
-  onDelete: (product: any) => void; // Change 'any' to a more specific type if possible
-  onAddAffiliate: () => void; // This prop name might be confusing here; AffiliateProductsSection has onLinkProductToAffiliate
+  products: AffiliateProduct[]; 
+  onEdit: (product: any) => void;
+  onDelete: (product: any) => void;
+  onAddAffiliate: () => void;
   onViewProducts: () => void;
 }
+
+// Map AffiliateProduct to the global Product type
+const mapAffiliateProductToGlobalProduct = (p: AffiliateProduct): Product => ({
+  id: String(p.id),
+  title: p.name,
+  price: typeof p.price === 'number' ? p.price : 0,
+  description: `Affiliate product with ${p.commission} commission rate`,
+  type: "digital",
+  images: p.imageUrl ? [p.imageUrl] : [],
+  createdById: "affiliate-user",
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
+});
 
 export const MyAffiliateProducts = ({
   products,
   onEdit,
   onDelete,
-  onAddAffiliate, // Consider renaming or re-evaluating this prop for clarity if passed to AffiliateProductsSection
+  onAddAffiliate,
   onViewProducts
 }: MyAffiliateProductsProps) => {
 
-  // Map AffiliateProduct from the hook to the structure expected by AffiliateProductsSection
-  const mappedProducts: MappedProductForAffiliateSection[] = products.map(p => ({
-    id: String(p.id), // Ensure id is string for AffiliateProductsSection
-    name: p.name,
-    price: p.price,
-    imageUrl: p.imageUrl,
-    // category: p.category, // If AffiliateProduct had category
-    // title: p.name, // Example mapping
-  }));
+  // Map AffiliateProduct from the hook to the global Product structure
+  const mappedProducts: Product[] = products.map(mapAffiliateProductToGlobalProduct);
 
   return (
     <Card className="mb-8">
@@ -62,17 +48,12 @@ export const MyAffiliateProducts = ({
       </CardHeader>
       <CardContent className="py-4">
         <AffiliateProductsSection 
-          products={mappedProducts} // Pass mapped products
-          onEditProduct={onEdit} // Prop name for AffiliateProductsSection
-          onDeleteProduct={onDelete} // Prop name for AffiliateProductsSection
-          // onAddAffiliate is not a direct prop of AffiliateProductsSection.
-          // It has onLinkProductToAffiliate. If onAddAffiliate is meant for something else, keep it separate.
-          // For now, assuming onAddAffiliate is not directly passed if it doesn't match a prop.
-          // If onAddAffiliate was intended for the "Link Product" action, it needs different parameters.
+          products={mappedProducts}
+          onEditProduct={onEdit}
+          onDeleteProduct={onDelete}
           onLinkProductToAffiliate={(productId, affiliateId) => {
             console.log(`Link product ${productId} to affiliate ${affiliateId} from MyAffiliateProducts`);
-            // onAddAffiliate might be called here or related logic.
-            // Current onAddAffiliate() has no params.
+            onAddAffiliate();
           }}
         />
       </CardContent>

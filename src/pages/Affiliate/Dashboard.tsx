@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-// import { BarChart3, ShoppingCart, Settings, Users, Package, CreditCard } from 'lucide-react'; // Icons are used in subcomponents
 import { StatsCards } from '@/components/affiliate/dashboard/StatsCards';
 import { SalesAndProductsTabs } from '@/components/affiliate/dashboard/SalesAndProductsTabs';
 import { MarketingMaterials } from '@/components/affiliate/dashboard/MarketingMaterials';
@@ -19,6 +18,7 @@ interface AffiliateProductData {
   category: string;
   price: number;
 }
+
 interface SaleData {
   id: string;
   productName: string;
@@ -27,6 +27,7 @@ interface SaleData {
   commissionEarned: number;
   status: string;
 }
+
 interface DashboardStatsData {
   totalSales: number;
   totalEarnings: number;
@@ -43,7 +44,7 @@ interface TabAffiliateSale {
 }
 
 interface TabTopProduct {
-  id: number; // Kept as number for SalesAndProductsTabs
+  id: number;
   name: string;
   commission: string;
   sales: number;
@@ -57,12 +58,25 @@ interface MarketingMaterialItem {
   previewUrl: string;
 }
 
+// Ensure this interface matches what DashboardHeader expects
+interface DashboardHeaderProps {
+  onRequestPayout: () => void;
+  onEditProfile: () => void;
+  onViewProducts: () => void;
+}
+
+// Ensure this interface matches what MarketingMaterials expects
+interface MarketingMaterialsProps {
+  materials: MarketingMaterialItem[];
+  onViewMaterial: (materialId: string) => void;
+  onViewAllMaterials: () => void;
+}
 
 const fetchAffiliateDashboardData = async (): Promise<{
   stats: DashboardStatsData;
   products: AffiliateProductData[];
   sales: SaleData[];
-  marketingMaterials: MarketingMaterialItem[]; // Added marketing materials to fetch
+  marketingMaterials: MarketingMaterialItem[];
 }> => {
   await new Promise(resolve => setTimeout(resolve, 1000));
   return {
@@ -75,7 +89,7 @@ const fetchAffiliateDashboardData = async (): Promise<{
       { id: 'sale1', productName: 'Curso Online de React', date: '2024-07-15', amount: 99.90, commissionEarned: 19.98, status: 'Concluída' },
       { id: 'sale2', productName: 'Ebook de Marketing Digital', date: '2024-07-16', amount: 29.90, commissionEarned: 4.48, status: 'Pendente' },
     ],
-    marketingMaterials: [ // Sample marketing materials data
+    marketingMaterials: [
       { id: 'banner1', type: 'Banner', name: 'Banner Promocional Curso React', previewUrl: '/placeholder.svg' },
       { id: 'email1', type: 'Email', name: 'Modelo de Email Lançamento', previewUrl: '/placeholder.svg' },
       { id: 'video_ad1', type: 'Vídeo Ad', name: 'Anúncio em Vídeo - Novo Curso', previewUrl: '/placeholder.svg' },
@@ -88,7 +102,7 @@ const AffiliateDashboard = () => {
   const { toast } = useToast();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['affiliateDashboardDataWithMaterials'], // Changed queryKey
+    queryKey: ['affiliateDashboardDataWithMaterials'],
     queryFn: fetchAffiliateDashboardData,
   });
 
@@ -119,10 +133,9 @@ const AffiliateDashboard = () => {
   const handleViewAllMarketingMaterials = useCallback(() => {
     console.log("Ver todos os materiais de marketing");
     toast({ title: "Todos os Materiais", description: "Navegando para a página de todos os materiais de marketing (simulado)." });
-    // navigate('/afiliado/materiais-marketing'); // Example navigation
   }, [toast]);
 
-  const handleGenerateLink = useCallback((productId: number, productName: string) => { // productId is number here
+  const handleGenerateLink = useCallback((productId: number, productName: string) => {
     toast({ title: "Link de Afiliado Gerado", description: `Link para ${productName} (ID: ${productId}) foi copiado (simulado).` });
     navigator.clipboard.writeText(`https://sua-plataforma.com/produto/${productId}?ref=SEU_CODIGO_AFILIADO`).then(() => {
       toast({ title: "Link Copiado!", description: "Link de afiliado copiado para a área de transferência."});
@@ -133,10 +146,9 @@ const AffiliateDashboard = () => {
   }, [toast]);
 
   const handleViewAffiliateProducts = useCallback(() => {
-    navigate('/afiliado/produtos'); // Navigate to affiliate products page
+    navigate('/afiliado/produtos');
     toast({ title: "Ver Produtos", description: "Navegando para a lista de produtos para afiliação." });
   }, [navigate, toast]);
-
 
   if (isLoading) {
     return (
@@ -175,13 +187,12 @@ const AffiliateDashboard = () => {
     commission: `R$ ${s.commissionEarned.toFixed(2)}`,
   }));
 
-
   return (
     <div className="flex flex-col h-full">
       <DashboardHeader 
         onEditProfile={handleEditProfile}
         onRequestPayout={handleRequestPayout}
-        onViewProducts={handleViewAffiliateProducts} // Added this prop
+        onViewProducts={handleViewAffiliateProducts}
       />
       <main className="flex-1 p-4 md:p-6 space-y-6 overflow-auto">
         <StatsCards stats={data.stats} />
@@ -189,15 +200,15 @@ const AffiliateDashboard = () => {
         <SalesAndProductsTabs
           topProducts={topProductsForTabs}
           recentSales={recentSalesForTabs}
-          onViewProductDetails={(productId: number) => handleViewDetails(String(productId))} // Ensure ID type matches
+          onViewProductDetails={(productId: number) => handleViewDetails(String(productId))}
           onSaleDetails={handleViewSaleDetails}
           onGenerateLink={handleGenerateLink}
         />
 
         <MarketingMaterials 
-          materials={data.marketingMaterials || []} // Pass fetched materials
+          materials={data.marketingMaterials}
           onViewMaterial={handleViewMarketingMaterial}
-          onViewAllMaterials={handleViewAllMarketingMaterials} // Pass the handler for "View All"
+          onViewAllMaterials={handleViewAllMarketingMaterials}
         />
       </main>
     </div>
