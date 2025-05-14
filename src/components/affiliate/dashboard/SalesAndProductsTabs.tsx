@@ -1,14 +1,28 @@
 
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Eye, LinkIcon } from "lucide-react";
+import { Eye, Link as LinkIcon } from "lucide-react"; // Renamed Link to LinkIcon to avoid conflict with react-router-dom if used in same context elsewhere
 import { Button } from "@/components/ui/button";
-import { AffiliateSale, TopProduct } from "@/hooks/use-affiliate-dashboard";
+// Assuming AffiliateSale and TopProduct types are defined here or imported correctly.
+// For clarity, let's define them based on usage, these should match what AffiliateDashboard provides.
+export interface AffiliateSale {
+  id: string; // Changed from number to string
+  product: string;
+  date: string;
+  commission: string;
+}
+
+export interface TopProduct {
+  id: number;
+  name: string;
+  commission: string;
+  sales: number;
+}
 
 interface SalesAndProductsTabsProps {
   recentSales: AffiliateSale[];
   topProducts: TopProduct[];
-  onSaleDetails: (saleId: number) => void;
+  onSaleDetails: (saleId: string) => void; // Changed saleId to string
   onGenerateLink: (productId: number, productName: string) => void;
   onViewProductDetails: (productId: number) => void;
 }
@@ -47,7 +61,7 @@ export const SalesAndProductsTabs = ({
                     <Button 
                       variant="ghost" 
                       size="sm"
-                      onClick={() => onSaleDetails(sale.id)}
+                      onClick={() => onSaleDetails(sale.id)} // sale.id is string
                       className="gap-1"
                     >
                       <Eye className="h-4 w-4" />
@@ -103,3 +117,4 @@ export const SalesAndProductsTabs = ({
     </Tabs>
   );
 };
+

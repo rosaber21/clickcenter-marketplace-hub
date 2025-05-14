@@ -2,30 +2,27 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle, Search, Settings, Users, Edit, Trash2, Eye, LinkIcon } from "lucide-react";
+import { PlusCircle, Search, Settings } from "lucide-react"; // Removed unused icons
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge"; // Assuming Badge component exists
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; // Assuming DropdownMenu components exist
+// Table, Badge, DropdownMenu components are used by TopAffiliatesTable (read-only)
 import { AffiliatePerformanceMetrics } from "./affiliates/AffiliatePerformanceMetrics";
 import { TopAffiliatesTable } from "./affiliates/TopAffiliatesTable";
 import { AffiliateProductsSection } from "./affiliates/AffiliateProductsSection";
 
-// Assuming Product and Affiliate types. These should ideally come from a central types file.
 interface Product {
   id: string;
   name: string;
   price: number;
-  // Add other relevant product properties
   category?: string;
   imageUrl?: string;
   status?: string;
   creator?: string;
+  // Fields expected by AffiliateProductsSection (read-only component)
+  title?: string; // 'name' might serve as title
+  type?: string;  // 'category' might serve as type
+  createdById?: string; // 'creator' might be related
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 interface Affiliate {
@@ -36,13 +33,15 @@ interface Affiliate {
   conversionRate: number;
   earnings: number;
   status: 'active' | 'pending' | 'inactive';
-  // products?: Product[]; // Or AffiliateProduct[] depending on TopAffiliatesTable
+  // Fields expected by TopAffiliatesTable (read-only component)
+  commission?: string | number; 
+  productCount?: number; 
 }
 
 interface AffiliatesTabProps {
-  products: Product[]; // Changed from any[] to Product[]
-  onEdit: (product: Product) => void; // Assuming Product type for onEdit
-  onDelete: (product: Product) => void; // Assuming Product type for onDelete
+  products: Product[]; 
+  onEdit: (product: Product) => void; 
+  onDelete: (product: Product) => void; 
   onAddAffiliate: () => void;
   onManageAffiliates: () => void;
 }
@@ -56,7 +55,6 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Sample data - replace with actual data fetching and state management
   const performanceMetrics = {
     totalAffiliates: 120,
     activeAffiliates: 85,
@@ -65,9 +63,9 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
   };
 
   const topAffiliatesData: Affiliate[] = [
-    { id: '1', name: 'Affiliate One', sales: 150, conversionRate: 12, earnings: 2500, status: 'active' },
-    { id: '2', name: 'Affiliate Two', sales: 120, conversionRate: 10, earnings: 1800, status: 'active' },
-    { id: '3', name: 'Affiliate Three', sales: 90, conversionRate: 7, earnings: 1200, status: 'pending' },
+    { id: '1', name: 'Affiliate One', email: 'one@example.com', sales: 150, conversionRate: 12, earnings: 2500, status: 'active', commission: 'R$250', productCount: 5 },
+    { id: '2', name: 'Affiliate Two', email: 'two@example.com', sales: 120, conversionRate: 10, earnings: 1800, status: 'active', commission: 'R$180', productCount: 3 },
+    { id: '3', name: 'Affiliate Three', email: 'three@example.com', sales: 90, conversionRate: 7, earnings: 1200, status: 'pending', commission: 'R$120', productCount: 2 },
   ];
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,6 +95,7 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
         </div>
       </div>
 
+      {/* Assuming AffiliatePerformanceMetrics expects a 'metrics' prop */}
       <AffiliatePerformanceMetrics metrics={performanceMetrics} />
 
       <Card>
@@ -119,14 +118,14 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
         <CardContent>
           <TopAffiliatesTable 
             affiliates={filteredAffiliates} 
-            onEditAffiliate={(affiliate) => console.log('Edit affiliate', affiliate.id)}
-            onDeleteAffiliate={(affiliate) => console.log('Delete affiliate', affiliate.id)}
+            onEditAffiliate={(affiliateId) => console.log('Edit affiliate', affiliateId)} // Adjusted to pass ID if component expects that
+            onDeleteAffiliate={(affiliateId) => console.log('Delete affiliate', affiliateId)} // Adjusted to pass ID
           />
         </CardContent>
       </Card>
 
       <AffiliateProductsSection
-        products={products} // This now correctly passes Product[]
+        products={products}
         onEditProduct={onEdit}
         onDeleteProduct={onDelete}
         onLinkProductToAffiliate={(productId, affiliateId) => console.log(`Link product ${productId} to affiliate ${affiliateId}`)}
@@ -134,3 +133,4 @@ export const AffiliatesTab: React.FC<AffiliatesTabProps> = ({
     </div>
   );
 };
+

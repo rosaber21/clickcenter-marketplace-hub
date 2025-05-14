@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -14,22 +13,23 @@ export interface AffiliateStat {
 }
 
 export interface AffiliateProduct {
-  id: number; // DB product ID will be UUID string, adjust if necessary
+  id: number;
   name: string;
   commission: string;
   sales: number;
   imageUrl: string;
+  price: number; // Added price
 }
 
 export interface AffiliateSale {
-  id: string; // Sale ID from DB (UUID)
+  id: string; 
   product: string;
   date: string;
-  commission: string; // This will represent total sale amount for now
+  commission: string; 
 }
 
 export interface TopProduct {
-  id: number; // DB product ID will be UUID string
+  id: number; 
   name:string;
   commission: string;
   sales: number;
@@ -75,7 +75,6 @@ export const useAffiliateDashboard = () => {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
   
-  // Mock data for other sections (can be replaced with Supabase calls later)
   const [stats] = useState<AffiliateStat[]>([
     { label: "Total de Vendas (Mês)", value: "R$ 1.250,80", change: "+15%", icon: undefined },
     { label: "Comissões (Mês)", value: "R$ 250,16", change: "+12%", icon: undefined },
@@ -90,8 +89,8 @@ export const useAffiliateDashboard = () => {
   ]);
 
   const [affiliateProducts] = useState<AffiliateProduct[]>([
-    { id: 1, name: "Curso de Marketing Digital Completo", commission: "20%", sales: 15, imageUrl: "/placeholder.svg" },
-    { id: 2, name: "eBook: Guia de SEO Avançado", commission: "15%", sales: 25, imageUrl: "/placeholder.svg" },
+    { id: 1, name: "Curso de Marketing Digital Completo", commission: "20%", sales: 15, imageUrl: "/placeholder.svg", price: 199.90 }, // Added price
+    { id: 2, name: "eBook: Guia de SEO Avançado", commission: "15%", sales: 25, imageUrl: "/placeholder.svg", price: 29.90 }, // Added price
   ]);
 
   // Handler functions (remain as stubs for now)
@@ -111,7 +110,7 @@ export const useAffiliateDashboard = () => {
     toast({ title: "Ação: Adicionar Produto para Afiliação", description: `Adicionando produto ID: ${productId} à sua lista de afiliação.` });
   }, [toast]);
 
-  const handleSaleDetails = useCallback((saleId: string) => { // saleId is now string (UUID)
+  const handleSaleDetails = useCallback((saleId: string) => { // saleId is string
     toast({ title: "Ação: Detalhes da Venda", description: `Visualizando detalhes da venda ID: ${saleId}.` });
   }, [toast]);
 
