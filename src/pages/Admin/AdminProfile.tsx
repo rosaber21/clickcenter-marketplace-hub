@@ -1,20 +1,21 @@
 
 import React, { useRef, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react"; // User icon removido pois não estava sendo usado aqui
+import { Upload, Save } from "lucide-react"; // Adicionado Save icon
 
 const AdminProfile = () => {
   const [adminData, setAdminData] = useState({
     name: "Administrador ClickCenter",
     email: "admin@clickcenter.com",
     username: "admin_clickcenter",
-    avatarUrl: "", // Deixe em branco ou use um placeholder se não houver imagem
+    avatarUrl: "",
     initials: "AD",
   });
+  const [isSaving, setIsSaving] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -29,14 +30,45 @@ const AdminProfile = () => {
     if (file) {
       setSelectedFile(file);
       console.log("Arquivo selecionado:", file);
-      // Gerar URL de pré-visualização
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result as string);
+        // Futuramente, aqui também atualizaria adminData.avatarUrl após o upload bem-sucedido
       };
       reader.readAsDataURL(file);
       // Aqui, futuramente, adicionaremos a lógica para fazer upload para o Supabase
+      // e então atualizar setAdminData com a nova avatarUrl.
     }
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target;
+    setAdminData(prevData => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    console.log("Salvando dados:", adminData);
+    // Aqui, futuramente, adicionaremos a lógica para salvar os dados no backend (Supabase)
+    // Por exemplo:
+    // const { data, error } = await supabase.from('admin_profiles').update({ ... }).eq('id', adminProfileId);
+    // if (error) console.error("Erro ao salvar:", error);
+    // else console.log("Dados salvos:", data);
+    
+    // Simular uma chamada de API
+    await new Promise(resolve => setTimeout(resolve, 1000)); 
+    console.log("Dados do perfil salvos (simulado):", adminData);
+    // Se houver um arquivo selecionado para o avatar, faria o upload aqui também
+    if (selectedFile) {
+      console.log("Fazendo upload do avatar (simulado):", selectedFile.name);
+      // Lógica de upload do avatar aqui...
+      // Após o upload, atualize adminData.avatarUrl com a URL retornada pelo Supabase Storage
+    }
+    setIsSaving(false);
+    // Idealmente, mostrar um toast de sucesso/erro aqui.
   };
 
   return (
@@ -86,24 +118,35 @@ const AdminProfile = () => {
             <CardHeader>
               <CardTitle>Informações Pessoais</CardTitle>
               <CardDescription>
-                Seus dados de administrador.
+                Seus dados de administrador. Modifique e salve abaixo.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome Completo</Label>
-                <Input id="name" defaultValue={adminData.name} readOnly />
+                <Input id="name" value={adminData.name} onChange={handleInputChange} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="username">Nome de Usuário</Label>
-                <Input id="username" defaultValue={adminData.username} readOnly />
+                <Input id="username" value={adminData.username} onChange={handleInputChange} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" defaultValue={adminData.email} readOnly />
+                <Input id="email" type="email" value={adminData.email} onChange={handleInputChange} />
               </div>
-              {/* Poderíamos adicionar mais campos aqui, como telefone, etc. */}
             </CardContent>
+            <CardFooter className="border-t px-6 py-4">
+              <Button onClick={handleSave} disabled={isSaving}>
+                {isSaving ? (
+                  <>Salvando...</>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Salvar Alterações
+                  </>
+                )}
+              </Button>
+            </CardFooter>
           </Card>
         </div>
       </div>
