@@ -6,11 +6,13 @@ import { HowItWorks } from "./HowItWorks";
 interface CategoriesSectionProps {
   categories: CategoryData[];
   onViewProducts: (categoryId: number) => void;
+  onLearnMore: (categoryName: string) => void;
 }
 
 export const CategoriesSection: React.FC<CategoriesSectionProps> = ({ 
   categories, 
-  onViewProducts 
+  onViewProducts,
+  onLearnMore 
 }) => {
   return (
     <div className="space-y-6">
@@ -20,6 +22,7 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
             key={category.id} 
             category={category} 
             onViewProducts={onViewProducts} 
+            onLearnMore={onLearnMore}
           />
         ))}
       </div>
@@ -28,4 +31,3 @@ export const CategoriesSection: React.FC<CategoriesSectionProps> = ({
     </div>
   );
 };
-

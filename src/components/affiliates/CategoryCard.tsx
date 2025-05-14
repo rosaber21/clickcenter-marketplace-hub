@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Info } from "lucide-react";
 
 export interface CategoryData {
   id: number;
@@ -23,9 +24,10 @@ export interface CategoryData {
 interface CategoryCardProps {
   category: CategoryData;
   onViewProducts: (categoryId: number) => void;
+  onLearnMore: (categoryName: string) => void;
 }
 
-export const CategoryCard: React.FC<CategoryCardProps> = ({ category, onViewProducts }) => {
+export const CategoryCard: React.FC<CategoryCardProps> = ({ category, onViewProducts, onLearnMore }) => {
   return (
     <div className="group">
       <Card className="h-full transition-all duration-300 hover:shadow-lg hover:border-primary/50 group-hover:scale-[1.02]">
@@ -48,17 +50,24 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ category, onViewProd
             {category.productCount} produtos disponíveis para afiliação
           </p>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex justify-between gap-2">
           <Button 
             variant="ghost" 
-            className="w-full group-hover:bg-primary group-hover:text-white transition-colors"
+            className="flex-1 group-hover:bg-primary group-hover:text-white transition-colors"
             onClick={() => onViewProducts(category.id)}
           >
             Ver Produtos
+          </Button>
+          <Button 
+            variant="outline"
+            className="flex items-center gap-1"
+            onClick={() => onLearnMore(category.name)}
+          >
+            <Info className="h-4 w-4" />
+            Saiba Mais
           </Button>
         </CardFooter>
       </Card>
     </div>
   );
 };
-

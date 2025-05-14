@@ -7,7 +7,7 @@ import {
   TabsList, 
   TabsTrigger 
 } from "@/components/ui/tabs";
-import { Tag, Users, ArrowLeft } from "lucide-react";
+import { Tag, Users, ArrowLeft, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
@@ -59,6 +59,16 @@ const AffiliateCategories = () => {
       title: "Como funciona",
       description: "Saiba mais sobre nosso programa de afiliados",
     });
+  };
+
+  const handleLearnMore = (categoryName: string) => {
+    // Navegação para a página de detalhes da categoria
+    toast({
+      title: "Saiba Mais",
+      description: `Detalhes sobre a categoria ${categoryName}`,
+      variant: "success",
+    });
+    navigate(`/afiliados/detalhes-categoria/${categoryName.toLowerCase().replace(/\s+/g, '-')}`);
   };
 
   return (
@@ -113,6 +123,7 @@ const AffiliateCategories = () => {
           <CategoriesSection 
             categories={affiliateCategories} 
             onViewProducts={handleViewProducts}
+            onLearnMore={handleLearnMore}
           />
         </TabsContent>
 
