@@ -2,21 +2,9 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
+import { Affiliate } from "@/types"; // Import the unified Affiliate type
 
-// Update the Affiliate interface to match the one in AffiliatesTab
-interface Affiliate {
-  id: string;
-  name: string;
-  email: string;
-  sales: number;
-  conversionRate: number;
-  earnings: number;
-  status: 'active' | 'pending' | 'suspended';
-  commission: number;
-  productCount?: number;
-  avatarUrl?: string;
-  lastActivity?: string;
-}
+// Update the Affiliate interface to match the one in AffiliatesTab - REMOVED, using imported type
 
 interface TopAffiliatesTableProps {
   affiliates: Affiliate[];
@@ -44,8 +32,8 @@ export const TopAffiliatesTable: React.FC<TopAffiliatesTableProps> = ({
           {affiliates.map((affiliate) => (
             <tr key={affiliate.id} className="border-b hover:bg-muted/30 transition-colors">
               <td className="py-3">{affiliate.name}</td>
-              <td className="py-3">€ {affiliate.sales}</td>
-              <td className="py-3">€ {affiliate.commission}</td>
+              <td className="py-3">€ {affiliate.sales.toFixed(2)}</td>
+              <td className="py-3">€ {affiliate.commission.toFixed(2)}</td>
               <td className="py-3">{affiliate.productCount || 0}</td>
               <td className="py-3 text-right">
                 <Button 
@@ -65,3 +53,4 @@ export const TopAffiliatesTable: React.FC<TopAffiliatesTableProps> = ({
     </div>
   );
 };
+

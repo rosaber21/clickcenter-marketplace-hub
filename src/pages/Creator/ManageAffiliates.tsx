@@ -1,24 +1,14 @@
-
 import React, { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { PlusCircle, ArrowLeft, UserPlus, Mail, Trash2, CheckCircle, XCircle } from "lucide-react";
+import { ArrowLeft, UserPlus, Mail, Trash2, CheckCircle, XCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-
-interface Affiliate {
-  id: number;
-  name: string;
-  email: string;
-  status: "active" | "pending" | "inactive";
-  sales: number;
-  commission: string;
-  lastActive: string;
-}
+import { Affiliate } from "@/types"; // Import the unified Affiliate type
 
 export default function ManageAffiliates() {
   const { toast } = useToast();
@@ -27,47 +17,54 @@ export default function ManageAffiliates() {
   const [showInviteForm, setShowInviteForm] = useState(false);
   const [newAffiliateEmail, setNewAffiliateEmail] = useState("");
   
-  // Sample affiliate data
+  // Sample affiliate data updated to unified Affiliate type
   const [affiliates, setAffiliates] = useState<Affiliate[]>([
     { 
-      id: 1, 
+      id: "1", 
       name: "João Silva", 
       email: "joao.silva@example.com", 
       status: "active", 
       sales: 24, 
-      commission: "R$ 1.200,00",
-      lastActive: "Hoje"
+      commission: 1200.00, // Numeric value
+      lastActivity: "Hoje",
+      productCount: 5, // Optional: added for consistency
+      avatarUrl: "/placeholder.svg" // Optional: added for consistency
     },
     { 
-      id: 2, 
+      id: "2", 
       name: "Maria Oliveira", 
       email: "maria.oliveira@example.com", 
       status: "active", 
       sales: 18, 
-      commission: "R$ 850,00",
-      lastActive: "Ontem"
+      commission: 850.00, // Numeric value
+      lastActivity: "Ontem",
+      productCount: 3,
+      avatarUrl: "/placeholder.svg"
     },
     { 
-      id: 3, 
+      id: "3", 
       name: "Carlos Santos", 
       email: "carlos.santos@example.com", 
       status: "pending", 
       sales: 0, 
-      commission: "R$ 0,00",
-      lastActive: "Nunca"
+      commission: 0.00, // Numeric value
+      lastActivity: "Nunca",
+      productCount: 0,
+      avatarUrl: "/placeholder.svg"
     },
     { 
-      id: 4, 
+      id: "4", 
       name: "Ana Ferreira", 
       email: "ana.ferreira@example.com", 
       status: "inactive", 
       sales: 5, 
-      commission: "R$ 250,00",
-      lastActive: "2 semanas atrás"
+      commission: 250.00, // Numeric value
+      lastActivity: "2 semanas atrás",
+      productCount: 1,
+      avatarUrl: "/placeholder.svg"
     }
   ]);
   
-  // Filter affiliates based on search term
   const filteredAffiliates = affiliates.filter(
     affiliate => 
       affiliate.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -88,13 +85,15 @@ export default function ManageAffiliates() {
     }
     
     const newAffiliate: Affiliate = {
-      id: affiliates.length + 1,
+      id: String(affiliates.length + 1 + Date.now()), // Ensure unique string ID
       name: newAffiliateEmail.split('@')[0], // Temporary name from email
       email: newAffiliateEmail,
       status: "pending",
       sales: 0,
-      commission: "R$ 0,00",
-      lastActive: "Nunca"
+      commission: 0.00, // Numeric value
+      lastActivity: "Nunca",
+      productCount: 0,
+      avatarUrl: "/placeholder.svg"
     };
     
     setAffiliates([...affiliates, newAffiliate]);
@@ -108,8 +107,8 @@ export default function ManageAffiliates() {
     });
   };
   
-  // Handle deleting an affiliate
-  const handleDeleteAffiliate = (affiliateId: number) => {
+  // Handle deleting an affiliate (affiliateId is now string)
+  const handleDeleteAffiliate = (affiliateId: string) => {
     setAffiliates(affiliates.filter(affiliate => affiliate.id !== affiliateId));
     
     toast({
@@ -119,8 +118,8 @@ export default function ManageAffiliates() {
     });
   };
   
-  // Handle changing affiliate status
-  const handleToggleStatus = (affiliateId: number) => {
+  // Handle changing affiliate status (affiliateId is now string)
+  const handleToggleStatus = (affiliateId: string) => {
     setAffiliates(affiliates.map(affiliate => {
       if (affiliate.id === affiliateId) {
         const newStatus = affiliate.status === "active" ? "inactive" : "active";
@@ -131,14 +130,14 @@ export default function ManageAffiliates() {
           variant: "success",
         });
         
-        return { ...affiliate, status: newStatus };
+        return { ...affiliate, status: newStatus as Affiliate['status'] };
       }
       return affiliate;
     }));
   };
   
   // Helper to render status badge with appropriate color
-  const renderStatusBadge = (status: string) => {
+  const renderStatusBadge = (status: Affiliate['status']) => {
     switch (status) {
       case "active":
         return <Badge className="bg-green-500">Ativo</Badge>;
@@ -146,6 +145,8 @@ export default function ManageAffiliates() {
         return <Badge className="bg-yellow-500">Pendente</Badge>;
       case "inactive":
         return <Badge className="bg-gray-500">Inativo</Badge>;
+      case "suspended":
+        return <Badge className="bg-red-500">Suspenso</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
@@ -179,7 +180,6 @@ export default function ManageAffiliates() {
           </CardHeader>
           
           <CardContent className="pt-6">
-            {/* Invite form */}
             {showInviteForm && (
               <Card className="mb-6 bg-muted/20">
                 <CardHeader>
@@ -216,7 +216,6 @@ export default function ManageAffiliates() {
               </Card>
             )}
             
-            {/* Search and filter */}
             <div className="mb-4">
               <Input
                 placeholder="Buscar afiliados por nome ou email..."
@@ -247,8 +246,10 @@ export default function ManageAffiliates() {
                       <TableCell>{affiliate.email}</TableCell>
                       <TableCell>{renderStatusBadge(affiliate.status)}</TableCell>
                       <TableCell>{affiliate.sales}</TableCell>
-                      <TableCell>{affiliate.commission}</TableCell>
-                      <TableCell>{affiliate.lastActive}</TableCell>
+                      <TableCell>
+                        {affiliate.commission.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      </TableCell>
+                      <TableCell>{affiliate.lastActivity}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
                           {affiliate.status !== "pending" && (
