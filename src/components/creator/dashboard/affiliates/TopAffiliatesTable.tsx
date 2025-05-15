@@ -3,21 +3,29 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 
+// Update the Affiliate interface to match the one in AffiliatesTab
 interface Affiliate {
+  id: string;
   name: string;
+  email: string;
   sales: number;
+  conversionRate: number;
+  earnings: number;
+  status: 'active' | 'pending' | 'suspended';
   commission: number;
-  productCount: number;
+  productCount?: number;
+  avatarUrl?: string;
+  lastActivity?: string;
 }
 
 interface TopAffiliatesTableProps {
   affiliates: Affiliate[];
-  onViewAffiliate: (affiliate: string) => void;
+  onViewAffiliateDetails: (affiliateId: string) => void;
 }
 
 export const TopAffiliatesTable: React.FC<TopAffiliatesTableProps> = ({
   affiliates,
-  onViewAffiliate
+  onViewAffiliateDetails
 }) => {
   return (
     <div className="mt-6">
@@ -33,17 +41,17 @@ export const TopAffiliatesTable: React.FC<TopAffiliatesTableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {affiliates.map((affiliate, index) => (
-            <tr key={index} className="border-b hover:bg-muted/30 transition-colors">
+          {affiliates.map((affiliate) => (
+            <tr key={affiliate.id} className="border-b hover:bg-muted/30 transition-colors">
               <td className="py-3">{affiliate.name}</td>
-              <td className="py-3">€ {affiliate.sales.toFixed(2)}</td>
-              <td className="py-3">€ {affiliate.commission.toFixed(2)}</td>
-              <td className="py-3">{affiliate.productCount}</td>
+              <td className="py-3">€ {affiliate.sales}</td>
+              <td className="py-3">€ {affiliate.commission}</td>
+              <td className="py-3">{affiliate.productCount || 0}</td>
               <td className="py-3 text-right">
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  onClick={() => onViewAffiliate(affiliate.name)}
+                  onClick={() => onViewAffiliateDetails(affiliate.id)}
                   className="gap-1"
                 >
                   <Eye className="h-4 w-4" />
