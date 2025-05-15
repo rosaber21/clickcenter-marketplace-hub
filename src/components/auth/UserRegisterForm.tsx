@@ -1,4 +1,3 @@
-
 import React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -14,13 +13,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, UserPlus } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; // Added Select imports
 
-// Register schema validation
+// Register schema validation updated
 const registerSchema = z.object({
   name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres"),
   email: z.string().email("Digite um email válido"),
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
   confirmPassword: z.string().min(6, "Confirme sua senha"),
+  accountType: z.enum(["aluno", "afiliado", "criador"]), // Added accountType
 }).refine((data) => data.password === data.confirmPassword, {
   message: "As senhas não coincidem",
   path: ["confirmPassword"],
@@ -44,6 +51,7 @@ export const UserRegisterForm = ({ onSubmit, isLoading = false }: UserRegisterFo
       email: "",
       password: "",
       confirmPassword: "",
+      accountType: "aluno", // Default account type
     },
   });
 
@@ -132,6 +140,32 @@ export const UserRegisterForm = ({ onSubmit, isLoading = false }: UserRegisterFo
                   </Button>
                 </div>
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="accountType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tipo de Conta</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                disabled={isLoading}
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione um tipo de conta" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="aluno">Aluno/Cliente</SelectItem>
+                  <SelectItem value="afiliado">Afiliado</SelectItem>
+                  <SelectItem value="criador">Criador de Produtos</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
