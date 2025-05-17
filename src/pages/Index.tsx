@@ -5,14 +5,14 @@ import { HeroBanner } from "@/components/home/HeroBanner";
 import { SearchAndFilters } from "@/components/home/SearchAndFilters";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { BenefitsSection } from "@/components/home/BenefitsSection";
-import { useProducts } from "@/hooks/use-products"; // Certifique-se de que o caminho está correto
-import { Skeleton } from "@/components/ui/skeleton"; // Para o loading state
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // Para erros
-import { Terminal } from "lucide-react"; // Ícone para o alerta de erro
+import { useProducts } from "@/hooks/use-products";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Terminal } from "lucide-react";
 
 export default function Index() {
   const { 
-    products, // Alterado de filteredProducts para products
+    products,
     searchTerm, 
     setSearchTerm, 
     activeFilter, 
@@ -30,15 +30,23 @@ export default function Index() {
     }
   }, [isLoadingProducts, setAnimate]);
 
+  const handleViewAllProducts = () => {
+    const productsSection = document.getElementById("products-section");
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <MainLayout>
-      <HeroBanner />
+      <HeroBanner onViewAllProducts={handleViewAllProducts} />
       <div className="container mx-auto px-4 py-8">
         <SearchAndFilters
           searchTerm={searchTerm}
-          onSearchTermChange={setSearchTerm}
+          setSearchTerm={setSearchTerm} // Corrigido: onSearchTermChange -> setSearchTerm
           activeFilter={activeFilter}
-          onActiveFilterChange={setActiveFilter}
+          setActiveFilter={setActiveFilter} // Corrigido: onActiveFilterChange -> setActiveFilter
+          animate={animate} // Adicionado: prop animate
         />
         
         {isLoadingProducts && (
@@ -67,13 +75,13 @@ export default function Index() {
 
         {!isLoadingProducts && !errorLoadingProducts && (
           <FeaturedProducts
-            filteredProducts={products} // Passando 'products' aqui
+            filteredProducts={products}
             animate={animate}
             onAddToCart={handleAddToCart}
           />
         )}
         
-        <BenefitsSection />
+        <BenefitsSection animate={animate} /> {/* Adicionado: prop animate */}
       </div>
     </MainLayout>
   );
