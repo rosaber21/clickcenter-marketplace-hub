@@ -38,10 +38,8 @@ export function Header({ scrolled, cartOpen, setCartOpen, setMobileMenuOpen, mob
   return (
     <header 
       className={cn(
-        "sticky top-0 z-50 w-full backdrop-blur transition-all duration-200",
-        scrolled 
-          ? "bg-background/95 shadow-sm border-b" 
-          : "bg-transparent"
+        "sticky top-0 z-50 w-full backdrop-blur transition-all duration-200 bg-background/95", // Fundo sempre aplicado
+        scrolled && "shadow-sm border-b" // Sombra e borda apenas quando rolado
       )}
     >
       <div className="container flex h-16 items-center justify-between">
@@ -67,3 +65,4 @@ export function Header({ scrolled, cartOpen, setCartOpen, setMobileMenuOpen, mob
     </header>
   );
 }
+
