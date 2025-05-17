@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import { MainLayout } from "@/components/layout/MainLayout";
+// MainLayout import is no longer needed here as App.tsx wraps Index with MainLayout
 import { HeroBanner } from "@/components/home/HeroBanner";
 import { SearchAndFilters } from "@/components/home/SearchAndFilters";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
@@ -37,16 +37,17 @@ export default function Index() {
     }
   };
 
+  // Removed MainLayout wrapper from here
   return (
-    <MainLayout>
+    <>
       <HeroBanner onViewAllProducts={handleViewAllProducts} />
       <div className="container mx-auto px-4 py-8">
         <SearchAndFilters
           searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm} // Corrigido: onSearchTermChange -> setSearchTerm
+          setSearchTerm={setSearchTerm}
           activeFilter={activeFilter}
-          setActiveFilter={setActiveFilter} // Corrigido: onActiveFilterChange -> setActiveFilter
-          animate={animate} // Adicionado: prop animate
+          setActiveFilter={setActiveFilter}
+          animate={animate}
         />
         
         {isLoadingProducts && (
@@ -81,8 +82,8 @@ export default function Index() {
           />
         )}
         
-        <BenefitsSection animate={animate} /> {/* Adicionado: prop animate */}
+        <BenefitsSection animate={animate} />
       </div>
-    </MainLayout>
+    </>
   );
 }

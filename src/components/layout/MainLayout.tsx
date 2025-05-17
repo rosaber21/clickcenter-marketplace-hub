@@ -55,8 +55,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col main-gradient-bg">
-      {/* Only one Header component - TEMPORARILY COMMENTED OUT FOR DIAGNOSIS */}
-      {/* 
+      {/* Header component restored */}
       <Header 
         scrolled={scrolled} 
         cartOpen={cartOpen}
@@ -64,7 +63,6 @@ export function MainLayout({ children }: MainLayoutProps) {
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
       /> 
-      */}
 
       {/* Mobile Menu */}
       {isMobile && (
@@ -90,4 +88,3 @@ export function MainLayout({ children }: MainLayoutProps) {
     </div>
   );
 }
-
